@@ -1,11 +1,11 @@
-https://abbaswu.github.io/2024/08/23/Lessons-learned-from-master-s-thesis/
 https://abbaswu.github.io/index.html
+https://abbaswu.github.io/2024/08/23/Lessons-learned-from-master-s-thesis/
 https://abbaswu.github.io/2023/05/09/PNW-PLSE-Workshop-2023-Observations-and-Gained-Insights/
 https://abbaswu.github.io/2023/07/21/ISSTA-ECOOP-2023-Observations-and-Gained-Insights/
 https://abbaswu.github.io/2023/09/08/The-Cornell-Maryland-Max-Planck-Pre-doctoral-Research-School-2023-Observations-and-Gained-Insights/
 https://abbaswu.github.io/2023/10/08/Pre-MICCAI-Workshop-UBC-Observations-and-Gained-Insights/
 https://abbaswu.github.io/2024/07/07/Talking-back-and-confidence/
-https://abbaswu.github.io/Link-Collections/index.html
+https://abbaswu.github.io/link-collections/index.html
 https://abbaswu.github.io/2024/07/05/Some-thoughts-about-chatting/
 https://abbaswu.github.io/2024/07/02/Pay-Attention-to-the-Other-Person-s-Easily-Overlooked-Emotional-State-When-Chatting-Online/
 https://abbaswu.github.io/2024/06/20/Show-not-tell/
