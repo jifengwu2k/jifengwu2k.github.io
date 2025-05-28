@@ -1,3 +1,6 @@
+https://jifengwu2k.github.io/2025/05/28/How-to-Upload-a-Package-to-PyPI/
+https://jifengwu2k.github.io/2021/05/20/Downloading-and-Installing-Python-Packages-for-Windows-XP/
+https://jifengwu2k.github.io/2022/12/31/Date-and-Time-Types-in-Python/
 https://jifengwu2k.github.io/index.html
 https://jifengwu2k.github.io/2023/06/10/Batch-Killing-Processes-Looked-up-Through-ps-aux-grep-process_name/
 https://jifengwu2k.github.io/2023/03/01/Type-Theoretic-Constructs-in-CXX/
@@ -7,7 +10,6 @@ https://jifengwu2k.github.io/2023/02/18/Using-ffmpeg-to-Manipulate-Video-Files/
 https://jifengwu2k.github.io/2022/10/30/Various-Solutions-for-Different-Types-of-Reverse-Proxying/
 https://jifengwu2k.github.io/2023/11/05/Sarah-Chasins-Works-on-PL-and-HCI/
 https://jifengwu2k.github.io/2022/12/31/Social-Media-Strategy-tentative/
-https://jifengwu2k.github.io/2023/02/16/Syncing-a-Local-Directory-With-a-Remote-Directory-via-FTP/
 https://jifengwu2k.github.io/2023/07/11/Task-Parallelism-and-Data-Parallelism-Thread-Pools/
 https://jifengwu2k.github.io/2023/09/08/The-Cornell-Maryland-Max-Planck-Pre-doctoral-Research-School-2023-Observations-and-Gained-Insights/
 https://jifengwu2k.github.io/2023/08/16/Timetable-of-Well-known-Conferences-in-Different-Subdomains-of-Computer-Science/
@@ -80,7 +82,6 @@ https://jifengwu2k.github.io/2023/09/04/From-the-Fourier-Series-to-the-Fourier-T
 https://jifengwu2k.github.io/2023/10/27/Giving-Talks-on-Research-Whats-and-Hows/
 https://jifengwu2k.github.io/2023/07/21/ISSTA-ECOOP-2023-Observations-and-Gained-Insights/
 https://jifengwu2k.github.io/2023/10/23/Conversation-with-Prof-Robert-Xiao/
-https://jifengwu2k.github.io/2022/12/31/Date-and-Time-Types-in-Python/
 https://jifengwu2k.github.io/2023/02/20/Displaying-Information-for-Thrown-and-Caught-Exceptions-to-the-User-in-Python/
 https://jifengwu2k.github.io/2024/06/16/Financial-strategies-during-master-s-and-PhD-degrees-tentative/
 https://jifengwu2k.github.io/2022/12/26/Command-line-HTTP-Servers-for-Rapid-File-Sharing/

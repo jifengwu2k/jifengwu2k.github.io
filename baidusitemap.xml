@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://jifengwu2k.github.io/2025/05/28/How-to-Upload-a-Package-to-PyPI/</loc>
+    <lastmod>2025-05-28</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2021/05/20/Downloading-and-Installing-Python-Packages-for-Windows-XP/</loc>
+    <lastmod>2025-05-24</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2022/12/31/Date-and-Time-Types-in-Python/</loc>
+    <lastmod>2025-05-24</lastmod>
+  </url>
+  <url>
     <loc>https://jifengwu2k.github.io/2023/06/10/Batch-Killing-Processes-Looked-up-Through-ps-aux-grep-process_name/</loc>
     <lastmod>2025-05-20</lastmod>
   </url>
@@ -30,10 +42,6 @@
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2022/12/31/Social-Media-Strategy-tentative/</loc>
-    <lastmod>2025-05-20</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2023/02/16/Syncing-a-Local-Directory-With-a-Remote-Directory-via-FTP/</loc>
     <lastmod>2025-05-20</lastmod>
   </url>
   <url>
@@ -322,10 +330,6 @@
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2023/10/23/Conversation-with-Prof-Robert-Xiao/</loc>
-    <lastmod>2025-05-20</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2022/12/31/Date-and-Time-Types-in-Python/</loc>
     <lastmod>2025-05-20</lastmod>
   </url>
   <url>
