@@ -1,4 +1,4 @@
-https://jifengwu2k.github.io/2025/07/11/Python-Packaging-Managing-Package-Files-Compiling-Extension-Modules-When-Building-a-Wheel-Checking-Non-Python-Dependencies-Before-Installing-a-Wheel-and-Uploading-to-PyPI/
+https://jifengwu2k.github.io/2025/07/11/Python-Packaging-Managing-Package-Files-Compiling-Extension-Modules-When-Building-a-Wheel-and-Uploading-to-PyPI/
 https://jifengwu2k.github.io/2022/12/31/Date-and-Time-Types-in-Python/
 https://jifengwu2k.github.io/index.html
 https://jifengwu2k.github.io/2023/06/10/Batch-Killing-Processes-Looked-up-Through-ps-aux-grep-process_name/
