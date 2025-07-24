@@ -4,6 +4,27 @@
   
   
   <entry>
+    <title>Creating Custom Data Structures from Abstract Containers in `collections.abc`</title>
+    <link href="/2025/07/24/Creating-Custom-Data-Structures-from-Abstract-Containers-in-collections-abc/"/>
+    <url>/2025/07/24/Creating-Custom-Data-Structures-from-Abstract-Containers-in-collections-abc/</url>
+    
+    <content type="html"><![CDATA[<h1id="creating-custom-data-structures-from-abstract-containers-in-collections.abc">CreatingCustom Data Structures from Abstract Containers in<code>collections.abc</code></h1><p>Python's <code>collections.abc</code> module provides a set ofabstract base classes (ABCs) that define the interfaces for variouscontainer types. These ABCs serve as excellent starting points when youneed to create custom data structures that behave like built-incontainers. In this post, we'll explore the hierarchy of these abstractcontainers and explain why inheriting from them is beneficial.</p><h2 id="the-hierarchy-of-abstract-containers">The Hierarchy of AbstractContainers</h2><p>The abstract container classes in <code>collections.abc</code> form alogical inheritance hierarchy that mirrors how we think about containerrelationships:</p><ul><li><strong>Container</strong> (requires <code>__contains__</code>)<ul><li>Defines the <code>in</code> operator behavior</li></ul></li><li><strong>Iterable</strong> (requires <code>__iter__</code>)<ul><li>Adds iteration capability</li></ul></li><li><strong>Sized</strong> (requires <code>__len__</code>)<ul><li>Adds length measurement capability</li></ul></li><li><strong>Collection</strong> (combines <code>Container</code>,<code>Iterable</code>, and <code>Sized</code>)<ul><li>A complete basic collection</li></ul></li></ul><p>From these fundamental abstract container classes, more specializedcontainers branch out:</p><ul><li><strong>Sequence</strong> (combines <code>Reversible</code> and<code>Collection</code>, and also requires <code>__getitem__</code>)<ul><li>Represents immutable sequences (like tuple)</li><li>Provides <code>index()</code> and <code>count()</code><strong>automatically</strong></li></ul></li><li><strong>Mapping</strong> (inherits from <code>Collection</code>, andalso requires <code>__getitem__</code>)<ul><li>Represents read-only dictionaries</li><li>Provides <code>get()</code>, <code>items()</code>,<code>keys()</code>, <code>values()</code><strong>automatically</strong></li></ul></li><li><strong>Set</strong> (inherits from <code>Collection</code>,requires no more methods)<ul><li>Represents immutable sets</li><li>Provides <code>isdisjoint()</code> and support for<code>&amp;</code>, <code>|</code>, <code>-</code>, <code>^</code>,<code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>,<code>&gt;=</code>, <code>==</code> operations<strong>automatically</strong></li></ul></li></ul><p>The inheritance hierarchy of all abstract container classes is asfollows:</p><pre><code class=" mermaid">classDiagram    Awaitable &lt;|-- Coroutine    Iterable &lt;|-- Reversible    Iterable &lt;|-- Iterator    Iterator &lt;|-- Generator    Sized &lt;|-- MappingView    Iterable &lt;|-- Collection    Sized &lt;|-- Collection    Container &lt;|-- Collection    Collection &lt;|-- ValuesView    MappingView &lt;|-- ValuesView    Collection &lt;|-- Mapping    Collection &lt;|-- Sequence    Reversible &lt;|-- Sequence    Sequence &lt;|-- ByteString    Sequence &lt;|-- MutableSequence    Collection &lt;|-- Set    Set &lt;|-- ItemsView    MappingView &lt;|-- ItemsView    Set &lt;|-- MutableSet    Mapping &lt;|-- MutableMapping    AsyncIterable &lt;|-- AsyncIterator    AsyncIterator &lt;|-- AsyncGenerator</code></pre><p>To get a list of all abstract methods you must implement wheninheriting an abstract container class, you can use the followingfunction:</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> abc<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_all_abstract_methods</span>(<span class="hljs-params">abstract_base_class</span>):<br>    <span class="hljs-comment"># type: (<span class="hljs-built_in">type</span>) -&gt; <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]</span><br>    all_abstract_methods = <span class="hljs-built_in">set</span>()<br><br>    <span class="hljs-keyword">for</span> mro_entry <span class="hljs-keyword">in</span> abstract_base_class.__mro__:<br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(mro_entry, abc.ABCMeta) <span class="hljs-keyword">or</span> <span class="hljs-built_in">hasattr</span>(mro_entry, <span class="hljs-string">&#x27;__abstractmethods__&#x27;</span>):<br>            <span class="hljs-keyword">for</span> abstract_method <span class="hljs-keyword">in</span> mro_entry.__abstractmethods__:<br>                all_abstract_methods.add(abstract_method)<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">sorted</span>(all_abstract_methods)<br></code></pre></td></tr></table></figure><h2 id="why-inherit-from-abstract-containers">Why Inherit from AbstractContainers?</h2><p>When you create a custom data structure by inheriting from theseabstract container classes, you get several benefits:</p><ul><li><strong>Interface Clarity</strong>: The abstract container classesclearly document what abstract methods your class needs to implement tobe a proper container (see <code>get_all_abstract_methods</code>above).</li><li><strong>Type Checking Compatibility</strong>: Your custom class willbe recognized as the proper type by <code>isinstance()</code> and<code>issubclass()</code> checks, as well as by third-partytype-checking tools such as <code>mypy</code>.</li><li><strong>Automatic Method Implementation</strong>: The abstractcontainer classes provide many methods automatically once you implementthe required abstract methods (see the examples of<code>Sequence</code>, <code>Mapping</code>, and <code>Set</code>above).</li><li><strong>Consistent Behavior</strong>: Your custom container willbehave like Python developers expect it to.</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Coding</category>
+      
+      <category>Python</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Python Packaging: Managing Package Files, Compiling Extension Modules When Building a Wheel, and Uploading to PyPI</title>
     <link href="/2025/07/11/Python-Packaging-Managing-Package-Files-Compiling-Extension-Modules-When-Building-a-Wheel-and-Uploading-to-PyPI/"/>
     <url>/2025/07/11/Python-Packaging-Managing-Package-Files-Compiling-Extension-Modules-When-Building-a-Wheel-and-Uploading-to-PyPI/</url>
@@ -13,7 +34,9 @@
     
     <categories>
       
-      <category>Code</category>
+      <category>Coding</category>
+      
+      <category>Python</category>
       
     </categories>
     
@@ -224,7 +247,7 @@
     
     <categories>
       
-      <category>Code</category>
+      <category>Coding</category>
       
     </categories>
     
@@ -284,25 +307,6 @@
       <category>Paper Reading</category>
       
       <category>Research Programming</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Giving Talks on Research: Whats and Hows</title>
-    <link href="/2023/10/27/Giving-Talks-on-Research-Whats-and-Hows/"/>
-    <url>/2023/10/27/Giving-Talks-on-Research-Whats-and-Hows/</url>
-    
-    <content type="html"><![CDATA[<hr /><p>As researchers, we often need to give talks on our research, eitheras part of presenting our results, or as a means of pitching ouraspirations for the future. In this talk, inspired by ideas presented byDerek Dreyer at CMMRS 2023, Simon Peyton Jones at ICFP PLSE 2023, FinnHacket and Robert Xiao at "Workshop on Presentation Skills", and mypersonal experiences, I will present the high-level "whats" an idealtalk should be like, and the low-level "hows" along the path of actuallypreparing and giving such talks.</p><p>Source code and compiled PDF of the presentation for "Giving Talks onResearch: Whats and Hows" presented at the Systopia Reading Group Oct27, 2023 is available <ahref="https://github.com/abbaswu/Giving-Talks-on-Research-Whats-and-Hows/tree/main">inthis GitHub repository</a>.</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>Talks</category>
       
     </categories>
     
@@ -540,25 +544,6 @@
   
   
   <entry>
-    <title>Task Parallelism and Data Parallelism Thread Pools</title>
-    <link href="/2023/07/11/Task-Parallelism-and-Data-Parallelism-Thread-Pools/"/>
-    <url>/2023/07/11/Task-Parallelism-and-Data-Parallelism-Thread-Pools/</url>
-    
-    <content type="html"><![CDATA[<h1 id="task-parallelism-and-data-parallelism-thread-pools">TaskParallelism and Data Parallelism Thread Pools</h1><p>Parallel computing environments often involve distributing codeacross multiple processors for efficient execution. Two common paradigmsof parallelization are task parallelism and data parallelism.</p><p>Task parallelism focuses on distributing encapsulated tasks that canexecute the same or different code on the same or different data acrossdifferent processors. On the other hand, data parallelism involvesperforming the same operations on different subsets of the same data onmultiple processors.</p><p>Both task parallelism and data parallelism can be implemented usingthread pools. This article explores simple implementations of threadpools for task parallelism and data parallelism scenarios.</p><h2 id="task-parallelism-thread-pool">Task Parallelism Thread Pool</h2><p>The following code demonstrates a simple thread pool for taskparallelism. It utilizes a task queue to distribute <em>tasks</em>,which are represented as <code>Callable[[], None]</code> objects(callables accepting no parameters and returning None) across multiplethreads. Each thread continuously fetches a task from the task queue andexecutes it. If an exception occurs during task execution, a tracebackis printed, and a new task is obtained from the task queue.</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> traceback<br><br><span class="hljs-keyword">from</span> collections.abc <span class="hljs-keyword">import</span> <span class="hljs-type">Callable</span>, Iterable, Generator<br><span class="hljs-keyword">from</span> queue <span class="hljs-keyword">import</span> Queue<br><span class="hljs-keyword">from</span> threading <span class="hljs-keyword">import</span> Thread<br><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">Any</span><br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TaskParallelismThreadPoolThread</span>(<span class="hljs-title class_ inherited__">Thread</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, task_queue: Queue[<span class="hljs-type">Callable</span>[[], <span class="hljs-literal">None</span>] | <span class="hljs-literal">None</span>]</span>):<br>        <span class="hljs-built_in">super</span>().__init__()<br>        self.task_queue: Queue[<span class="hljs-type">Callable</span>[[], <span class="hljs-literal">None</span>] | <span class="hljs-literal">None</span>] = task_queue<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">run</span>(<span class="hljs-params">self</span>) -&gt; <span class="hljs-literal">None</span>:<br>        <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>            task: <span class="hljs-type">Callable</span>[[], <span class="hljs-literal">None</span>] | <span class="hljs-literal">None</span> = self.task_queue.get()<br><br>            <span class="hljs-keyword">if</span> task <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>                <span class="hljs-keyword">break</span><br>            <br>            <span class="hljs-keyword">try</span>:<br>                task()<br>            <span class="hljs-keyword">except</span>:<br>                traceback.print_exc()<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">run_simple_task_parallelism_thread_pool</span>(<span class="hljs-params">tasks: Iterable[<span class="hljs-type">Callable</span>[[], <span class="hljs-literal">None</span>]], num_threads: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-literal">None</span>:<br>    <span class="hljs-comment"># Create task queue.</span><br>    task_queue: Queue[<span class="hljs-type">Callable</span>[[], <span class="hljs-literal">None</span>] | <span class="hljs-literal">None</span>] = Queue()<br><br>    <span class="hljs-comment"># Create all threads which share a task queue.</span><br>    threads: <span class="hljs-built_in">list</span>[Thread] = []<br>    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(num_threads):<br>        thread: Thread = TaskParallelismThreadPoolThread(task_queue)<br>        thread.start()<br>        threads.append(thread)<br>    <br>    <span class="hljs-comment"># Enqueue all tasks.</span><br>    <span class="hljs-keyword">for</span> task <span class="hljs-keyword">in</span> tasks:<br>        task_queue.put(task)<br>    <br>    <span class="hljs-comment"># Enqueue sentinel values for all threads to stop once all tasks are finished.</span><br>    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(num_threads):<br>        task_queue.put(<span class="hljs-literal">None</span>)<br>    <br>    <span class="hljs-comment"># Wait for all threads to stop.</span><br>    <span class="hljs-keyword">for</span> thread <span class="hljs-keyword">in</span> threads:<br>        thread.join()<br></code></pre></td></tr></table></figure><p>To use this task parallelism thread pool, provide it with acollection of <em>tasks</em> (represented as<code>Callable[[], None]</code> objects) and the desired number ofthreads. The tasks will be executed in parallel by the thread pool untilall tasks have finished.</p><h2 id="data-parallelism-thread-pool">Data Parallelism Thread Pool</h2><p>The following code showcases a simple thread pool for dataparallelism. It distributes data as <em>argument tuples</em> acrossmultiple threads using an <em>argument tuple queue</em>. Each thread isassigned an <em>operation</em> created using an <em>operationfactory</em>. After <em>executing an operation on an argumenttuple</em>, the resulting return value is passed to a return valuecallback.</p><p>As with the task parallelism thread pool, all threads in the threadpool are always busy by getting a new argument tuple whenever itsoperation finishes execution on a previous argument tuple. Should anexception be raised when executing an operation on an argument tuple, atraceback is printed, and a new argument tuple is taken from the sharedargument tuple queue.</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> traceback<br><span class="hljs-keyword">import</span> multiprocessing<br><br><span class="hljs-keyword">from</span> collections.abc <span class="hljs-keyword">import</span> <span class="hljs-type">Callable</span>, Iterable, Generator<br><span class="hljs-keyword">from</span> queue <span class="hljs-keyword">import</span> Queue<br><span class="hljs-keyword">from</span> threading <span class="hljs-keyword">import</span> Thread<br><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">Any</span><br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">DataParallelismThreadPoolThread</span>(<span class="hljs-title class_ inherited__">Thread</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, operation: <span class="hljs-type">Callable</span>[[...], <span class="hljs-type">Any</span>], argument_tuple_queue: Queue[<span class="hljs-built_in">tuple</span>[<span class="hljs-type">Any</span>, ...] | <span class="hljs-literal">None</span>], return_value_callback: <span class="hljs-type">Callable</span>[[<span class="hljs-type">Any</span>], <span class="hljs-literal">None</span>]</span>):<br>        <span class="hljs-built_in">super</span>().__init__()<br>        self.operation: <span class="hljs-type">Callable</span>[[...], <span class="hljs-type">Any</span>] = operation<br>        self.argument_tuple_queue: Queue[<span class="hljs-built_in">tuple</span>[<span class="hljs-type">Any</span>, ...] | <span class="hljs-literal">None</span>] = argument_tuple_queue<br>        self.return_value_callback: <span class="hljs-type">Callable</span>[[<span class="hljs-type">Any</span>], <span class="hljs-literal">None</span>] = return_value_callback<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">run</span>(<span class="hljs-params">self</span>) -&gt; <span class="hljs-literal">None</span>:<br>        <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>            argument_tuple: <span class="hljs-built_in">tuple</span>[<span class="hljs-type">Any</span>, ...] | <span class="hljs-literal">None</span> = self.argument_tuple_queue.get()<br><br>            <span class="hljs-keyword">if</span> argument_tuple <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>                <span class="hljs-keyword">break</span><br>            <br>            <span class="hljs-keyword">try</span>:<br>                self.return_value_callback(self.operation(*argument_tuple))<br>            <span class="hljs-keyword">except</span>:<br>                traceback.print_exc()<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">run_simple_data_parallelism_thread_pool</span>(<span class="hljs-params"></span><br><span class="hljs-params">    operation_factory: <span class="hljs-type">Callable</span>[[], <span class="hljs-type">Callable</span>[[...], <span class="hljs-type">Any</span>]],</span><br><span class="hljs-params">    argument_tuples: Iterable[<span class="hljs-built_in">tuple</span>[<span class="hljs-type">Any</span>, ...]],</span><br><span class="hljs-params">    return_value_callback: <span class="hljs-type">Callable</span>[[<span class="hljs-type">Any</span>], <span class="hljs-literal">None</span>] = <span class="hljs-keyword">lambda</span> return_value: <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    num_threads: <span class="hljs-built_in">int</span> = multiprocessing.cpu_count(<span class="hljs-params"></span>)</span><br><span class="hljs-params"></span>) -&gt; <span class="hljs-literal">None</span>:<br>    <span class="hljs-comment"># Create argument tuple queue.</span><br>    argument_tuple_queue: Queue[<span class="hljs-built_in">tuple</span>[<span class="hljs-type">Any</span>, ...] | <span class="hljs-literal">None</span>] = Queue()<br><br>    <span class="hljs-comment"># Create all threads which share an argument tuple queue.</span><br>    threads: <span class="hljs-built_in">list</span>[Thread] = []<br>    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(num_threads):<br>        thread: Thread = DataParallelismThreadPoolThread(operation_factory(), argument_tuple_queue, return_value_callback)<br>        thread.start()<br>        threads.append(thread)<br>    <br>    <span class="hljs-comment"># Enqueue all argument tuples.</span><br>    <span class="hljs-keyword">for</span> argument_tuple <span class="hljs-keyword">in</span> argument_tuples:<br>        argument_tuple_queue.put(argument_tuple)<br>    <br>    <span class="hljs-comment"># Enqueue sentinel values for all threads to stop once execution on all argument tuples have finished.</span><br>    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(num_threads):<br>        argument_tuple_queue.put(<span class="hljs-literal">None</span>)<br>    <br>    <span class="hljs-comment"># Wait for all threads to stop.</span><br>    <span class="hljs-keyword">for</span> thread <span class="hljs-keyword">in</span> threads:<br>        thread.join()<br></code></pre></td></tr></table></figure><p>To utilize the data parallelism thread pool, provide an <em>operationfactory</em>, a collection of argument tuples, and a return valuecallback. The operation factory, when called, creates operationsrepresented as <code>Callable[[...], Any]</code> objects, acceptingarguments from an <em>argument tuple</em> and returning a value. Eachthread in the thread pool will execute these operations on the providedargument tuples. Any return values will be passed to the return valuecallback, which can be customized according to your needs. The dataparallelism thread pool will process the argument tuples in paralleluntil all tuples have been processed.</p><h2 id="example">Example</h2><p>Say that we want to sleep for <span class="math inline">\(0, 1, 2,\dots, N - 1\)</span> seconds before printing the number of secondsslept in parallel, where <span class="math inline">\(N\)</span> is thenumber of threads in our thread pool.</p><p>We can adopt a task parallelism approach, where we <em>create taskswhich encapsulate how long they sleep</em>, and add them to a taskparallelism thread pool:</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">import</span> random<br><br><br>N = <span class="hljs-number">8</span><br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">create_task</span>(<span class="hljs-params">sleep_time: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-type">Callable</span>[[], <span class="hljs-literal">None</span>]:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">task</span>():<br>        <span class="hljs-keyword">nonlocal</span> sleep_time<br>        time.sleep(sleep_time)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;Slept for <span class="hljs-subst">&#123;sleep_time&#125;</span>&#x27;</span>)<br>    <br>    <span class="hljs-keyword">return</span> task<br><br><br>run_simple_task_parallelism_thread_pool(<br>    (create_task(i) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(N)),<br>    N<br>)<br></code></pre></td></tr></table></figure><p>As an alternative, we can also use a data parallelism approach, inwhich <em>operations</em> accept the number of seconds they sleep from<em>argument tuples</em>, sleep for those time durations, and returnthose time durations before <em>return value callbacks</em> operate onthe return values and print those time durations:</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">import</span> random<br><br><span class="hljs-keyword">from</span> collections.abc <span class="hljs-keyword">import</span> <span class="hljs-type">Callable</span><br><br><br>N = <span class="hljs-number">8</span><br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">operation</span>(<span class="hljs-params">sleep_time: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-built_in">int</span>:<br>    time.sleep(sleep_time)<br>    <span class="hljs-keyword">return</span> sleep_time<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">operation_factory</span>() -&gt; <span class="hljs-type">Callable</span>[[<span class="hljs-built_in">int</span>], <span class="hljs-built_in">int</span>]:<br>    <span class="hljs-keyword">return</span> operation<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">return_value_callback</span>(<span class="hljs-params">sleep_time: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-literal">None</span>:<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;Slept for <span class="hljs-subst">&#123;sleep_time&#125;</span>&#x27;</span>)<br><br><br>run_simple_data_parallelism_thread_pool(<br>    operation_factory,<br>    ((i,) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(N)),<br>    return_value_callback,<br>    N<br>)<br></code></pre></td></tr></table></figure><p>Running both thread pools takes the same time and produces the sameoutput.</p><h2 id="references">References</h2><ul><li>https://en.m.wikipedia.org/wiki/Task_parallelism</li><li>https://en.wikipedia.org/wiki/Data_parallelism</li></ul>]]></content>
-    
-    
-    <categories>
-      
-      <category>Code</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>Batch Killing Processes Looked up Through ps -aux | grep &lt;process_name&gt;</title>
     <link href="/2023/06/10/Batch-Killing-Processes-Looked-up-Through-ps-aux-grep-process_name/"/>
     <url>/2023/06/10/Batch-Killing-Processes-Looked-up-Through-ps-aux-grep-process_name/</url>
@@ -568,7 +553,7 @@
     
     <categories>
       
-      <category>Code</category>
+      <category>DevOps</category>
       
     </categories>
     
@@ -587,7 +572,9 @@
     
     <categories>
       
-      <category>Code</category>
+      <category>Coding</category>
+      
+      <category>Bash</category>
       
     </categories>
     
@@ -658,25 +645,6 @@
   
   
   <entry>
-    <title>Rapidly Prototyping Presentations Using Markdown with Marp</title>
-    <link href="/2023/03/17/Rapidly-Prototyping-Presentations-Using-Markdown-with-Marp/"/>
-    <url>/2023/03/17/Rapidly-Prototyping-Presentations-Using-Markdown-with-Marp/</url>
-    
-    <content type="html"><![CDATA[<hr /><ul><li>In the need to create a <em>decent</em>, <em>academic</em>presentation <em>fast</em>?</li><li>LaTeX overly verbose?</li><li>No time to spend on adjusting style?</li><li>Have notes written in Markdown?</li></ul><p>The solution: create presentations with Markdown using Marp!</p><p>Source code and compiled PDF of the presentation for "RapidlyPrototyping Presentations Using Markdown with Marp" presented at the SPLWorkshop 2023W2 is available <ahref="https://github.com/abbaswu/rapidly-prototyping-presentations-using-markdown-with-marp">inthis GitHub repository</a>.</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>Talks</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>Paper Reading: How to make ad-hoc polymorphism less ad-hoc</title>
     <link href="/2023/03/06/Paper-Reading-How-to-make-ad-hoc-polymorphism-less-ad-hoc/"/>
     <url>/2023/03/06/Paper-Reading-How-to-make-ad-hoc-polymorphism-less-ad-hoc/</url>
@@ -707,7 +675,9 @@
     
     <categories>
       
-      <category>Code</category>
+      <category>Coding</category>
+      
+      <category>C++</category>
       
     </categories>
     
@@ -747,26 +717,9 @@
     
     <categories>
       
-      <category>Code</category>
+      <category>Coding</category>
       
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Using ffmpeg to Manipulate Video Files</title>
-    <link href="/2023/02/18/Using-ffmpeg-to-Manipulate-Video-Files/"/>
-    <url>/2023/02/18/Using-ffmpeg-to-Manipulate-Video-Files/</url>
-    
-    <content type="html"><![CDATA[<p>FFmpeg is a collection of libraries and tools for manipulating video,audio, and other multimedia files and streams. It is frequently used forbasic editing (cutting and joining), video scaling, post-productionvideo effects, and standard compliance (SMPTE, ITU).</p><p>The main component of FFmpeg is the command-line tool<code>ffmpeg</code>, which reads an input file, applies transformations,and writes to an output file.</p><p>The basic usage pattern of <code>ffmpeg</code> is<code>ffmpeg -i &lt;input file&gt; [options] &lt;output file&gt;</code>.<code>ffmpeg</code> automatically selects the decoder and encoder basedon the extension of <code>&lt;input file&gt;</code> and<code>&lt;output file&gt;</code>, and we specify what transformations weapply to the original video file in <code>[options]</code>.</p><p>We now explain what to write in <code>[options]</code> to addresstypical video manipulation demands.</p><h1 id="cut-a-video">Cut a Video</h1><p>Add the option<code>-ss &lt;start time in hours&gt;:&lt;start time in minutes&gt;:&lt;start time in seconds&gt; -to &lt;end time in hours&gt;:&lt;end time in minutes&gt;:&lt;end time in seconds&gt;</code>.</p><p>If there is no need to transcode the video format or apply othertransformations, add <code>-c:v copy -c:a copy</code> for increasedspeed.</p><p>For example,<code>ffmpeg -i input.mp4 -ss 00:05:10 -to 00:15:30 -c:v copy -c:a copy output.mp4</code>saves <code>input.mp4</code> from 00:05:10 to 00:15:30 to<code>output.mp4</code> with no transcoding or other transformations,resulting in a 10 minutes and 20 seconds video.</p><h1 id="change-frame-rate">Change Frame Rate</h1><p>Add the option <code>-r &lt;frame rate&gt;</code>.</p><p>For example, <code>ffmpeg -i input.mp4 -r 12 output.gif</code>controls the frame rate of <code>output.gif</code> generated bytranscoding to 12FPS.</p><h1 id="change-output-resolution">Change Output Resolution</h1><p>Add the option <code>-s &lt;length&gt; x &lt;width&gt;</code>. Theunits of <code>&lt;length&gt;</code> and <code>&lt;width&gt;</code> arein pixels.</p><p>It is usually required that the length and width be scaled equallyfrom the original length and width to avoid distortion of thepicture.</p><p>For example, <code>ffmpeg -i input.mp4 -s 320x180 output.gif</code>controls the resolution of the <code>output.gif</code> generated bytranscoding to 320x180.</p><h1 id="change-playback-speed">Change Playback Speed</h1><ul><li>To speed up the output video to k times its original size: add theoption <code>-filter:v 'setpts=PTS/&lt;k&gt;'</code>.</li><li>To slow down the output video to k times the original: add theoption <code>-filter:v 'setpts=&lt;k&gt;*PTS'</code>.</li></ul><p>For example,<code>ffmpeg -i input.mp4 -filter:v 'setpts=PTS/2' output.gif</code> (or<code>ffmpeg -i input.mp4 -filter:v 'setpts=0.5*PTS' output.gif</code>)will transcode the resulting <code>output.gif</code> to speed up to 2times the original.</p><h1 id="extract-audio">Extract Audio</h1><p>Before we extract audio, we need to first look up media informationusing <code>ffprobe</code>, a command-line tool installed with<code>ffmpeg</code>:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ ffprobe video.mkv<br>...<br>Input <span class="hljs-comment">#0, matroska,webm, from &#x27;video.mkv&#x27;:</span><br>  Metadata:<br>    encoder         : no_variable_data<br>    creation_time   : 1970-01-01T00:00:00.000000Z<br>  Duration: 00:23:30.07, start: 0.000000, bitrate: 1392 kb/s<br>    Stream <span class="hljs-comment">#0:0: Audio: aac (LC), 48000 Hz, stereo, fltp (default)</span><br>    Metadata:<br>...<br></code></pre></td></tr></table></figure><p>We can see that the format of the audio stream is aac. Now, we canadd the option <code>-map 0:a -acodec copy</code> to copy the audiostream. Note that the extension of output file should correspond withthe format of the audio stream.</p><p>For example, we run the following command to save the audio stream of<code>video.mkv</code> to <code>audio.mp4</code>:<code>ffmpeg -i video.mkv -map 0:a -acodec copy audio.mp4</code>. Notethat <code>.mp4</code> is a valid extensions of aac audio streams.</p><h1 id="references">References</h1><ul><li>https://en.wikipedia.org/wiki/FFmpeg</li><li>https://shotstack.io/learn/use-ffmpeg-to-trim-video/</li><li>https://homehack.nl/create-animated-gifs-from-mp4-with-ffmpeg/</li><li>https://superuser.com/questions/1261678/how-do-i-speed-up-a-video-by-60x-in-ffmpeg/1261681</li><li>https://www.baeldung.com/linux/ffmpeg-audio-from-video</li></ul>]]></content>
-    
-    
-    <categories>
-      
-      <category>Code</category>
+      <category>Python</category>
       
     </categories>
     
@@ -860,25 +813,6 @@
   
   
   <entry>
-    <title>Modules Within PySide6 for Cross-platform GUI Building and System API Calling</title>
-    <link href="/2023/01/02/Modules-Within-PySide6-for-Cross-platform-GUI-Building-and-System-API-Calling/"/>
-    <url>/2023/01/02/Modules-Within-PySide6-for-Cross-platform-GUI-Building-and-System-API-Calling/</url>
-    
-    <content type="html"><![CDATA[<h1 id="a-brief-introduction-to-qt">A Brief Introduction to Qt</h1><p>Qt is a C++ library with <ahref="https://www.qt.io/qt-for-python">official Python bindings</a> thatallows creating GUIs and cross-platform applications targeting differentsoftware and hardware platforms, such as Linux, Windows, macOS, Android,or embedded systems, with little to no change to the underlyingcodebase, while still having native capabilities, speed, and "look andfeel".</p><p>There are several advantages of using Qt, including:</p><ul><li>Well-designed object-oriented framework.</li><li>Excellent documentation.</li><li>Large user base.</li><li>Widely endorsed. Many industrial-grade cross-platform software useQt, including Autodesk Maya, Autodesk 3ds Max, Google Earth,Mathematica, OBS Studio, QGIS, Sibelius, Teamviewer, VirtualBox, VLCmedia player, Wireshark, and WPS Office.</li></ul><h1 id="modules-within-pyside6">Modules Within PySide6</h1><p>To aid use, we have summarized the relevant modules of <ahref="https://www.qt.io/qt-for-python">PySide6</a>, Qt's official Pythonbindings.</p><ul><li><code>PySide6.QtCore</code>: Qt's essential classes, includingplatform-independent command-line parsing, multithreading, date and timeutilities, object serialization, etc. <strong>Most of these featureshave already been introduced into the C++ and Python standardlibraries.</strong> However, we should pay attention to <strong>Qt'sevent handling mechanism</strong> - a mechanism for emitting events inthe form of objects across threads (known as signals), and handlingthese events in designated functions (known as slots).</li></ul><h2 id="modules-related-to-building-guis">Modules Related to BuildingGUIs</h2><p>The modules of PySide6 directly related to building GUIs are asfollows:</p><ul><li><code>PySide6.QtGui</code>: Classes used internally by Qt's userinterface technologies, including classes for windowing systemintegration, event handling, OpenGL and OpenGL ES integration, 2Dgraphics, basic imaging, fonts, and text.</li><li><code>PySide6.QtWidgets</code>: <strong>Provides a set of UIelements to create classic desktop-style user interfaces. All UIelements, including user-defined ones, inherit from<code>PySide6.QtWidgets.QtWidget</code>.</strong></li><li><code>PySide6.QtMultimediaWidgets</code>: Providesmultimedia-related widgets and controls.</li><li><code>PySide6.QtOpenGL</code>, <code>PySide6.QtOpenGLWidgets</code>:Used to support the OpenGL widget class, which operates similarly toother Qt widgets with the exception that it opens an OpenGL displaybuffer whose contents can be rendered using the OpenGL API.</li><li><code>PySide6.QtPdf</code>, <code>PySide6.QtPdfWidgets</code>:Classes for rendering pages from PDF documents.</li><li><code>PySide6.QtWebEngineCore</code>,<code>PySide6.QtWebEngineWidgets</code>: Provides a Chromium web browserengine as well as C++ classes to render web content and interact withit.</li></ul><h2 id="modules-related-to-system-api-calling">Modules Related to SystemAPI Calling</h2><p>Qt is more than a GUI framework. It also provides a cross-platformway of doing a lot of stuff that desktop applications often need to do -calling into system APIs, especially platform-specific multimedia APIsnot covered by the POSIX standard and/or the C++ and Python standardlibraries.</p><figure><imgsrc="https://cdn.vectorstock.com/i/1000x1000/31/10/multimedia-design-vector-4393110.webp"alt="Stock Image: Multimedia" /><figcaption aria-hidden="true">Stock Image: Multimedia</figcaption></figure><p>To better document this crucial yet often overlooked use case, wehave summarized the relevant modules of PySide6.</p><ul><li><code>PySide6.QtBluetooth</code>: Enables connectivity betweenBluetooth enabled devices. Currently the API is supported to differentdegrees on Android, iOS, macOS, Linux, and Windows.</li><li><code>PySide6.QtMultimedia</code>: Provides APIs for rendering audioand video files on screen and playing them back, as well as a thoroughAPI for recording audio and video via system cameras andmicrophones.</li><li><code>PySide6.QtNfc</code>: Provides APIs for dealing with NFC ForumTags and NFC Forum Devices, including target identification and loss,the registration of NDEF message handlers, the reading and writing ofNDEF messages on NFC Forum Tags, and the sending of tag-specificcommands.</li><li><code>PySide6.QtPositioning</code>: Allows developers to locatethemselves using a variety of sources, such as satellite, wifi, textfiles, and so on. The position on a map, for instance, can be determinedusing that information. Additionally, it is possible to retrievesatellite data and carry out area-based monitoring. Currently the API issupported on Android, iOS, macOS, Linux, and Windows (with GPS receiversexposed as a serial port providing NMEA sentences or usingWindows.Devices.Geolocation).</li><li><code>PySide6.QtPrintSupport</code>: Offers broad cross-platformprinting capability, including printing to attached printers, printingto remote printers over networks, and creating PDF files.</li><li><code>PySide6.QtSensors</code>: Provides access to sensor hardware.Currently the API is supported on Android, iOS, and Windows (MSVC).</li></ul><p>References:</p><ul><li>https://en.wikipedia.org/wiki/Qt_(software)</li><li>https://www.quora.com/What-are-the-Pros-and-Cons-of-using-QT-framework-for-cross-platform-programming-Win-Mac</li><li>https://wiki.qt.io/Qt_for_Python</li></ul>]]></content>
-    
-    
-    <categories>
-      
-      <category>Code</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>Date and Time Types in Python</title>
     <link href="/2022/12/31/Date-and-Time-Types-in-Python/"/>
     <url>/2022/12/31/Date-and-Time-Types-in-Python/</url>
@@ -888,45 +822,9 @@
     
     <categories>
       
-      <category>Code</category>
+      <category>Coding</category>
       
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Social Media Strategy (tentative)</title>
-    <link href="/2022/12/31/Social-Media-Strategy-tentative/"/>
-    <url>/2022/12/31/Social-Media-Strategy-tentative/</url>
-    
-    <content type="html"><![CDATA[<p>Social media accounts are windows that exhibit our image to thepublic, and we must pay attention to them. However, on the one hand, theuse of social media should complement, and not negatively affect, ourroutine work, study, and life patterns; on the other hand, differentsocial media platforms generally differ in terms of appropriate contentto display. After a period of observation and reflection, we havedeveloped the following social media strategy to address these issues,as depicted in the Bipartite Graph below.</p><pre><code class=" mermaid">stateDiagramstate &quot;Life Moments&quot; as LifeMomentsstate &quot;Reflections on Life&quot; as ReflectionsOnLifestate &quot;Work Moments&quot; as WorkMomentsstate &quot;Reflections on Work&quot; as ReflectionsOnWorkstate &quot;Reflections on Development&quot; as ReflectionsOnDevelopmentstate &quot;Detailed Explanations&quot; as DetailedExplanationsstate &quot;Planning&quot; as Planningstate &quot;Instagram&quot; as Instagramstate &quot;小红书&quot; as XiaoHongShustate &quot;WeChat&quot; as WeChatstate &quot;QQ&quot; as QQstate &quot;LinkedIn&quot; as LinkedInstate &quot;Blog&quot; as Blog    LifeMoments --&gt; Instagram    LifeMoments --&gt; XiaoHongShu    LifeMoments --&gt; WeChat    LifeMoments --&gt; QQ        ReflectionsOnLife --&gt; XiaoHongShu    ReflectionsOnLife --&gt; Twitter    ReflectionsOnLife --&gt; WeChat    ReflectionsOnLife --&gt; QQ    WorkMoments --&gt; Twitter    WorkMoments --&gt; WeChat    WorkMoments --&gt; QQ    ReflectionsOnWork --&gt; Twitter    ReflectionsOnWork --&gt; WeChat    ReflectionsOnWork --&gt; QQ    ReflectionsOnDevelopment --&gt; LinkedIn        DetailedExplanations --&gt; Blog        Planning --&gt; Blog</code></pre><p>In addition, a pain point we will encounter is that we will post somecontent to both Chinese and English social media platforms. To overcomethis problem, we can first write a Chinese (or English) version and useautomated tools such as Google Translate and DeepL before manuallytouching up the machine-translated version.</p><p>Furthermore, to boost the following of our social media accounts,when we need to share the content posted on social media with others viaprivate chat, we can share the link of the content posted to socialmedia instead of copying and pasting the content itself.</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>Reflections</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Command-line HTTP Servers for Rapid File Sharing</title>
-    <link href="/2022/12/26/Command-line-HTTP-Servers-for-Rapid-File-Sharing/"/>
-    <url>/2022/12/26/Command-line-HTTP-Servers-for-Rapid-File-Sharing/</url>
-    
-    <content type="html"><![CDATA[<p>Sometimes, we need an ad-hoc, quick-and-dirty way of sharing fileswith others while maintaining complete control of the datatransmission.</p><ul><li>We should not store our data on any third-party servers.</li><li>The connections established through the network should bepoint-to-point.</li></ul><p>Being supported by virtually every Internet-capable device and fromboth command-line tools (such as wget and curl) and graphical Webbrowsers, the HTTP protocol is one of our best bets. Thus, we havecompiled a list of command-line HTTP servers that enable rapid filesharing and compare their features.</p><h1 id="python3--m-http.server"><ahref="https://docs.python.org/dev/library/http.server.html">python3 -mhttp.server</a></h1><p>The Python standard library has a barebones built-in HTTP server. Notrecommended for production.</p><ul><li>Language: Python</li></ul><h1 id="mjpclabgo-http-file-server"><ahref="https://github.com/mjpclab/go-http-file-server">mjpclab/go-http-file-server</a></h1><p>Simple command line based HTTP file server to share local filesystem.</p><ul><li>Features:<ul><li>Cross-Origin Resource Sharing (CORS)</li><li>Frontend Features:<ul><li>File Upload</li><li>File Delete</li><li>Create Subdirectory</li><li>Download the Current Directory as an Archive</li></ul></li><li>HTTP Basic Authentication</li><li>HTTP Range Requests</li><li>HTTP Strict Transport Security (HSTS)</li><li>HTTPS</li></ul></li><li>GitHub Stars: 175</li><li>Language: Go</li></ul><h1 id="mar10wsgidav"><ahref="https://github.com/mar10/wsgidav">mar10/wsgidav</a></h1><p>A generic and extendable WebDAV server written in Python and based onWSGI.</p><ul><li>Features:<ul><li>HTTP Range Requests</li></ul></li><li>GitHub Stars: 640</li><li>Language: Python</li><li>Multithreaded</li><li>WebDAV Server</li></ul><h1 id="thewawarsimple-http-server"><ahref="https://github.com/TheWaWaR/simple-http-server">TheWaWaR/simple-http-server</a></h1><figure><imgsrc="https://github.com/TheWaWaR/simple-http-server/raw/master/screenshot.png"alt="Screenshot" /><figcaption aria-hidden="true">Screenshot</figcaption></figure><ul><li>Features:<ul><li>Cross-Origin-Embedder-Policy (COEP)</li><li>Cross-Origin Resource Sharing (CORS)</li><li>Cross-Origin-Opener-Policy (COOP)</li><li>HTTP Basic Authentication</li><li>HTTP Range Requests</li><li>HTTPS</li><li>Frontend Features:<ul><li>File Upload</li></ul></li></ul></li><li>GitHub Stars: 785</li><li>Language: Rust</li><li>Multithreaded</li></ul><h1 id="http-partyhttp-server"><ahref="https://github.com/http-party/http-server">http-party/http-server</a></h1><p><code>http-server</code> is a simple, zero-configuration command-linestatic HTTP server. It is powerful enough for production usage, but it'ssimple and hackable enough to be used for testing, local development andlearning.</p><ul><li>Features:<ul><li>Cross-Origin Resource Sharing (CORS)</li><li>HTTP Basic Authentication</li><li>HTTP Range Requests</li><li>HTTPS</li></ul></li><li>GitHub Stars: 12.4k</li><li>Language: node.js</li></ul><h1 id="estebanboraihttp-server"><ahref="https://github.com/EstebanBorai/http-server">EstebanBorai/http-server</a></h1><p>Simple and configurable command-line HTTP server</p><ul><li>Features:<ul><li>Cross-Origin Resource Sharing (CORS)</li><li>HTTP Basic Authentication</li><li>HTTPS</li><li>GZip Compression</li></ul></li></ul>]]></content>
-    
-    
-    <categories>
-      
-      <category>Code</category>
+      <category>Python</category>
       
     </categories>
     
@@ -1071,7 +969,7 @@
     
     <categories>
       
-      <category>Code</category>
+      <category>DevOps</category>
       
     </categories>
     
@@ -1111,7 +1009,9 @@
     
     <categories>
       
-      <category>Code</category>
+      <category>Coding</category>
+      
+      <category>Python</category>
       
     </categories>
     
