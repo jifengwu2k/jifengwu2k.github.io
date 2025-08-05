@@ -2,64 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webcam Viewer with Camera Selection</title>
+  <title>Webcam Viewer</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f0f0f0;
+      display: grid;
+      place-items: center;
       margin: 0;
-      padding: 0;
-    }
-
-    h1 {
-      margin-top: 30px;
-      font-size: 24px;
-      color: #333;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    select, label {
-      font-size: 16px;
-      margin: 10px 0;
-    }
-
-    select {
-      padding: 10px;
-      width: 200px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-
-    video {
-      margin-top: 20px;
-      width: 80%;
-      height: auto;
-      border: 5px solid #333;
-      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
     }
   </style>
 </head>
 <body>
-  <h1>Webcam Viewer with Camera Selection</h1>
+  <h1>Webcam Viewer</h1>
 
-  <div class="container">
-    <!-- Video element to display the webcam feed -->
-    <video id="webcam" autoplay></video>
-
-    <!-- Dropdown to select the camera -->
+  <!-- Dropdown to select the camera -->
+  <p>
     <label for="cameras">Select Camera:</label>
     <select id="cameras"></select>
-  </div>
+  </p>
+
+  <!-- Video element to display the webcam feed -->
+  <p>
+    <video id="webcam" autoplay></video>
+  </p>
 
   <script>
     const video = document.getElementById('webcam');
@@ -92,7 +56,7 @@
           video.srcObject = stream;
         })
         .catch(error => {
-          console.error('Error accessing webcam: ', error);
+          alert('Error accessing webcam: ', error);
         });
     }
 
@@ -109,7 +73,7 @@
           videoDevices.forEach((device, index) => {
             const option = document.createElement('option');
             option.value = device.deviceId;
-            option.text = device.label || `Camera ${index + 1}`;
+            option.text = device.label || `Camera ${index}`;
             cameraSelect.appendChild(option);
           });
 
@@ -119,7 +83,7 @@
           }
         })
         .catch(error => {
-          console.error('Error enumerating devices: ', error);
+          alert('Error enumerating devices: ', error);
         });
     }
 
