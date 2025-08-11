@@ -4,6 +4,27 @@
   
   
   <entry>
+    <title>Powering `clangd`-based C++ IDEs with `compile_commands.json`</title>
+    <link href="/2025/08/11/Powering-clangd-based-C-IDEs-with-compile-commands-json/"/>
+    <url>/2025/08/11/Powering-clangd-based-C-IDEs-with-compile-commands-json/</url>
+    
+    <content type="html"><![CDATA[<h1id="powering-clangd-based-c-ides-with-compile_commands.json">Powering<code>clangd</code>-based C++ IDEs with<code>compile_commands.json</code></h1><h2 id="what-is-compile_commands.json">What is<code>compile_commands.json?</code></h2><p><code>clangd</code>, the C++ language server that powers IDE featuresin VS Code, CLion, etc. such as <strong>code navigation, linting anderror detection, and refactoring</strong>, requires<code>compile_commands.json</code>, a JSON file that records exactly howeach source file in your project should be compiled. The example shows asimple structure:</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">[</span><br>  <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/path/to/project&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;command&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;clang++ -std=c++11 -g -Og main.cpp -o main&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;file&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;main.cpp&quot;</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">]</span><br></code></pre></td></tr></table></figure><p>Each entry contains:</p><ul><li><code>directory</code>: The absolute path of where the compilationoccurs</li><li><code>command</code>: The full compilation command (Shell featuressuch as variable and command substitution are NOT supported)</li><li><code>file</code>: The relative path of the source file beingcompiled</li></ul><h2 id="generating-compile_commands.json">Generatingcompile_commands.json</h2><p>You can create one manually as shown in the following Shellscript:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># The absolute path of the project directory (where the compilation occurs)</span><br>DIRECTORY=<span class="hljs-string">&quot;<span class="hljs-subst">$(realpath .)</span>&quot;</span><br><br><span class="hljs-comment"># The relative path of the source file being compiled</span><br>FILE=<span class="hljs-string">&#x27;main.cpp&#x27;</span><br><br><span class="hljs-comment"># The full compilation command (precompute variable and command substitutions)</span><br>COMMAND=<span class="hljs-string">&quot;clang++ -std=c++11 -g -Og -fprofile-instr-generate -fcoverage-mapping main.cpp -o main <span class="hljs-subst">$(python3-config --includes)</span> <span class="hljs-subst">$(python3-config --ldflags)</span>&quot;</span><br><br><span class="hljs-comment"># Generate `compile_commands.json` under the project directory</span><br><span class="hljs-built_in">cat</span> &gt; <span class="hljs-string">&quot;<span class="hljs-variable">$DIRECTORY</span>/compile_commands.json&quot;</span> &lt;&lt;<span class="hljs-string">EOF</span><br><span class="hljs-string">[</span><br><span class="hljs-string">  &#123;</span><br><span class="hljs-string">    &quot;directory&quot;: &quot;$DIRECTORY&quot;,</span><br><span class="hljs-string">    &quot;command&quot;: &quot;$COMMAND&quot;,</span><br><span class="hljs-string">    &quot;file&quot;: &quot;$FILE&quot;</span><br><span class="hljs-string">  &#125;</span><br><span class="hljs-string">]</span><br><span class="hljs-string">EOF</span><br></code></pre></td></tr></table></figure><p>This approach works well for small projects. For larger ones,consider using CMake or <code>bear</code> (for make-based projects).</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Coding</category>
+      
+      <category>C++</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Metaclass Fundamentals</title>
     <link href="/2025/07/25/Metaclass-Fundamentals/"/>
     <url>/2025/07/25/Metaclass-Fundamentals/</url>

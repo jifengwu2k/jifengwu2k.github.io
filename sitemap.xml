@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://jifengwu2k.github.io/2025/08/11/Powering-clangd-based-C-IDEs-with-compile-commands-json/</loc>
+    
+    <lastmod>2025-08-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://jifengwu2k.github.io/index.html</loc>
     
     <lastmod>2025-08-05</lastmod>
@@ -769,7 +778,7 @@
 
   <url>
     <loc>https://jifengwu2k.github.io/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -779,112 +788,112 @@
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Meeting-Minutes/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Mathematics/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Conferences/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Reflections/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Paper-Reading/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Paper-Reading/Topics-in-Programming-Languages-Automated-Testing-Bug-Detection-and-Program-Analysis/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Paper-Reading/Advanced-Software-Engineering/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Paper-Reading/Topics-in-Programming-Languages-Type-Systems/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Paper-Reading/Research-Programming/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Reference/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Paper-Reading/PL-Reading-Group/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/DevOps/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Coding/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Coding/Python/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Coding/C/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Coding/Bash/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
