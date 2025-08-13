@@ -1,3 +1,5 @@
+https://jifengwu2k.github.io/2025/08/12/Copying-Files-via-cat-and-dd/
+https://jifengwu2k.github.io/2025/08/12/Generating-Google-Calendar-Event-URLs/
 https://jifengwu2k.github.io/2024/01/04/Functional-Array-Programming/
 https://jifengwu2k.github.io/2023/09/30/Understanding-the-Name-Structure-and-Loss-Function-of-the-Variational-Autoencoder/
 https://jifengwu2k.github.io/2025/08/12/Using-DevTools-Console-for-Web-Scraping/
@@ -77,11 +79,9 @@ https://jifengwu2k.github.io/2023/07/21/ISSTA-ECOOP-2023-Observations-and-Gained
 https://jifengwu2k.github.io/2024/06/16/Financial-strategies-during-master-s-and-PhD-degrees-tentative/
 https://jifengwu2k.github.io/2024/08/23/Lessons-learned-from-master-s-thesis/
 https://jifengwu2k.github.io/2025/08/12/How-to-Make-VS-Code-s-Language-Detection-Sane-and-Deterministic/
-https://jifengwu2k.github.io/2025/08/12/Generating-Google-Calendar-Event-URLs/
 https://jifengwu2k.github.io/2022/12/31/Date-and-Time-Types-in-Python/
 https://jifengwu2k.github.io/2025/07/24/Creating-Custom-Data-Structures-from-Abstract-Containers-in-collections-abc/
 https://jifengwu2k.github.io/2023/10/23/Conversation-with-Prof-Robert-Xiao/
-https://jifengwu2k.github.io/2025/08/12/Copying-Files-via-cat-and-dd/
 https://jifengwu2k.github.io/2023/10/10/Conversation-with-Prof-Margo-Seltzer/
 https://jifengwu2k.github.io/2023/06/10/Batch-Killing-Processes-Looked-up-Through-ps-aux-grep-process_name/
 https://jifengwu2k.github.io/index.html
