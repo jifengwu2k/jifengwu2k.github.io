@@ -1,3 +1,4 @@
+https://jifengwu2k.github.io/2025/08/21/Eating-in-the-Americas-Down-to-earth-Foodstuffs/
 https://jifengwu2k.github.io/2025/08/12/Copying-Files-via-cat-and-dd/
 https://jifengwu2k.github.io/2025/08/12/Generating-Google-Calendar-Event-URLs/
 https://jifengwu2k.github.io/2024/01/04/Functional-Array-Programming/
@@ -108,3 +109,4 @@ https://jifengwu2k.github.io/categories/Software-Design/
 https://jifengwu2k.github.io/categories/Software-Design/Python/
 https://jifengwu2k.github.io/categories/Software-Design/Bash/
 https://jifengwu2k.github.io/categories/Software-Design/C/
+https://jifengwu2k.github.io/categories/Cooking/
