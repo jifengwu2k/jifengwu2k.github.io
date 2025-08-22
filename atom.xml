@@ -6,7 +6,7 @@
   <link href="https://jifengwu2k.github.io/atom.xml" rel="self"/>
   
   <link href="https://jifengwu2k.github.io/"/>
-  <updated>2025-08-21T04:40:14.946Z</updated>
+  <updated>2025-08-22T00:46:36.945Z</updated>
   <id>https://jifengwu2k.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>High-Frequency Git Operations for Everyday Development</title>
+    <link href="https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/"/>
+    <id>https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/</id>
+    <published>2025-08-22T00:43:36.000Z</published>
+    <updated>2025-08-22T00:46:36.945Z</updated>
+    
+    <content type="html"><![CDATA[<p>Whether you're joining a new project, dealing with ignored files, orwanting to clean up your commit history, you'll often need to execute aset of Git commands. Here are some of the most frequent Git operationsyou may need in day-to-day development.</p><h2 id="connect-your-local-folder-to-a-github-repository">Connect YourLocal Folder to a GitHub Repository</h2><h3 id="scenario">Scenario</h3><p>You have an existing local folder with files and want to connect itto an already existing GitHub repository.</p><h3 id="steps">Steps</h3><p>Initialize Git in your folder:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git init<br></code></pre></td></tr></table></figure><p>Add your GitHub repository (replace URL with your repo):</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git remote add origin https://github.com/username/repo.git<br></code></pre></td></tr></table></figure><p>Fetch remote history:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git fetch origin<br></code></pre></td></tr></table></figure><p>Merge remote and local files, allowing unrelated histories<em>(change <code>main</code> to your repo's default branch ifnecessary)</em>:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git pull origin main --allow-unrelated-histories<br></code></pre></td></tr></table></figure><p>If you see an error like:</p><blockquote><p>The following untracked working tree files would be overwritten bymerge...</p></blockquote><p>We recommend:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 1. Move local conflicting files to a temporary directory</span><br><span class="hljs-comment"># For example, back them up to a non-conflicting `backup` folder in the current directory</span><br><span class="hljs-built_in">mkdir</span> backup<br><span class="hljs-built_in">mv</span> conflicting-file-1 conflicting-file-2 backup/<br><br><span class="hljs-comment"># 2. Try pulling the remote repository content again</span><br>git pull origin main --allow-unrelated-histories<br><br><span class="hljs-comment"># 3. Manually merge the backed up files into the pulled files</span><br></code></pre></td></tr></table></figure><p>Commit after resolving all conflicts:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">git add .<br>git commit -m <span class="hljs-string">&quot;Merge local files with remote repository&quot;</span><br></code></pre></td></tr></table></figure><p>Push to the remote repository (if needed):</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git push --set-upstream origin main<br></code></pre></td></tr></table></figure><p><strong>The <code>--set-upstream origin main</code> option is onlyneeded for the first push; you don't need it afterward.</strong></p><h2 id="list-what-files-git-add-.-would-stage">List What Files<code>git add .</code> Would Stage</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git status --short<br></code></pre></td></tr></table></figure><p>Example Output:</p><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs haxe">M file1.txt       <span class="hljs-meta"># modified file</span><br>?? <span class="hljs-keyword">new</span><span class="hljs-type">file</span>.txt     <span class="hljs-meta"># untracked file</span><br></code></pre></td></tr></table></figure><p>Breakdown:</p><ul><li><code>M</code> = Modified (but not staged)</li><li><code>??</code> = Untracked (new files)</li></ul><h2 id="remove-previously-committed-files-now-in-.gitignore">RemovePreviously Committed Files Now in <code>.gitignore</code></h2><h3 id="scenario-1">Scenario</h3><p>You added rules to <code>.gitignore</code> but some files werealready committed.</p><h3 id="steps-1">Steps</h3><p>Stage removal of all currently tracked files (but not deletelocally):</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">rm</span> -r --cached .<br></code></pre></td></tr></table></figure><p>Add everything back to the repo ("add" skips <code>gitignore</code>dfiles):</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git add .<br></code></pre></td></tr></table></figure><p>Commit the change:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git commit -m <span class="hljs-string">&quot;Remove ignored files from the repository&quot;</span><br></code></pre></td></tr></table></figure><p>At this point, the files are only removed from the repository<strong>from this commit onward (they'll still exist in oldercommits/history)</strong>. If you want them <strong>removed fromprevious commits as well</strong>, consider <strong>squashing multiplecommits into a single commit</strong>, as explained below.</p><h2 id="squash-multiple-commits-into-a-single-commit">Squash MultipleCommits into a Single Commit</h2><h3 id="scenario-2">Scenario</h3><p>You have made several small commits <em>(some of which may be faultyor embarassing)</em> and want to clean up history by squashing them intoone.</p><h3 id="steps-2">Steps</h3><p>Review commit history:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">log</span><br></code></pre></td></tr></table></figure><p>Decide how many previous commits you want to squash.</p><p>Start an interactive rebase, e.g. with the last 3 commits:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git rebase -i HEAD~3<br></code></pre></td></tr></table></figure><p>In the opened editor:</p><ul><li>Leave <code>pick</code> for the first commit.</li><li>For the others, change <code>pick</code> to <code>squash</code> (orjust <code>s</code>).</li><li>Save and close.</li></ul><p>You will then enter a second editor session. Edit the combined commitmessage. Save and close.</p><p>Force-push the branch to rewrite history on GitHub:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git push --force<br></code></pre></td></tr></table></figure><h3 id="note">Note</h3><ul><li>Use squashing carefully if collaborating, as force push overwriteshistory.</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Whether you&#39;re joining a new project, dealing with ignored files, or
+wanting to clean up your commit history, you&#39;ll often need to execut</summary>
+      
+    
+    
+    
+    <category term="DevOps" scheme="https://jifengwu2k.github.io/categories/DevOps/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>Eating in the Americas - Down-to-earth Foodstuffs</title>
@@ -475,32 +498,6 @@ tell”。意思是面对他们希望我们加baseline和metric的commen</summar
       
     <summary type="html">&lt;h1 id=&quot;original-chinese&quot;&gt;Original (Chinese)&lt;/h1&gt;
 &lt;p&gt;我们的思维，的确是工程师的思维。这体现在我们日常生活的方方面面：不论是开车，还是做菜，还是写代码，还是制定计划，我们总是会非常关注计划，关注流程，关注优化，关注总结，关注反馈</summary>
-      
-    
-    
-    
-    <category term="Reflections" scheme="https://jifengwu2k.github.io/categories/Reflections/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Financial strategies during master&#39;s and PhD degrees (tentative)</title>
-    <link href="https://jifengwu2k.github.io/2024/06/16/Financial-strategies-during-master-s-and-PhD-degrees-tentative/"/>
-    <id>https://jifengwu2k.github.io/2024/06/16/Financial-strategies-during-master-s-and-PhD-degrees-tentative/</id>
-    <published>2024-06-16T04:00:00.000Z</published>
-    <updated>2025-08-13T04:31:00.453Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="original-chinese">Original (Chinese)</h1><ul><li>记录每月工资，跟踪每月固定必需开销（房租、订阅服务等），分配每月可变必需开销（食品百货等）、可变可选开销（衣物、旅行等）与储蓄。<ul><li>储蓄包括银行的储蓄账户和各种理财产品。<ul><li>对我们而言，各种理财产品的职责首先是对抗通货膨胀的<strong>储蓄账户</strong>，而非盈利的手段——我们是斗不过高频交易算法的。不得花过多的时间经历关注理财产品的价格变化，严格禁止各种赌博心理。</li></ul></li></ul></li><li>充分利用各种税收和学费资助的“免费”服务：<ul><li>规划好行程，充分利用公共交通，少打车。</li><li>充分利用学校提供的医疗保险；</li><li>通过学校订购的在线课程，不断提升与科研需求相辅相成的实用技能，如网页前端开发、数据科学等，并获取相应证书，既提升我们欠缺的implementation能力，又方便找实习与工作等。</li></ul></li><li>做好灵活的食品百货采货计划。<ul><li>关注超市传单；</li><li>书包中常备购物袋；</li><li>适量减少红肉采货量，适量增加鱼、蛋白粉、谷物、水果、蛋、奶采货量。</li></ul></li></ul><hr /><h1 id="translation-deepl.com">Translation (DeepL.com)</h1><ul><li>Record monthly paychecks, track monthly fixed essential expenses(rent, subscription services, etc.), and allocate monthly variableessential expenses (food, groceries, etc.) and variable optionalexpenses (clothing, travel, etc.) with savings.</li><li>Savings include savings accounts in banks and various financialproducts.</li><li>For us, the duty of various financial products is, first andforemost, an inflation-fighting <strong>savings account</strong>, not ameans of profit - we can't beat high-frequency trading algorithms. Wemust not spend excessive time paying attention to price changes infinancial products and strictly prohibit all kinds of gamblingmentality.</li><li>Take advantage of tax and tuition assistance "freebies":</li><li>Plan trips well, use public transportation, and take fewercabs.</li><li>Take advantage of the school's health insurance;</li><li>Through online courses purchased by the school, improve practicalskills that complement research needs, such as web front-enddevelopment, data science, etc., and obtain the appropriate certificatesto improve our lack of implementation skills and facilitate the searchfor internships and jobs.</li><li>Make a flexible food and grocery procurement plan.</li><li>Pay attention to supermarket flyers;</li><li>Always carry a shopping bag in your bag;</li><li>Reduce the amount of red meat and increase the amount of fish,protein powder, cereals, fruits, eggs, and milk.</li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;original-chinese&quot;&gt;Original (Chinese)&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;记录每月工资，跟踪每月固定必需开销（房租、订阅服务等），分配每月可变必需开销（食品百货等）、可变可选开销（衣物、旅行等）与储蓄。
-&lt;ul&gt;
-&lt;li&gt;储蓄包括银行的</summary>
       
     
     
