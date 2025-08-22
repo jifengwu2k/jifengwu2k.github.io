@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://jifengwu2k.github.io/2025/07/10/Managing-Development-Environments-with-Conda/</loc>
+    <lastmod>2025-08-22</lastmod>
+  </url>
+  <url>
     <loc>https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/</loc>
     <lastmod>2025-08-22</lastmod>
   </url>

@@ -335,6 +335,30 @@ project</summary>
   </entry>
   
   <entry>
+    <title>Managing Development Environments with Conda</title>
+    <link href="https://jifengwu2k.github.io/2025/07/10/Managing-Development-Environments-with-Conda/"/>
+    <id>https://jifengwu2k.github.io/2025/07/10/Managing-Development-Environments-with-Conda/</id>
+    <published>2025-07-10T04:00:00.000Z</published>
+    <updated>2025-08-22T03:54:59.020Z</updated>
+    
+    <content type="html"><![CDATA[<p>When juggling multiple data science or machine learning projects,maintaining isolated, reproducible environments is crucial.<strong>conda</strong> has emerged as the <em>de facto standard</em> inPython for managing such environments. But <em>why</em> should you useconda over alternatives like <code>venv</code>, <code>poetry</code>,<code>pipenv</code>, system package managers like <code>apt</code>, orcontainer tools like Docker? Let's find out - and get you set up!</p><h2 id="why-conda">Why Conda?</h2><p>Conda offers several key advantages:</p><ul><li>Beyond Python Packages: Unlike <code>venv</code>,<code>pipenv</code>, or <code>poetry</code>, conda handles both Pythonpackages <em>and</em> complex system-level dependencies, such as CUDAtoolkits for GPU acceleration, C/C++ compiler toolchains, and othercommand-line utilities.</li><li>No Admin Required: With system-wide package managers like<code>apt</code>, you'll often need root privileges to install software.In comparison, Conda lets you install everything in user-space.</li><li>Better than Docker for Rapid Iteration: While Docker excels atpackaging for production, it often means verbose Dockerfiles, long buildtimes, and a less pleasant development experience. Conda offers alightweight, rapid way to set up and switch between environments on yourlocal machine.</li></ul><h2 id="installing-conda-miniconda">Installing Conda (Miniconda)</h2><p>The preferred way to get started is with Miniconda, a minimal condainstaller. Here's a step-by-step guide:</p><p>Create an Installation Directory:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p ~/miniconda3<br></code></pre></td></tr></table></figure><p>Download the Miniconda Installer:</p><ul><li>Linux x86_64:<code>wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh</code></li><li>Linux aarch64:<code>wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh -O ~/miniconda3/miniconda.sh</code></li><li>Linux s390x:<code>wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-s390x.sh -O ~/miniconda3/miniconda.sh</code></li><li>Linux ppc64le:<code>wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-ppc64le.sh -O ~/miniconda3/miniconda.sh</code></li><li>Linux x86:<code>wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86.sh -O ~/miniconda3/miniconda.sh</code></li><li>Linux armv7l:<code>wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-armv7l.sh -O ~/miniconda3/miniconda.sh</code></li><li>macOS arm64:<code>curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh -o ~/miniconda3/miniconda.sh</code></li><li>macOS x86_64:<code>curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ~/miniconda3/miniconda.sh</code></li><li>macOS x86:<code>curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86.sh -o ~/miniconda3/miniconda.sh</code></li></ul><p>Run the Installer</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3 &amp;&amp; \<br>    <span class="hljs-built_in">rm</span> ~/miniconda3/miniconda.sh &amp;&amp; \<br>    <span class="hljs-built_in">source</span> ~/miniconda3/bin/activate &amp;&amp; \<br>    conda init --all<br></code></pre></td></tr></table></figure><p>What does this do?</p><ul><li><code>-b</code>: Run in batch (no interactive prompts)</li><li><code>-u</code>: Unpack the installer</li><li><code>-p ~/miniconda3</code>: Install into this directory</li><li><code>&amp;&amp; rm ...</code>: Clean up the installer file</li><li><code>&amp;&amp; source ~/miniconda3/bin/activate</code>: Activateconda</li><li><code>&amp;&amp; conda init --all</code>: Set up conda for yourshell (e.g., bash/zsh/fish)</li></ul><h2 id="managing-conda-environments">Managing Conda Environments</h2><p>List all environments:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda <span class="hljs-built_in">env</span> list<br></code></pre></td></tr></table></figure><p>Remove an environment:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda <span class="hljs-built_in">env</span> remove --name ENV_NAME<br></code></pre></td></tr></table></figure><p>Replace <code>ENV_NAME</code> with the actual name (e.g.,<code>myenv</code>). This will delete the environment and all itsfiles.</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;When juggling multiple data science or machine learning projects,
+maintaining isolated, reproducible environments is crucial.
+&lt;strong&gt;con</summary>
+      
+    
+    
+    
+    <category term="Developer Experience" scheme="https://jifengwu2k.github.io/categories/Developer-Experience/"/>
+    
+    
+  </entry>
+  
+  <entry>
     <title>用汉语拼音解读国际音标，快速读出任何语言的发音</title>
     <link href="https://jifengwu2k.github.io/2025/06/30/%E7%94%A8%E6%B1%89%E8%AF%AD%E6%8B%BC%E9%9F%B3%E8%A7%A3%E8%AF%BB%E5%9B%BD%E9%99%85%E9%9F%B3%E6%A0%87%EF%BC%8C%E5%BF%AB%E9%80%9F%E8%AF%BB%E5%87%BA%E4%BB%BB%E4%BD%95%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%91%E9%9F%B3/"/>
     <id>https://jifengwu2k.github.io/2025/06/30/%E7%94%A8%E6%B1%89%E8%AF%AD%E6%8B%BC%E9%9F%B3%E8%A7%A3%E8%AF%BB%E5%9B%BD%E9%99%85%E9%9F%B3%E6%A0%87%EF%BC%8C%E5%BF%AB%E9%80%9F%E8%AF%BB%E5%87%BA%E4%BB%BB%E4%BD%95%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%91%E9%9F%B3/</id>
@@ -475,29 +499,6 @@ context，其中就包括对方的情绪状态。线上聊天还是在</summary>
     <summary type="html">&lt;h1 id=&quot;original-chinese&quot;&gt;Original (Chinese)&lt;/h1&gt;
 &lt;p&gt;导师在告诉我如何回答reviewers comments的时候曾经说过：“show, not
 tell”。意思是面对他们希望我们加baseline和metric的commen</summary>
-      
-    
-    
-    
-    <category term="Reflections" scheme="https://jifengwu2k.github.io/categories/Reflections/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Our minds are, indeed, the minds of engineers</title>
-    <link href="https://jifengwu2k.github.io/2024/06/19/Our-minds-are-indeed-the-minds-of-engineers/"/>
-    <id>https://jifengwu2k.github.io/2024/06/19/Our-minds-are-indeed-the-minds-of-engineers/</id>
-    <published>2024-06-19T04:00:00.000Z</published>
-    <updated>2025-08-13T04:31:00.454Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="original-chinese">Original (Chinese)</h1><p>我们的思维，的确是工程师的思维。这体现在我们日常生活的方方面面：不论是开车，还是做菜，还是写代码，还是制定计划，我们总是会非常关注计划，关注流程，关注优化，关注总结，关注反馈；而我们的头脑没有那么敏捷，不擅长理论创新——我们是罗马人，而非希腊人。</p><p>我们不应该误入理论创新的歧途。是的，我们确实对理论很感兴趣，但是那种兴趣不是形而上的对理论本身的兴趣，而是对理论有何价值以及如何落地的兴趣。</p><p>当下的热点是什么？我们应该如何结合某个具体的工业背景，有效而创造性地运用那些理论解决现实问题。这应该是我们的主业。而去研究理论，并思考如何创造性地使用它们，是我们的副业与兴趣爱好。</p><h1 id="translation-deepl.com">Translation (DeepL.com)</h1><p>Our minds are, indeed, the minds of engineers. This is reflected inevery aspect of our daily lives: whether we are driving, cooking,writing code, or making plans, we will always pay great attention to theplan, to the process, to the optimization, to the summary, and to thefeedback; and our minds are not as agile and not as good at theoreticalinnovation - we are Romans, not Greeks!</p><p>We shouldn't get sidetracked into theoretical innovation. Yes, we dohave an interest in theory, but that interest is not metaphysicalinterest in the theory itself, it is interest in what the theory isworth and how it can be implemented.</p><p>What are the hot topics of the moment? How should we effectively andcreatively apply those theories to solve real-world problems in aspecific industrial context. That should be our main business. Studyingtheories and thinking about how to use them creatively is our sideproject and hobby.</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;original-chinese&quot;&gt;Original (Chinese)&lt;/h1&gt;
-&lt;p&gt;我们的思维，的确是工程师的思维。这体现在我们日常生活的方方面面：不论是开车，还是做菜，还是写代码，还是制定计划，我们总是会非常关注计划，关注流程，关注优化，关注总结，关注反馈</summary>
       
     
     
