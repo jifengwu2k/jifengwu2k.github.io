@@ -4,6 +4,63 @@
   
   
   <entry>
+    <title>Drinking in the Americas - Down-to-earth Drinks</title>
+    <link href="/2025/08/25/Drinking-in-the-Americas-Down-to-earth-Drinks/"/>
+    <url>/2025/08/25/Drinking-in-the-Americas-Down-to-earth-Drinks/</url>
+    
+    <content type="html"><![CDATA[<p>喝在美洲——接地气儿的饮料</p><p>Drinking in the Americas - Down-to-earth Drinks</p><p>这些饮料均在美洲诞生：</p><p>These drinks were created in the Americas:</p><h2 id="cocktails">Cocktails</h2><h3 id="rum-based">Rum-based</h3><p>🇨🇺 Cuba libre (<code>kuβa ˈliβɾe</code>)</p><ul><li>120 ml cola</li><li>50 ml white rum</li><li>10 ml Fresh lime juice</li></ul><p>🇨🇺 Mojito (<code>moˈxito</code>)</p><ul><li>45 ml white rum</li><li>20 ml fresh lime juice</li><li>6 sprigs of mint</li><li>2 teaspoons white cane sugar (or 20 ml of sugar syrup)</li><li>Soda water</li></ul><p>🇵🇷 Piña colada (<code>ˈpiɲa koˈlaða</code>)</p><ul><li>50 ml white rum</li><li>30 ml coconut cream</li><li>50 ml fresh pineapple juice</li></ul><h3 id="tequila-based">Tequila-based</h3><p>🇲🇽 Margarita</p><ul><li>50 ml tequila 100% agave</li><li>20 ml triple sec</li><li>15 ml freshly squeezed lime juice</li></ul><p>🇲🇽 Paloma</p><ul><li>50 ml 100% agave tequila</li><li>5 ml fresh lime juice</li><li>pinch of salt</li><li>100 ml pink grapefruit soda</li></ul><p>🇺🇸 Tequila sunrise</p><ul><li>45 ml tequila</li><li>90 ml fresh orange juice</li><li>15 ml grenadine syrup</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Food and Drink</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Compiling C++ Code in a Conda Environment Using Conda-managed Headers and Libraries</title>
+    <link href="/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-managed-Headers-and-Libraries/"/>
+    <url>/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-managed-Headers-and-Libraries/</url>
+    
+    <content type="html"><![CDATA[<h2 id="prerequisites">Prerequisites</h2><h3 id="common-build-variables">Common Build Variables</h3><h4 id="directly-used-by-gccclang">Directly Used by<code>gcc</code>/<code>clang</code></h4><p>These environment variables are <strong>automatically used by<code>gcc</code>/<code>clang</code> themselves</strong>.</p><ul><li><code>CPATH</code><ul><li>Colon-separated list of directories to search for headers beforebuilt-in include paths.</li><li>Like passing multiple <code>-I</code> options.</li></ul></li><li><code>LIBRARY_PATH</code><ul><li>Colon-separated list of directories to search for libraries(<code>.so</code>/<code>.a</code>) at <strong>link time</strong>.</li><li>Like passing multiple <code>-L</code> options.</li><li><strong>Doesn't affect how the executable finds shared librarieswhen running.</strong></li></ul></li></ul><h4 id="for-build-systems-make-cmake-etc.">For Build Systems(<code>make</code>, <code>cmake</code>, etc.)</h4><p>These environment variables are not used by compilers<strong>unless</strong> your build tool (<code>make</code>,<code>cmake</code>, etc.) or script expands them.</p><ul><li><code>CC</code> / <code>CXX</code>:<ul><li>Which C/C++ compiler to use.</li></ul></li><li><code>CFLAGS</code> / <code>CXXFLAGS</code>:<ul><li>Extra flags for compiling C or C++ respectively, e.g.,<code>-O2 -g -Wall</code>.</li></ul></li><li><code>LDFLAGS</code>:<ul><li>Extra flags when linking, such as <code>-L/path/to/lib</code>,<code>-lfoo</code>, <code>-Wl,-rpath,/my/libs</code>.</li></ul></li></ul><blockquote><p>🚫 <strong>Never stuff include/library/link flags inside<code>$CXX</code> or <code>$CC</code>. Always set them as separatevariables, or pass them directly on the command line to thecompiler.</strong></p></blockquote><h3 id="c-libraries-in-conda-environments">C++ Libraries in CondaEnvironments</h3><p>When you install a C++ library from <code>conda-forge</code>, it'splaced inside your current environment, not in a system-widedirectory.</p><ul><li>Headers: <code>$CONDA_PREFIX/include</code></li><li>Libraries: <code>$CONDA_PREFIX/lib</code></li></ul><blockquote><p>Exception: The <strong>C runtime</strong> (<code>libc.so</code>,<code>libm.so</code>, etc.) always comes from the system, not Conda.</p></blockquote><h2 id="example">Example</h2><h3 id="create-a-conda-environment-for-c-compilation">Create a CondaEnvironment for C++ Compilation</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda create -n clangxx-env -y<br>conda activate clangxx-env<br>conda install -c conda-forge clang clangxx libcxx libcxxabi libcxx-devel -y<br></code></pre></td></tr></table></figure><ul><li><code>libcxx</code>, <code>libcxxabi</code>,<code>libcxx-devel</code>: LLVM's C++ standard library and headers.</li></ul><h3 id="tell-the-compiler-where-to-look-for-headers-and-libraries">Tellthe Compiler Where to Look for Headers and Libraries</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CPATH=<span class="hljs-string">&quot;<span class="hljs-variable">$CONDA_PREFIX</span>/include&quot;</span><br><span class="hljs-built_in">export</span> LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$CONDA_PREFIX</span>/lib&quot;</span><br></code></pre></td></tr></table></figure><p>This automatically adds Conda's include and lib directories to<code>clang</code>'s search paths.</p><h3 id="set-common-build-variables-for-build-systems">Set Common BuildVariables for Build Systems</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CC=<span class="hljs-string">&quot;clang&quot;</span><br><span class="hljs-built_in">export</span> CXX=<span class="hljs-string">&quot;clang++ -stdlib=libc++&quot;</span><br><span class="hljs-built_in">export</span> LDFLAGS=<span class="hljs-string">&quot;-Wl,-rpath,<span class="hljs-variable">$LIBRARY_PATH</span>&quot;</span><br></code></pre></td></tr></table></figure><ul><li><code>LDFLAGS</code> sets an <code>rpath</code> such that thegenerated executable or shared library will hard-code<code>LIBRARY_PATH</code> as a shared library search path.</li></ul><h3 id="compile-a-program">Compile a Program</h3><p>Let's say you have <code>hello_world.cpp</code>.</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-variable">$CXX</span> hello_world.cpp -o hello_world <span class="hljs-variable">$LDFLAGS</span><br></code></pre></td></tr></table></figure><h3 id="check-your-binary">Check Your Binary</h3><p>You can check what dynamic libraries your binary depends on using<code>ldd hello_world</code>:</p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ ldd hello_world<br>    linux-vdso.so.<span class="hljs-number">1</span> (<span class="hljs-number">0</span>x00007ffd05ead000)<br>    libc++.so.<span class="hljs-number">1</span> =&gt; <span class="hljs-regexp">/home/y</span>ouruser<span class="hljs-regexp">/miniconda3/</span>envs<span class="hljs-regexp">/clangxx-env/</span>lib/libc++.so.<span class="hljs-number">1</span> (<span class="hljs-number">0</span>x000071f5b0e86000)<br>    libc++abi.so.<span class="hljs-number">1</span> =&gt; <span class="hljs-regexp">/home/y</span>ouruser<span class="hljs-regexp">/miniconda3/</span>envs<span class="hljs-regexp">/clangxx-env/</span>lib/libc++abi.so.<span class="hljs-number">1</span> (<span class="hljs-number">0</span>x000071f5b0e48000)<br>    libm.so.<span class="hljs-number">6</span> =&gt; <span class="hljs-regexp">/lib/</span>x86_64-linux-gnu/libm.so.<span class="hljs-number">6</span> (<span class="hljs-number">0</span>x000071f5b0d44000)<br>    libc.so.<span class="hljs-number">6</span> =&gt; <span class="hljs-regexp">/lib/</span>x86_64-linux-gnu/libc.so.<span class="hljs-number">6</span> (<span class="hljs-number">0</span>x000071f5b0a00000)<br>    ...<br></code></pre></td></tr></table></figure><p><strong>Good sign:</strong> For anything above <code>libc</code>, itshould point inside your Conda environment (e.g.,<code>libc++.so.1</code>), not the system.</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Development Environments</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Manipulating Videos Using `ffmpeg`</title>
+    <link href="/2025/08/23/Manipulating-Videos-Using-ffmpeg/"/>
+    <url>/2025/08/23/Manipulating-Videos-Using-ffmpeg/</url>
+    
+    <content type="html"><![CDATA[<h2 id="reduce-a-videos-resolution-by-half">Reduce a Video's Resolutionby Half</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ffmpeg -i &lt;input_file&gt; -vf <span class="hljs-string">&quot;scale=iw/2:ih/2&quot;</span> -c:a copy &lt;output_file&gt;<br></code></pre></td></tr></table></figure><ul><li>Use the <code>scale</code> filter with expressions to halve thewidth and height:<ul><li><code>iw</code> = input width, <code>ih</code> = input height.</li></ul></li><li><code>-c:a copy</code> copies the audio stream withoutre-encoding.</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Multimedia</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>微波炉电饭煲食谱</title>
     <link href="/2025/08/22/%E5%BE%AE%E6%B3%A2%E7%82%89%E7%94%B5%E9%A5%AD%E7%85%B2%E9%A3%9F%E8%B0%B1/"/>
     <url>/2025/08/22/%E5%BE%AE%E6%B3%A2%E7%82%89%E7%94%B5%E9%A5%AD%E7%85%B2%E9%A3%9F%E8%B0%B1/</url>
@@ -13,7 +70,7 @@
     
     <categories>
       
-      <category>Cooking</category>
+      <category>Food and Drink</category>
       
     </categories>
     
@@ -51,7 +108,7 @@
     
     <categories>
       
-      <category>Cooking</category>
+      <category>Food and Drink</category>
       
     </categories>
     
@@ -89,7 +146,7 @@
     
     <categories>
       
-      <category>Developer Experience</category>
+      <category>Development Environments</category>
       
     </categories>
     
@@ -184,7 +241,7 @@
     
     <categories>
       
-      <category>Developer Experience</category>
+      <category>Development Environments</category>
       
     </categories>
     
@@ -283,7 +340,7 @@
     
     <categories>
       
-      <category>Developer Experience</category>
+      <category>Development Environments</category>
       
     </categories>
     

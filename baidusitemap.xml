@@ -2,11 +2,35 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://jifengwu2k.github.io/2025/08/22/%E5%BE%AE%E6%B3%A2%E7%82%89%E7%94%B5%E9%A5%AD%E7%85%B2%E9%A3%9F%E8%B0%B1/</loc>
-    <lastmod>2025-08-24</lastmod>
+    <lastmod>2025-08-26</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/08/21/Eating-in-the-Americas-Down-to-earth-Foodstuffs/</loc>
+    <lastmod>2025-08-26</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/08/25/Drinking-in-the-Americas-Down-to-earth-Drinks/</loc>
+    <lastmod>2025-08-26</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-managed-Headers-and-Libraries/</loc>
+    <lastmod>2025-08-25</lastmod>
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2025/07/10/Managing-Development-Environments-with-Conda/</loc>
-    <lastmod>2025-08-22</lastmod>
+    <lastmod>2025-08-25</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/08/11/Powering-clangd-based-C-IDEs-with-compile-commands-json/</loc>
+    <lastmod>2025-08-25</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/08/12/How-to-Make-VS-Code-s-Language-Detection-Sane-and-Deterministic/</loc>
+    <lastmod>2025-08-25</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/08/23/Manipulating-Videos-Using-ffmpeg/</loc>
+    <lastmod>2025-08-24</lastmod>
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/</loc>
@@ -22,10 +46,6 @@
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2025/08/21/Setting-Up-a-Headless-VNC-Server-for-Remote-Desktop-Access/</loc>
-    <lastmod>2025-08-21</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/08/21/Eating-in-the-Americas-Down-to-earth-Foodstuffs/</loc>
     <lastmod>2025-08-21</lastmod>
   </url>
   <url>
@@ -102,10 +122,6 @@
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2025/07/11/Python-Packaging-Managing-Package-Files-Compiling-Extension-Modules-When-Building-a-Wheel-and-Uploading-to-PyPI/</loc>
-    <lastmod>2025-08-13</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/08/11/Powering-clangd-based-C-IDEs-with-compile-commands-json/</loc>
     <lastmod>2025-08-13</lastmod>
   </url>
   <url>
@@ -346,10 +362,6 @@
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2024/08/23/Lessons-learned-from-master-s-thesis/</loc>
-    <lastmod>2025-08-13</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/08/12/How-to-Make-VS-Code-s-Language-Detection-Sane-and-Deterministic/</loc>
     <lastmod>2025-08-13</lastmod>
   </url>
   <url>
