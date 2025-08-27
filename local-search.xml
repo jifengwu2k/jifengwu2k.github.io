@@ -4,6 +4,44 @@
   
   
   <entry>
+    <title>Manipulating PDFs from the Unix Command Line</title>
+    <link href="/2025/08/27/Manipulating-PDFs-from-the-Unix-Command-Line/"/>
+    <url>/2025/08/27/Manipulating-PDFs-from-the-Unix-Command-Line/</url>
+    
+    <content type="html"><![CDATA[<p>The <a href="https://poppler.freedesktop.org/">Poppler utilities</a>provide many Unix command-line tools for manipulating PDFs. Installvia:</p><ul><li><code>sudo apt-get install poppler-utils</code> (Ubuntu)</li><li><code>sudo apk add poppler-utils</code> (Alpine)</li><li><code>brew install poppler</code> (macOS)</li></ul><h2 id="extract-text-from-a-pdf">Extract Text from a PDF</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdftotext input.pdf output.txt<br></code></pre></td></tr></table></figure><h2 id="merge-pdfs-together">Merge PDFs Together</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdfunite file1.pdf file2.pdf merged.pdf<br></code></pre></td></tr></table></figure><h2 id="split-extract-pages-from-a-pdf">Split (Extract) Pages from aPDF</h2><p>This will split each page of <code>input.pdf</code> to<code>output_1.pdf</code>, <code>output_2.pdf</code>, etc.</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdfseparate input.pdf output_%d.pdf<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>Multimedia</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Philosophical Idioms</title>
+    <link href="/2025/08/27/Philosophical-Idioms/"/>
+    <url>/2025/08/27/Philosophical-Idioms/</url>
+    
+    <content type="html"><![CDATA[<h2 id="cutting-through-the-nonsense">Cutting Through the Nonsense</h2><blockquote><p>“艾玛，这不就是咱们屯子里的那个……吗？”</p></blockquote><ul><li>"Ain't that just that ... from our neck o' the woods?"</li></ul><blockquote><p>"... is by definition ..."</p></blockquote><ul><li>Literal: “……从定义上讲/从本质上说是……</li><li>Idiomatic: “……说白了就是……”</li></ul><blockquote><p>"That's a feature, not a bug."</p></blockquote><ul><li>Literal: “那是功能，不是缺陷。”</li><li>Idiomatic: “这是设计好的，不是整劈叉了。”</li></ul><h2 id="your-situation-shapes-your-views">Your Situation Shapes YourViews</h2><blockquote><p>“屁股决定脑袋。”</p></blockquote><ul><li>Literal: "Your ass determines your head."</li><li>Idiomatic: "Where you stand depends on where you sit." (A classicU.S. political saying with the same idea.)</li></ul><h2 id="pragmatism-and-results-driven-thinking">Pragmatism andResults-Driven Thinking</h2><blockquote><p>“实践是检验真理的唯一标准。”</p></blockquote><ul><li>Literal: "Practice is the sole criterion for testing truth."</li><li>Idiomatic: "Actions are the ultimate test of truth."</li></ul><blockquote><p>“不管黑猫白猫，能捉到老鼠就是好猫。”</p></blockquote><ul><li>Literal: "No matter whether it's a black cat or a white cat, as longas it catches mice, it's a good cat."</li><li>Idiomatic: "If it gets the job done, it's good enough."</li></ul><h2 id="knowing-who-you-are-doing-your-own-thing">Knowing Who You Are&amp; Doing Your Own Thing</h2><blockquote><p>“认清自己几斤几两。” “撒泡尿照照自己。”</p></blockquote><ul><li>Literal: "Recognize how many pounds and ounces you weigh." / "Take apiss and look at yourself in it."</li><li>Idiomatic: "Who do you think you are?"</li></ul><blockquote><p>“你们没有资格说，你们从实力地位出发同……谈话。”</p></blockquote><ul><li>"You do not have the qualification to say that you want to speak to... from a position of strength."</li></ul><blockquote><p>“我蛮夷也，不与中国之号谥。”</p></blockquote><ul><li>Literal: "I'm a barbarian; I do not accept the designations of theCentral Kingdom."</li><li>Idiomatic: "I'm a barbarian. I don't play by your rules."</li></ul><blockquote><p>“入关之后自有大儒为我辩经。”</p></blockquote><ul><li>Literal: "After entering the pass, there will naturally be greatscholars to argue scriptures on my behalf."</li><li>Idiomatic: "Let the philosophers debate after I've made mymove."</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Linguistics</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Drinking in the Americas - Down-to-earth Drinks</title>
     <link href="/2025/08/25/Drinking-in-the-Americas-Down-to-earth-Drinks/"/>
     <url>/2025/08/25/Drinking-in-the-Americas-Down-to-earth-Drinks/</url>
@@ -61,11 +99,11 @@
   
   
   <entry>
-    <title>微波炉电饭煲食谱</title>
-    <link href="/2025/08/22/%E5%BE%AE%E6%B3%A2%E7%82%89%E7%94%B5%E9%A5%AD%E7%85%B2%E9%A3%9F%E8%B0%B1/"/>
-    <url>/2025/08/22/%E5%BE%AE%E6%B3%A2%E7%82%89%E7%94%B5%E9%A5%AD%E7%85%B2%E9%A3%9F%E8%B0%B1/</url>
+    <title>简易食谱</title>
+    <link href="/2025/08/22/%E7%AE%80%E6%98%93%E9%A3%9F%E8%B0%B1/"/>
+    <url>/2025/08/22/%E7%AE%80%E6%98%93%E9%A3%9F%E8%B0%B1/</url>
     
-    <content type="html"><![CDATA[<h2 id="焖面焖饭-一锅出">焖面/焖饭 (一锅出)</h2><ul><li><ahref="/static/videos/微波炉豆角五花肉焖面.mp4">微波炉豆角五花肉焖面</a></li><li><ahref="/static/videos/电饭煲一颗番茄焖饭.mp4">电饭煲一颗番茄焖饭</a></li><li><ahref="/static/videos/电饭煲土豆胡萝卜洋葱玉米香菇青椒鸡腿焖饭.mp4">电饭煲土豆胡萝卜洋葱玉米香菇青椒鸡腿焖饭</a></li><li><a href="/static/videos/电饭煲火锅焖饭.mp4">电饭煲火锅焖饭</a></li><li><ahref="/static/videos/电饭煲豆角土豆焖饭.mp4">电饭煲豆角土豆焖饭</a></li><li><a href="/static/videos/电饭煲豆角焖面.mp4">电饭煲豆角焖面</a></li><li><a href="/static/videos/电饭煲豆角焖饭.mp4">电饭煲豆角焖饭</a></li><li><a href="/static/videos/电饭煲煲仔饭.mp4">电饭煲煲仔饭</a></li></ul><h2 id="主食">主食</h2><ul><li><a href="/static/videos/微波炉土豆泥.mp4">微波炉土豆泥</a></li><li><ahref="/static/videos/微波炉南瓜、红薯、玉米、土豆、山药.mp4">微波炉南瓜、红薯、玉米、土豆、山药</a></li><li><a href="/static/videos/电饭煲恰巴塔.mp4">电饭煲恰巴塔</a></li><li><a href="/static/videos/肉馅饼.mp4">肉馅饼</a></li></ul><h2 id="素菜">素菜</h2><ul><li><ahref="/static/videos/微波炉青椒擂皮蛋.mp4">微波炉青椒擂皮蛋</a></li><li><ahref="/static/videos/微波炉土豆鸡蛋西兰花圣女果虾仁沙拉.mp4">微波炉土豆鸡蛋西兰花圣女果虾仁沙拉</a></li><li><ahref="/static/videos/微波炉茄辣西（1）.mp4">微波炉茄辣西（1）</a></li><li><ahref="/static/videos/微波炉茄辣西（2）.mp4">微波炉茄辣西（2）</a></li><li><ahref="/static/videos/微波炉蒜蓉空心菜.mp4">微波炉蒜蓉空心菜</a></li><li><ahref="/static/videos/微波炉酸辣土豆丝.mp4">微波炉酸辣土豆丝</a></li><li><ahref="/static/videos/电饭煲地三鲜（1）.mp4">电饭煲地三鲜（1）</a></li><li><ahref="/static/videos/电饭煲地三鲜（2）.mp4">电饭煲地三鲜（2）</a></li></ul><h2 id="荤菜">荤菜</h2><ul><li><a href="/static/videos/微波炉清蒸鱼.mp4">微波炉清蒸鱼</a></li><li><a href="/static/videos/微波炉白灼虾.mp4">微波炉白灼虾</a></li><li><a href="/static/videos/微波炉盐焗鸡.mp4">微波炉盐焗鸡</a></li><li><a href="/static/videos/微波炉黄焖鸡.mp4">微波炉黄焖鸡</a></li><li><a href="/static/videos/电饭煲黄焖鸡.mp4">电饭煲黄焖鸡</a></li><li><ahref="/static/videos/电饭煲水蒸蛋、丝瓜蒸鸡腿.mp4">电饭煲水蒸蛋、丝瓜蒸鸡腿</a></li><li><a href="/static/videos/电饭煲蜜汁叉烧.mp4">电饭煲蜜汁叉烧</a></li><li><ahref="/static/videos/微波炉鸡蛋肉饼汤.mp4">微波炉鸡蛋肉饼汤</a></li><li><ahref="/static/videos/电饭煲土豆番茄焖牛肉.mp4">电饭煲土豆番茄焖牛肉</a></li><li><ahref="/static/videos/电饭煲番茄炖牛腩.mp4">电饭煲番茄炖牛腩</a></li></ul><h2 id="食材准备">食材准备</h2><ul><li><a href="/static/videos/微波炉熬猪油.mp4">微波炉熬猪油</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<h2 id="轻食">轻食</h2><ul><li><a href="/static/images/玉米鸡蛋火龙果.jpg">玉米鸡蛋火龙果</a></li></ul><h2 id="主食">主食</h2><ul><li><a href="/static/videos/微波炉土豆泥.mp4">微波炉土豆泥</a></li><li><ahref="/static/videos/微波炉南瓜、红薯、玉米、土豆、山药.mp4">微波炉南瓜、红薯、玉米、土豆、山药</a></li><li><a href="/static/videos/电饭煲恰巴塔.mp4">电饭煲恰巴塔</a></li><li><a href="/static/videos/肉馅饼.mp4">肉馅饼</a></li></ul><h2 id="素菜">素菜</h2><ul><li><ahref="/static/videos/微波炉青椒擂皮蛋.mp4">微波炉青椒擂皮蛋</a></li><li><ahref="/static/videos/微波炉土豆鸡蛋西兰花圣女果虾仁沙拉.mp4">微波炉土豆鸡蛋西兰花圣女果虾仁沙拉</a></li><li><ahref="/static/videos/微波炉茄辣西（1）.mp4">微波炉茄辣西（1）</a></li><li><ahref="/static/videos/微波炉茄辣西（2）.mp4">微波炉茄辣西（2）</a></li><li><ahref="/static/videos/微波炉蒜蓉空心菜.mp4">微波炉蒜蓉空心菜</a></li><li><ahref="/static/videos/微波炉酸辣土豆丝.mp4">微波炉酸辣土豆丝</a></li><li><ahref="/static/videos/电饭煲地三鲜（1）.mp4">电饭煲地三鲜（1）</a></li><li><ahref="/static/videos/电饭煲地三鲜（2）.mp4">电饭煲地三鲜（2）</a></li></ul><h2 id="荤菜">荤菜</h2><ul><li><a href="/static/videos/微波炉清蒸鱼.mp4">微波炉清蒸鱼</a></li><li><a href="/static/videos/微波炉白灼虾.mp4">微波炉白灼虾</a></li><li><a href="/static/videos/微波炉盐焗鸡.mp4">微波炉盐焗鸡</a></li><li><a href="/static/videos/微波炉黄焖鸡.mp4">微波炉黄焖鸡</a></li><li><a href="/static/videos/电饭煲黄焖鸡.mp4">电饭煲黄焖鸡</a></li><li><ahref="/static/videos/电饭煲水蒸蛋、丝瓜蒸鸡腿.mp4">电饭煲水蒸蛋、丝瓜蒸鸡腿</a></li><li><a href="/static/videos/电饭煲蜜汁叉烧.mp4">电饭煲蜜汁叉烧</a></li><li><ahref="/static/videos/微波炉鸡蛋肉饼汤.mp4">微波炉鸡蛋肉饼汤</a></li><li><ahref="/static/videos/电饭煲土豆番茄焖牛肉.mp4">电饭煲土豆番茄焖牛肉</a></li><li><ahref="/static/videos/电饭煲番茄炖牛腩.mp4">电饭煲番茄炖牛腩</a></li></ul><h2 id="饭菜一锅出">饭菜一锅出</h2><ul><li><ahref="/static/videos/微波炉豆角五花肉焖面.mp4">微波炉豆角五花肉焖面</a></li><li><ahref="/static/videos/电饭煲一颗番茄焖饭.mp4">电饭煲一颗番茄焖饭</a></li><li><ahref="/static/videos/电饭煲土豆胡萝卜洋葱玉米香菇青椒鸡腿焖饭.mp4">电饭煲土豆胡萝卜洋葱玉米香菇青椒鸡腿焖饭</a></li><li><a href="/static/videos/电饭煲火锅焖饭.mp4">电饭煲火锅焖饭</a></li><li><ahref="/static/videos/电饭煲豆角土豆焖饭.mp4">电饭煲豆角土豆焖饭</a></li><li><a href="/static/videos/电饭煲豆角焖面.mp4">电饭煲豆角焖面</a></li><li><a href="/static/videos/电饭煲豆角焖饭.mp4">电饭煲豆角焖饭</a></li><li><a href="/static/videos/电饭煲煲仔饭.mp4">电饭煲煲仔饭</a></li></ul><h2 id="食材准备">食材准备</h2><ul><li><a href="/static/videos/微波炉熬猪油.mp4">微波炉熬猪油</a></li></ul>]]></content>
     
     
     <categories>
