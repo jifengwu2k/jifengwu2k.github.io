@@ -1,3 +1,6 @@
+https://jifengwu2k.github.io/index.html
+https://jifengwu2k.github.io/2022/10/20/Personal-Website-Design-Considerations/
+https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/
 https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/
 https://jifengwu2k.github.io/2025/08/29/%E6%96%B9%E4%BE%BF%E5%9C%A8%E5%AE%B6%E5%AE%8C%E6%88%90%E7%9A%84%E7%AE%80%E6%98%93%E8%BF%90%E5%8A%A8/
 https://jifengwu2k.github.io/2025/08/27/Manipulating-PDFs-from-the-Unix-Command-Line/
@@ -41,7 +44,6 @@ https://jifengwu2k.github.io/2023/02/10/Paper-Reading-Types-and-Programming-Lang
 https://jifengwu2k.github.io/2023/02/26/Paper-Reading-Types-and-Programming-Languages-Chapter-22/
 https://jifengwu2k.github.io/2023/01/25/Paper-Reading-Types-and-Programming-Languages-Chapter-9-and-Chapter-11/
 https://jifengwu2k.github.io/2023/06/09/Parsing-Command-line-Options-in-Shell-Scripts-Using-getopts/
-https://jifengwu2k.github.io/2022/10/20/Personal-Website-Design-Considerations/
 https://jifengwu2k.github.io/2024/07/02/Pay-Attention-to-the-Other-Person-s-Easily-Overlooked-Emotional-State-When-Chatting-Online/
 https://jifengwu2k.github.io/2022/10/04/Paper-Reading-KLEE-unassisted-and-automatic-generation-of-high-coverage-tests-for-complex-systems-programs/
 https://jifengwu2k.github.io/2022/11/16/Paper-Reading-Lightweight-Verification-of-Array-Indexing/
@@ -98,7 +100,6 @@ https://jifengwu2k.github.io/2025/07/24/Creating-Custom-Data-Structures-from-Abs
 https://jifengwu2k.github.io/2023/10/23/Conversation-with-Prof-Robert-Xiao/
 https://jifengwu2k.github.io/2023/10/10/Conversation-with-Prof-Margo-Seltzer/
 https://jifengwu2k.github.io/2023/06/10/Batch-Killing-Processes-Looked-up-Through-ps-aux-grep-process_name/
-https://jifengwu2k.github.io/index.html
 https://jifengwu2k.github.io/categories/index.html
 https://jifengwu2k.github.io/projects/index.html
 https://jifengwu2k.github.io/tags/index.html

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://jifengwu2k.github.io/2022/10/20/Personal-Website-Design-Considerations/</loc>
+    <lastmod>2025-08-31</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/</loc>
+    <lastmod>2025-08-31</lastmod>
+  </url>
+  <url>
     <loc>https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/</loc>
     <lastmod>2025-08-31</lastmod>
   </url>
@@ -170,10 +178,6 @@
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2023/06/09/Parsing-Command-line-Options-in-Shell-Scripts-Using-getopts/</loc>
-    <lastmod>2025-08-13</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2022/10/20/Personal-Website-Design-Considerations/</loc>
     <lastmod>2025-08-13</lastmod>
   </url>
   <url>
