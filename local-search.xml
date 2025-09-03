@@ -4,11 +4,49 @@
   
   
   <entry>
+    <title>穿搭技巧</title>
+    <link href="/2025/09/03/%E7%A9%BF%E6%90%AD%E6%8A%80%E5%B7%A7/"/>
+    <url>/2025/09/03/%E7%A9%BF%E6%90%AD%E6%8A%80%E5%B7%A7/</url>
+    
+    <content type="html"><![CDATA[<ul><li><a href="/static/videos/怎么穿“显高”！.mp4">怎么穿“显高”！</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Fashion</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>PyPI Packages</title>
     <link href="/2025/08/31/PyPI-Packages/"/>
     <url>/2025/08/31/PyPI-Packages/</url>
     
-    <content type="html"><![CDATA[<pre><code class=" mermaid">graph LR    posix_or_nt --&gt; textcompat    textcompat --&gt; chat_completions_conversation    intersperse --&gt; chat_completions_conversation    text_to_identifier</code></pre>]]></content>
+    <content type="html"><![CDATA[<pre><code class=" mermaid">graph LR    posix_or_nt --&gt; textcompat    textcompat --&gt; chat_completions_conversation    intersperse --&gt; chat_completions_conversation    text_to_identifier    canonical_interval    fixed_width_int    canonical_interval --&gt; canonical_range    canonical_range --&gt; determine_slice_assignment_action    canonical_interval --&gt; determine_slice_assignment_action        fixed_width_int --&gt; tuplehash    canonical_range --&gt; cowlist    determine_slice_assignment_action --&gt; cowlist    tuplehash --&gt; cowlist        cowlist --&gt; tree_traversals</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>Reference</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Favorite Quotes</title>
+    <link href="/2025/08/31/Favorite-Quotes/"/>
+    <url>/2025/08/31/Favorite-Quotes/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>"The best slave is the one who thinks he is free."</p><p>Johann Wolfgang von Goethe</p></blockquote><blockquote><p>"Philosophers have only interpreted the world, in various ways; thepoint, however, is to change it."</p><p>Karl Marx</p></blockquote><blockquote><p>We are all products of evolution, living within a universe-scalegenetic algorithm. Each of us emerges with a unique combination ofgenotypes and phenotypes, shaped by countless mutations and divergingpaths.</p><p>But we are not mere subjects of blind selection.</p><p>Through wisdom and relentless effort, we have the extraordinaryability to understand and bend the fitness function that governs ourfate.</p><p>Jifeng Wu</p></blockquote>]]></content>
     
     
     <categories>
@@ -99,25 +137,6 @@
   
   
   <entry>
-    <title>Drinking in the Americas - Down-to-earth Drinks</title>
-    <link href="/2025/08/25/Drinking-in-the-Americas-Down-to-earth-Drinks/"/>
-    <url>/2025/08/25/Drinking-in-the-Americas-Down-to-earth-Drinks/</url>
-    
-    <content type="html"><![CDATA[<p>喝在美洲——接地气儿的饮料</p><p>Drinking in the Americas - Down-to-earth Drinks</p><p>这些饮料均在美洲诞生：</p><p>These drinks were created in the Americas:</p><h2 id="cocktails">Cocktails</h2><h3 id="rum-based">Rum-based</h3><p>🇨🇺 Cuba libre (<code>kuβa ˈliβɾe</code>)</p><ul><li>120 ml cola</li><li>50 ml white rum</li><li>10 ml Fresh lime juice</li></ul><p>🇨🇺 Mojito (<code>moˈxito</code>)</p><ul><li>45 ml white rum</li><li>20 ml fresh lime juice</li><li>6 sprigs of mint</li><li>2 teaspoons white cane sugar (or 20 ml of sugar syrup)</li><li>Soda water</li></ul><p>🇵🇷 Piña colada (<code>ˈpiɲa koˈlaða</code>)</p><ul><li>50 ml white rum</li><li>30 ml coconut cream</li><li>50 ml fresh pineapple juice</li></ul><h3 id="tequila-based">Tequila-based</h3><p>🇲🇽 Margarita</p><ul><li>50 ml tequila 100% agave</li><li>20 ml triple sec</li><li>15 ml freshly squeezed lime juice</li></ul><p>🇲🇽 Paloma</p><ul><li>50 ml 100% agave tequila</li><li>5 ml fresh lime juice</li><li>pinch of salt</li><li>100 ml pink grapefruit soda</li></ul><p>🇺🇸 Tequila sunrise</p><ul><li>45 ml tequila</li><li>90 ml fresh orange juice</li><li>15 ml grenadine syrup</li></ul>]]></content>
-    
-    
-    <categories>
-      
-      <category>Food and Drink</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>Compiling C++ Code in a Conda Environment Using Conda-managed Headers and Libraries</title>
     <link href="/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-managed-Headers-and-Libraries/"/>
     <url>/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-managed-Headers-and-Libraries/</url>
@@ -160,7 +179,7 @@
     <link href="/2025/08/22/%E7%AE%80%E6%98%93%E9%A3%9F%E8%B0%B1/"/>
     <url>/2025/08/22/%E7%AE%80%E6%98%93%E9%A3%9F%E8%B0%B1/</url>
     
-    <content type="html"><![CDATA[<h2 id="轻食">轻食</h2><ul><li><a href="/static/images/玉米鸡蛋火龙果.jpg">玉米鸡蛋火龙果</a></li></ul><h2 id="主食">主食</h2><ul><li><a href="/static/videos/微波炉土豆泥.mp4">微波炉土豆泥</a></li><li><ahref="/static/videos/微波炉南瓜、红薯、玉米、土豆、山药.mp4">微波炉南瓜、红薯、玉米、土豆、山药</a></li><li><a href="/static/videos/电饭煲恰巴塔.mp4">电饭煲恰巴塔</a></li><li><a href="/static/videos/肉馅饼.mp4">肉馅饼</a></li></ul><h2 id="素菜">素菜</h2><ul><li><ahref="/static/videos/微波炉青椒擂皮蛋.mp4">微波炉青椒擂皮蛋</a></li><li><ahref="/static/videos/微波炉土豆鸡蛋西兰花圣女果虾仁沙拉.mp4">微波炉土豆鸡蛋西兰花圣女果虾仁沙拉</a></li><li><ahref="/static/videos/微波炉茄辣西（1）.mp4">微波炉茄辣西（1）</a></li><li><ahref="/static/videos/微波炉茄辣西（2）.mp4">微波炉茄辣西（2）</a></li><li><ahref="/static/videos/微波炉蒜蓉空心菜.mp4">微波炉蒜蓉空心菜</a></li><li><ahref="/static/videos/微波炉酸辣土豆丝.mp4">微波炉酸辣土豆丝</a></li><li><ahref="/static/videos/电饭煲地三鲜（1）.mp4">电饭煲地三鲜（1）</a></li><li><ahref="/static/videos/电饭煲地三鲜（2）.mp4">电饭煲地三鲜（2）</a></li></ul><h2 id="荤菜">荤菜</h2><ul><li><a href="/static/videos/微波炉清蒸鱼.mp4">微波炉清蒸鱼</a></li><li><a href="/static/videos/微波炉白灼虾.mp4">微波炉白灼虾</a></li><li><a href="/static/videos/微波炉盐焗鸡.mp4">微波炉盐焗鸡</a></li><li><a href="/static/videos/微波炉黄焖鸡.mp4">微波炉黄焖鸡</a></li><li><a href="/static/videos/电饭煲黄焖鸡.mp4">电饭煲黄焖鸡</a></li><li><ahref="/static/videos/电饭煲水蒸蛋、丝瓜蒸鸡腿.mp4">电饭煲水蒸蛋、丝瓜蒸鸡腿</a></li><li><a href="/static/videos/电饭煲蜜汁叉烧.mp4">电饭煲蜜汁叉烧</a></li><li><ahref="/static/videos/微波炉鸡蛋肉饼汤.mp4">微波炉鸡蛋肉饼汤</a></li><li><ahref="/static/videos/电饭煲土豆番茄焖牛肉.mp4">电饭煲土豆番茄焖牛肉</a></li><li><ahref="/static/videos/电饭煲番茄炖牛腩.mp4">电饭煲番茄炖牛腩</a></li></ul><h2 id="饭菜一锅出">饭菜一锅出</h2><ul><li><ahref="/static/videos/微波炉豆角五花肉焖面.mp4">微波炉豆角五花肉焖面</a></li><li><ahref="/static/videos/电饭煲一颗番茄焖饭.mp4">电饭煲一颗番茄焖饭</a></li><li><ahref="/static/videos/电饭煲土豆胡萝卜洋葱玉米香菇青椒鸡腿焖饭.mp4">电饭煲土豆胡萝卜洋葱玉米香菇青椒鸡腿焖饭</a></li><li><a href="/static/videos/电饭煲火锅焖饭.mp4">电饭煲火锅焖饭</a></li><li><ahref="/static/videos/电饭煲豆角土豆焖饭.mp4">电饭煲豆角土豆焖饭</a></li><li><a href="/static/videos/电饭煲豆角焖面.mp4">电饭煲豆角焖面</a></li><li><a href="/static/videos/电饭煲豆角焖饭.mp4">电饭煲豆角焖饭</a></li><li><a href="/static/videos/电饭煲煲仔饭.mp4">电饭煲煲仔饭</a></li></ul><h2 id="食材准备">食材准备</h2><ul><li><a href="/static/videos/微波炉熬猪油.mp4">微波炉熬猪油</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<blockquote><p>切忌用电饭煲在没有饭的情况下焖菜或炖菜，电饭煲盖会有大量难以清洗的残留物。</p><p>禁止像用水炖菜一样用牛奶炖菜，会导致牛奶中的蛋白凝结，显得比较恶心。</p></blockquote><h2 id="轻食">轻食</h2><ul><li><a href="/static/images/玉米鸡蛋火龙果.jpg">玉米鸡蛋火龙果</a></li><li><ahref="/static/videos/微波炉土豆鸡蛋西兰花圣女果虾仁沙拉.mp4">微波炉土豆鸡蛋西兰花圣女果虾仁沙拉</a></li></ul><h2 id="饮料">饮料</h2><ul><li><a href="/static/videos/微波炉焦糖奶茶.mp4">微波炉焦糖奶茶</a></li><li>🇨🇺 Cuba libre (<code>kuβa ˈliβɾe</code>)<ul><li>120 ml cola</li><li>50 ml white rum</li><li>10 ml Fresh lime juice</li></ul></li><li>🇨🇺 Mojito (<code>moˈxito</code>)<ul><li>45 ml white rum</li><li>20 ml fresh lime juice</li><li>6 sprigs of mint</li><li>2 teaspoons white cane sugar (or 20 ml of sugar syrup)</li><li>Soda water</li></ul></li><li>🇵🇷 Piña colada (<code>ˈpiɲa koˈlaða</code>)<ul><li>50 ml white rum</li><li>30 ml coconut cream</li><li>50 ml fresh pineapple juice</li></ul></li></ul><h2 id="主食">主食</h2><h3 id="杂粮">杂粮</h3><ul><li><a href="/static/videos/微波炉土豆泥.mp4">微波炉土豆泥</a></li><li><ahref="/static/videos/微波炉南瓜、红薯、玉米、土豆、山药.mp4">微波炉南瓜、红薯、玉米、土豆、山药</a></li><li><a href="/static/videos/微波炉蒸蜜薯.mp4">微波炉蒸蜜薯</a></li><li><ahref="/static/videos/微波炉酸辣土豆丝.mp4">微波炉酸辣土豆丝</a></li></ul><h3 id="粥品">粥品</h3><ul><li><a href="/static/videos/皮蛋瘦肉粥.mp4">皮蛋瘦肉粥</a></li></ul><h3 id="面点">面点</h3><ul><li><ahref="/static/videos/绞肉机和面蒸馒头.mp4">绞肉机和面蒸馒头</a></li><li><a href="/static/videos/电饭煲恰巴塔.mp4">电饭煲恰巴塔</a></li><li><a href="/static/videos/电饭煲馅饼.mp4">电饭煲馅饼</a></li><li><a href="/static/videos/肉馅饼.mp4">肉馅饼</a></li></ul><h2 id="素菜">素菜</h2><h3 id="绿叶蔬菜">绿叶蔬菜</h3><ul><li><ahref="/static/videos/微波炉蒜蓉空心菜.mp4">微波炉蒜蓉空心菜</a></li><li><ahref="/static/videos/微波炉火腿肠娃娃菜.mp4">微波炉火腿肠娃娃菜</a></li><li><a href="/static/videos/微波炉手撕包菜.mp4">微波炉手撕包菜</a></li></ul><h3 id="其他蔬菜">其他蔬菜</h3><ul><li><a href="/static/videos/微波炉花菜.mp4">微波炉花菜</a></li><li><ahref="/static/videos/微波炉青椒擂皮蛋.mp4">微波炉青椒擂皮蛋</a></li><li><ahref="/static/videos/微波炉香菇烧青椒.mp4">微波炉香菇烧青椒</a></li></ul><h3 id="混合蔬菜">混合蔬菜</h3><ul><li><ahref="/static/videos/微波炉茄辣西（1）.mp4">微波炉茄辣西（1）</a></li><li><ahref="/static/videos/微波炉茄辣西（2）.mp4">微波炉茄辣西（2）</a></li><li><ahref="/static/videos/电饭煲地三鲜（1）.mp4">电饭煲地三鲜（1）</a></li><li><ahref="/static/videos/电饭煲地三鲜（2）.mp4">电饭煲地三鲜（2）</a></li><li><ahref="/static/videos/电饭煲炖土豆、胡萝卜、洋葱、玉米、香菇、青红椒.mp4">电饭煲炖土豆、胡萝卜、洋葱、玉米、香菇、青红椒</a></li><li><ahref="/static/videos/微波炉懒人地三鲜.mp4">微波炉懒人地三鲜</a></li></ul><h2 id="荤菜">荤菜</h2><h3 id="肉类">肉类</h3><ul><li><a href="/static/videos/微波炉盐焗鸡.mp4">微波炉盐焗鸡</a></li><li><a href="/static/videos/微波炉黄焖鸡.mp4">微波炉黄焖鸡</a></li><li><a href="/static/videos/电饭煲黄焖鸡.mp4">电饭煲黄焖鸡</a></li><li><ahref="/static/videos/电饭煲水蒸蛋、丝瓜蒸鸡腿.mp4">电饭煲水蒸蛋、丝瓜蒸鸡腿</a></li><li><a href="/static/videos/电饭煲蜜汁叉烧.mp4">电饭煲蜜汁叉烧</a></li><li><ahref="/static/videos/微波炉鸡蛋肉饼汤.mp4">微波炉鸡蛋肉饼汤</a></li><li><ahref="/static/videos/电饭煲土豆番茄焖牛肉.mp4">电饭煲土豆番茄焖牛肉</a></li><li><ahref="/static/videos/电饭煲番茄炖牛腩.mp4">电饭煲番茄炖牛腩</a></li><li><a href="/static/videos/菠萝牛肉粒.mp4">菠萝牛肉粒</a></li><li><a href="/static/videos/电饭煲蚂蚁上树.mp4">电饭煲蚂蚁上树</a></li><li><ahref="/static/videos/电饭煲西红柿炖牛腩.mp4">电饭煲西红柿炖牛腩</a></li><li><a href="/static/videos/微波炉红烧鸡腿.mp4">微波炉红烧鸡腿</a></li><li><a href="/static/videos/微波炉鸡块.mp4">微波炉鸡块</a></li><li><a href="/static/videos/微波炉洋葱牛肉.mp4">微波炉洋葱牛肉</a></li></ul><h3 id="海鲜类">海鲜类</h3><ul><li><a href="/static/videos/微波炉清蒸鱼.mp4">微波炉清蒸鱼</a></li><li><a href="/static/videos/微波炉白灼虾.mp4">微波炉白灼虾</a></li><li><a href="/static/videos/电饭煲肉蟹煲.mp4">电饭煲肉蟹煲</a></li><li><ahref="/static/videos/微波炉鱼片、金针菇.mp4">微波炉鱼片、金针菇</a></li></ul><h2 id="饭菜一锅出">饭菜一锅出</h2><h3 id="米饭类">米饭类</h3><ul><li><ahref="/static/videos/电饭煲一颗番茄焖饭.mp4">电饭煲一颗番茄焖饭</a></li><li><ahref="/static/videos/电饭煲土豆胡萝卜洋葱玉米香菇青椒鸡腿焖饭.mp4">电饭煲土豆胡萝卜洋葱玉米香菇青椒鸡腿焖饭</a></li><li><a href="/static/videos/电饭煲火锅焖饭.mp4">电饭煲火锅焖饭</a></li><li><ahref="/static/videos/电饭煲豆角土豆焖饭.mp4">电饭煲豆角土豆焖饭</a></li><li><a href="/static/videos/电饭煲豆角焖饭.mp4">电饭煲豆角焖饭</a></li><li><a href="/static/videos/电饭煲煲仔饭.mp4">电饭煲煲仔饭</a></li><li><ahref="/static/videos/电饭煲土豆、茄子、番茄、豆角焖饭.mp4">电饭煲土豆、茄子、番茄、豆角焖饭</a></li><li><a href="/static/videos/番茄鸡蛋火腿饭.mp4">番茄鸡蛋火腿饭</a></li><li><ahref="/static/videos/番茄、鸡蛋、火腿、熟米.mp4">番茄、鸡蛋、火腿、熟米</a></li></ul><h3 id="面条类">面条类</h3><ul><li><ahref="/static/videos/微波炉豆角五花肉焖面.mp4">微波炉豆角五花肉焖面</a></li><li><a href="/static/videos/电饭煲豆角焖面.mp4">电饭煲豆角焖面</a></li></ul><h3 id="其他面食类">其他面食类</h3><ul><li><ahref="/static/videos/电饭煲洋葱、蘑菇、香肠、番茄、虾仁、芝士意大利面.mp4">电饭煲洋葱、蘑菇、香肠、番茄、虾仁、芝士意大利面</a></li><li><ahref="/static/videos/电饭煲西红柿土豆泥火鸡面.mp4">电饭煲西红柿土豆泥火鸡面</a></li></ul><h2 id="食材准备">食材准备</h2><ul><li><ahref="/static/videos/微波炉豆豉、蒜末、小米辣酱.mp4">微波炉豆豉、蒜末、小米辣酱</a></li><li><a href="/static/videos/微波炉葱油.mp4">微波炉葱油</a></li><li><a href="/static/videos/微波炉熬猪油.mp4">微波炉熬猪油</a></li></ul>]]></content>
     
     
     <categories>
