@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/</loc>
-    <lastmod>2025-09-10</lastmod>
+    <loc>https://jifengwu2k.github.io/2025/08/23/Manipulating-Videos-Using-ffmpeg/</loc>
+    <lastmod>2025-09-13</lastmod>
   </url>
   <url>
-    <loc>https://jifengwu2k.github.io/2025/08/31/Favorite-Quotes/</loc>
-    <lastmod>2025-09-09</lastmod>
+    <loc>https://jifengwu2k.github.io/2025/08/31/%E5%BA%A7%E5%8F%B3%E9%93%AD/</loc>
+    <lastmod>2025-09-13</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/09/12/%E5%8F%A4%E8%AF%97%E8%AF%8D%E7%8E%B0%E4%BB%A3%E8%A7%A3%E8%AF%BB/</loc>
+    <lastmod>2025-09-13</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/07/30/%E8%8B%B1%E8%AF%AD%E5%90%8D%E8%AF%8D%E6%96%B0%E8%AF%91/</loc>
+    <lastmod>2025-09-12</lastmod>
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/</loc>
-    <lastmod>2025-09-06</lastmod>
+    <lastmod>2025-09-10</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/</loc>
+    <lastmod>2025-09-10</lastmod>
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2025/09/05/Running-Local-LLMs-with-Ollama/</loc>
@@ -61,15 +73,7 @@
     <lastmod>2025-08-25</lastmod>
   </url>
   <url>
-    <loc>https://jifengwu2k.github.io/2025/08/23/Manipulating-Videos-Using-ffmpeg/</loc>
-    <lastmod>2025-08-24</lastmod>
-  </url>
-  <url>
     <loc>https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/</loc>
-    <lastmod>2025-08-22</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/07/30/%E8%8B%B1%E8%AF%AD%E5%90%8D%E8%AF%8D%E6%96%B0%E8%AF%91/</loc>
     <lastmod>2025-08-22</lastmod>
   </url>
   <url>
