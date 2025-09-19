@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/</loc>
+    <lastmod>2025-09-19</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/08/21/Eating-in-the-Americas-Down-to-earth-Foodstuffs/</loc>
+    <lastmod>2025-09-19</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/</loc>
+    <lastmod>2025-09-18</lastmod>
+  </url>
+  <url>
     <loc>https://jifengwu2k.github.io/2025/09/15/C-Coding-Guidelines/</loc>
     <lastmod>2025-09-15</lastmod>
   </url>
@@ -19,14 +31,6 @@
   <url>
     <loc>https://jifengwu2k.github.io/2025/07/30/%E8%8B%B1%E8%AF%AD%E5%90%8D%E8%AF%8D%E6%96%B0%E8%AF%91/</loc>
     <lastmod>2025-09-12</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/</loc>
-    <lastmod>2025-09-10</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/</loc>
-    <lastmod>2025-09-10</lastmod>
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2025/09/05/Running-Local-LLMs-with-Ollama/</loc>
@@ -55,10 +59,6 @@
   <url>
     <loc>https://jifengwu2k.github.io/2025/08/27/Philosophical-Idioms/</loc>
     <lastmod>2025-08-27</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/08/21/Eating-in-the-Americas-Down-to-earth-Foodstuffs/</loc>
-    <lastmod>2025-08-26</lastmod>
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-managed-Headers-and-Libraries/</loc>

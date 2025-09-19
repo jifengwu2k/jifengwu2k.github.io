@@ -1,11 +1,12 @@
+https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/
+https://jifengwu2k.github.io/2025/08/21/Eating-in-the-Americas-Down-to-earth-Foodstuffs/
+https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/
 https://jifengwu2k.github.io/index.html
 https://jifengwu2k.github.io/2025/09/15/C-Coding-Guidelines/
 https://jifengwu2k.github.io/2025/08/31/%E5%BA%A7%E5%8F%B3%E9%93%AD/
 https://jifengwu2k.github.io/2025/08/23/Manipulating-Videos-Using-ffmpeg/
 https://jifengwu2k.github.io/2025/09/12/%E5%8F%A4%E8%AF%97%E8%AF%8D%E7%8E%B0%E4%BB%A3%E8%A7%A3%E8%AF%BB/
 https://jifengwu2k.github.io/2025/07/30/%E8%8B%B1%E8%AF%AD%E5%90%8D%E8%AF%8D%E6%96%B0%E8%AF%91/
-https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/
-https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/
 https://jifengwu2k.github.io/2025/09/05/Running-Local-LLMs-with-Ollama/
 https://jifengwu2k.github.io/2025/08/29/%E7%AE%80%E6%98%93%E8%BF%90%E5%8A%A8/
 https://jifengwu2k.github.io/2025/08/22/%E7%AE%80%E6%98%93%E9%A3%9F%E8%B0%B1/
@@ -13,7 +14,6 @@ https://jifengwu2k.github.io/2025/09/03/%E7%A9%BF%E6%90%AD%E6%8A%80%E5%B7%A7/
 https://jifengwu2k.github.io/2022/10/20/Personal-Website-Design-Considerations/
 https://jifengwu2k.github.io/2025/08/27/Manipulating-PDFs-from-the-Unix-Command-Line/
 https://jifengwu2k.github.io/2025/08/27/Philosophical-Idioms/
-https://jifengwu2k.github.io/2025/08/21/Eating-in-the-Americas-Down-to-earth-Foodstuffs/
 https://jifengwu2k.github.io/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-managed-Headers-and-Libraries/
 https://jifengwu2k.github.io/2025/07/10/Managing-Development-Environments-with-Conda/
 https://jifengwu2k.github.io/2025/08/11/Powering-clangd-based-C-IDEs-with-compile-commands-json/
