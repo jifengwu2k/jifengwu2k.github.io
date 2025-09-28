@@ -1,8 +1,8 @@
-https://jifengwu2k.github.io/index.html
 https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/
+https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/
+https://jifengwu2k.github.io/index.html
 https://jifengwu2k.github.io/2025/07/30/%E8%8B%B1%E8%AF%AD%E5%90%8D%E8%AF%8D%E6%96%B0%E8%AF%91/
 https://jifengwu2k.github.io/2025/08/21/Eating-in-the-Americas-Down-to-earth-Foodstuffs/
-https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/
 https://jifengwu2k.github.io/2025/09/15/C-Coding-Guidelines/
 https://jifengwu2k.github.io/2025/08/31/%E5%BA%A7%E5%8F%B3%E9%93%AD/
 https://jifengwu2k.github.io/2025/08/23/Manipulating-Videos-Using-ffmpeg/
