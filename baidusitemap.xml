@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://jifengwu2k.github.io/2025/09/28/POSIX-Shell-Coding-How-Tos/</loc>
+    <lastmod>2025-09-29</lastmod>
+  </url>
+  <url>
     <loc>https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/</loc>
     <lastmod>2025-09-28</lastmod>
   </url>
@@ -190,10 +194,6 @@
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2023/01/25/Paper-Reading-Types-and-Programming-Languages-Chapter-9-and-Chapter-11/</loc>
-    <lastmod>2025-08-13</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2023/06/09/Parsing-Command-line-Options-in-Shell-Scripts-Using-getopts/</loc>
     <lastmod>2025-08-13</lastmod>
   </url>
   <url>

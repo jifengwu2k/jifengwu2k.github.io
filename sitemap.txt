@@ -1,6 +1,7 @@
+https://jifengwu2k.github.io/index.html
+https://jifengwu2k.github.io/2025/09/28/POSIX-Shell-Coding-How-Tos/
 https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/
 https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/
-https://jifengwu2k.github.io/index.html
 https://jifengwu2k.github.io/2025/07/30/%E8%8B%B1%E8%AF%AD%E5%90%8D%E8%AF%8D%E6%96%B0%E8%AF%91/
 https://jifengwu2k.github.io/2025/08/21/Eating-in-the-Americas-Down-to-earth-Foodstuffs/
 https://jifengwu2k.github.io/2025/09/15/C-Coding-Guidelines/
@@ -47,7 +48,6 @@ https://jifengwu2k.github.io/2023/02/05/Paper-Reading-Types-and-Programming-Lang
 https://jifengwu2k.github.io/2023/02/10/Paper-Reading-Types-and-Programming-Languages-Chapter-15-and-Chapter-16/
 https://jifengwu2k.github.io/2023/02/26/Paper-Reading-Types-and-Programming-Languages-Chapter-22/
 https://jifengwu2k.github.io/2023/01/25/Paper-Reading-Types-and-Programming-Languages-Chapter-9-and-Chapter-11/
-https://jifengwu2k.github.io/2023/06/09/Parsing-Command-line-Options-in-Shell-Scripts-Using-getopts/
 https://jifengwu2k.github.io/2024/07/02/Pay-Attention-to-the-Other-Person-s-Easily-Overlooked-Emotional-State-When-Chatting-Online/
 https://jifengwu2k.github.io/2022/10/04/Paper-Reading-KLEE-unassisted-and-automatic-generation-of-high-coverage-tests-for-complex-systems-programs/
 https://jifengwu2k.github.io/2022/11/16/Paper-Reading-Lightweight-Verification-of-Array-Indexing/
@@ -124,7 +124,6 @@ https://jifengwu2k.github.io/categories/System-Administration/
 https://jifengwu2k.github.io/categories/Conference-and-Meeting-Minutes/
 https://jifengwu2k.github.io/categories/Software-Design/
 https://jifengwu2k.github.io/categories/Software-Design/Python/
-https://jifengwu2k.github.io/categories/Software-Design/Bash/
 https://jifengwu2k.github.io/categories/Software-Design/C/
 https://jifengwu2k.github.io/categories/Linguistics/
 https://jifengwu2k.github.io/categories/Multimedia/
@@ -132,3 +131,4 @@ https://jifengwu2k.github.io/categories/Development-Environments/
 https://jifengwu2k.github.io/categories/Food-and-Drink/
 https://jifengwu2k.github.io/categories/Health/
 https://jifengwu2k.github.io/categories/Fashion/
+https://jifengwu2k.github.io/categories/Software-Design/Shell/
