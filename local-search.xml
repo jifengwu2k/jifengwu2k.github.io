@@ -42,25 +42,6 @@
   
   
   <entry>
-    <title>2025-09 Financial Statement</title>
-    <link href="/2025/10/01/2025-09/"/>
-    <url>/2025/10/01/2025-09/</url>
-    
-    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs csv">date,name,amount<br>2025-09-01,Cornell Universi NBS REFUND Monthly Dividend,3195.846<br>2025-09-01,ETSY, INC. ETSY.COM*BU BROOKLYN NY,-2.70<br>2025-08-31,GANNETT MEDIA CO 888-426-0491 VA,-1.00<br>2025-09-02,Payment to Chase card ending in &lt;redacted&gt;,-200.00<br>2025-09-02,MIDJOURNEY INC. MIDJOURNEY.CO CA,-10.80<br>2025-09-03,WALMART.COM 800-925-6278 AR,-17.14<br>2025-09-03,MIDJOURNEY INC. MIDJOURNEY.CO CA,-103.68<br>2025-09-04,WALMART.COM 800-925-6278 AR,-82.54<br>2025-09-03,WMT PLUS Sep 2025 800-925-6278 AR,-2.99<br>2025-09-07,Coinbase Oakland CA,-20.00<br>2025-09-08,Payment to Chase card ending in &lt;redacted&gt;,-40.00<br>2025-09-07,WALMART.COM 800-925-6278 AR,-45.47<br>2025-09-10,Payment to Chase card ending in &lt;redacted&gt;,-118.49<br>2025-09-10,WALMART.COM 800-925-6278 AR,-10.70<br>2025-09-12,APPLE.COM/BILL 866-712-7753 CA,-10.99<br>2025-09-12,Payment to Chase card ending in &lt;redacted&gt;,-26.40<br>2025-09-12,WALMART.COM 800-925-6278 AR,-42.48<br>2025-09-15,Payment to Chase card ending in &lt;redacted&gt;,-1668.52<br>2025-09-15,Zelle payment from &lt;redacted&gt;,14.20<br>2025-09-17,Payment to Chase card ending in &lt;redacted&gt;,-170.00<br>2025-09-18,OPENAI OPENAI.COM CA,-10.03<br>2025-09-20,OPENAI OPENAI.COM CA,-45.07<br>2025-09-20,USPS CHANGE OF ADDRESS 800-238-3150 TN,-1.25<br>2025-09-22,Payment to Chase card ending in &lt;redacted&gt;,-118.35<br>2025-09-22,Zelle payment to &lt;redacted&gt;,-15.00<br>2025-09-23,Payment to Chase card ending in &lt;redacted&gt;,-240.69<br>2025-09-29,Payment to Chase card ending in &lt;redacted&gt;,-220.00<br>2025-09-29,Payment to Chase card ending in &lt;redacted&gt;,-29.95<br>2025-09-29,Zelle payment to &lt;redacted&gt;,-28.00<br></code></pre></td></tr></table></figure><p>Total Net: -72.19</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>Financial Statements</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>POSIX Shell Coding How-Tos</title>
     <link href="/2025/09/28/POSIX-Shell-Coding-How-Tos/"/>
     <url>/2025/09/28/POSIX-Shell-Coding-How-Tos/</url>
