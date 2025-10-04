@@ -4,18 +4,73 @@
   
   
   <entry>
-    <title>POSIX Shell Coding How-Tos</title>
-    <link href="/2025/09/28/POSIX-Shell-Coding-How-Tos/"/>
-    <url>/2025/09/28/POSIX-Shell-Coding-How-Tos/</url>
+    <title>Using Jupyter Lab as a Lightweight Remote Desktop</title>
+    <link href="/2025/10/04/Using-Jupyter-Lab-as-a-Lightweight-Remote-Desktop/"/>
+    <url>/2025/10/04/Using-Jupyter-Lab-as-a-Lightweight-Remote-Desktop/</url>
     
-    <content type="html"><![CDATA[<h2 id="removing-suffix-by-separator">Removing Suffix by Separator</h2><p>Want to strip off everything after the <strong>first or lastoccurrence</strong> of a separator in a string? Suppose your string is<code>$string</code> and the separator is <code>$separator</code>:</p><p>Before the <strong>first</strong> occurrence:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">result=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;string%%&quot;$separator&quot;*&#125;</span>&quot;</span><br></code></pre></td></tr></table></figure><p>Before the <strong>last</strong> occurrence:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">result=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;string%&quot;$separator&quot;*&#125;</span>&quot;</span><br></code></pre></td></tr></table></figure><p>Example:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sh">string=<span class="hljs-string">&#x27;abc-def-ghi&#x27;</span><br>separator=<span class="hljs-string">&#x27;-&#x27;</span><br><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;string%%&quot;$separator&quot;*&#125;</span>&quot;</span>  <span class="hljs-comment"># Outputs: abc</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;string%&quot;$separator&quot;*&#125;</span>&quot;</span>   <span class="hljs-comment"># Outputs: abc-def</span><br></code></pre></td></tr></table></figure><h2 id="appending-content-to-a-command-pipeline">Appending Content to aCommand Pipeline</h2><p>Suppose you have a file and want to process its contents, then appendmore data before passing it all to the next part of a pipeline. The mostrobust, portable (POSIX-compliant) solution is:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">&#123; <span class="hljs-built_in">cat</span> file.txt; <span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;additional content&#x27;</span>; &#125; | your_next_command<br></code></pre></td></tr></table></figure><p>Why this works:</p><ul><li><code>&#123; ...; &#125;</code> groups commands together in the currentshell.</li><li>The pipe (<code>|</code>) passes their combined output.</li><li>This does not create unnecessary subshells and works in all POSIXshells.</li></ul><p><strong>Syntax tip:</strong> A space is required after <code>&#123;</code>and the last command must end in a semicolon (<code>;</code>) before theclosing <code>&#125;</code>.</p><h2 id="safely-using-find-xargs-with-filenames">3. Safely Using<code>find</code> + <code>xargs</code> with Filenames</h2><p>Using <code>find</code> + <code>xargs</code> with filenames can breakwhen filenames have spaces or special characters. To handle this safely,use null (<code>\0</code>) terminators:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">find mydir -name <span class="hljs-string">&#x27;*.txt&#x27;</span> -print0 | xargs -0 <span class="hljs-built_in">rm</span><br></code></pre></td></tr></table></figure><ul><li><code>-print0</code> makes <code>find</code> use a null character atthe end of each filename.</li><li><code>-0</code> tells <code>xargs</code> to expect null-delimitedinput.</li></ul><p>This combination ensures even weird filenames (with spaces, newlines,quotes, etc.) are handled safely.</p><h2 id="parsing-command-line-options-using-getopts">Parsing Command-lineOptions Using <code>getopts</code></h2><p>getopts is a built-in Unix shell command for parsing command-lineoptions. It is a wrapper around <code>getopt</code>, a POSIX C libraryfunction used to parse command-line options of the Unix/POSIX style.Specifically:</p><ul><li>Options are <em>single-character alphanumerics</em> preceded by a -(hyphen-minus) character, i.e. <code>-a</code>. <code>-b</code>,<code>-c</code>.</li><li>Options can take an argument or none.</li><li>Multiple options can be chained together, as long as the non-lastones are not argument-taking. If <code>-a</code> and <code>-b</code>take no arguments while <code>-c</code> takes an argument,<code>-abc foo</code> is the same as <code>-a -c -e foo</code>, but<code>-bca</code> is not the same as <code>-b -c a</code> due to thepreceding rule.</li><li>When an option takes an argument, this can be in the same token orin the next one. In other words, if <code>-c</code> takes an argument,<code>-cfoo</code> is the same as <code>-c foo</code>.</li></ul><h3 id="optstrings"><code>optstring</code>'s</h3><p>Both getopt and getopts specifies specify options using a<em>optstring</em>. Specifically:</p><ul><li><em>Begin an optstring with <code>:</code>.</em></li><li>To specify an option that <em>does not take an argument</em>, appendits name to the optstring.</li><li>To specify an option that <em>takes an argument</em>, append itsname <em>and <code>:</code></em> to the optstring.</li></ul><p>For example, the optstring that specifies two options<code>-a</code>, <code>-b</code> that do not take arguments and twooptions <code>-c</code>, <code>-d</code> that take arguments is<code>:abc:d:</code>.</p><h3 id="using-getopts-in-a-shell-script">Using <code>getopts</code> in aShell Script</h3><p>In Shell scripts, <code>getopts</code> invoked with an<code>optstring</code> is used with a <code>while</code>-loop to parsecommand-line options.</p><p>Say that our Shell script <code>test_getopts.sh</code> accepts twooptions <code>-a</code>, <code>-b</code> that do not take arguments andtwo options <code>-c</code>, <code>-d</code> that take arguments. OurShell script can look like this:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/sh</span><br><br><span class="hljs-keyword">while</span> <span class="hljs-built_in">getopts</span> <span class="hljs-string">&#x27;:abc:d:&#x27;</span> name<br><span class="hljs-keyword">do</span><br>    <span class="hljs-keyword">case</span> <span class="hljs-variable">$name</span> <span class="hljs-keyword">in</span><br>        a)<br>            <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;You provided option -a&quot;</span><br>            ;;<br>        b)<br>            <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;You provided option -b&quot;</span><br>            ;;<br>        c)<br>            <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;You provided option -c with argument <span class="hljs-variable">$OPTARG</span>&quot;</span><br>            ;;<br>        d)<br>            <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;You provided option -d with argument <span class="hljs-variable">$OPTARG</span>&quot;</span><br>            ;;<br>        :)<br>            <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;Option -<span class="hljs-variable">$OPTARG</span> requires an argument&quot;</span><br>            ;;<br>        ?)<br>            <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;You provided an invalid option -<span class="hljs-variable">$OPTARG</span>&quot;</span><br>            ;;<br>    <span class="hljs-keyword">esac</span><br><span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure><p>Here, <code>getopts</code> is invoked with the <code>optstring</code>for specifying our options, <code>:abc:d:</code>. In each iteration ofthe <code>while</code>-loop, the <em>next option</em> is parsed and theShell variables <code>name</code> and <code>OPTARG</code> are set todifferent values based on different conditions we may encounter.</p><ul><li>If a <em>valid</em> option is detected and that option <em>does nottake an argument</em>, the Shell variable <code>name</code> is set tothe name of the option.</li><li>If a <em>valid</em> option is detected and that option <em>takes anargument</em>:<ul><li>If we have provided an argument, the Shell variable<code>name</code> is set to the name of the option, and the Shellvariable <code>OPTARG</code> is set to the value of the argument.</li><li>If we <em>haven't provided an argument</em>, <em>the Shell variable<code>name</code> is set to <code>:</code>, and the Shell variable<code>OPTARG</code> is set to the name of the argument</em>.</li></ul></li><li>If an <em>invalid</em> option is detected, <em>the Shell variable<code>name</code> is set to <code>?</code>, and the Shell variable<code>OPTARG</code> is set to the name of the argument</em>.</li></ul><p>We can see <code>getopts</code> at work by providing differentcommand-line options when invoking our Shell script.</p><p>Providing no command-line options:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ sh test_getopts.sh<br></code></pre></td></tr></table></figure><p>Providing option <code>-a</code> that do not take arguments:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ sh test_getopts.sh -a<br>You provided option -a<br></code></pre></td></tr></table></figure><p>Providing option <code>-a</code> that do not take arguments<em>twice</em>:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ sh test_getopts.sh -a -a<br>You provided option -a<br>You provided option -a<br>$ sh test_getopts.sh -aa<br>You provided option -a<br>You provided option -a<br></code></pre></td></tr></table></figure><p>Providing option <code>-c</code> that takes an argument with anargument <code>foo</code>:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ sh test_getopts.sh -c foo<br>You provided option -c with argument foo<br></code></pre></td></tr></table></figure><p>Providing option <code>-c</code> that takes an argument with anargument <code>foo</code> <em>twice</em>:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ sh test_getopts.sh -c foo -c bar<br>You provided option -c with argument foo<br>You provided option -c with argument bar<br></code></pre></td></tr></table></figure><p>Providing option <code>-c</code> that takes an argument without anargument:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ sh test_getopts.sh -c<br>Option -c requires an argument<br></code></pre></td></tr></table></figure><p>Providing an invalid argument <code>-e</code>:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ sh test_getopts.sh -e<br>You provided an invalid option -e<br></code></pre></td></tr></table></figure><h3 id="references">References</h3><ul><li>https://en.wikipedia.org/wiki/Getopts</li><li>https://pubs.opengroup.org/onlinepubs/9699919799/utilities/getopts.html</li><li>https://en.wikipedia.org/wiki/Getopt</li><li>https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html</li></ul>]]></content>
+    <content type="html"><![CDATA[<h1 id="using-jupyter-lab-as-a-lightweight-remote-desktop">Using JupyterLab as a Lightweight Remote Desktop</h1><p>Jupyter Lab isn't just for data scince - it's a powerful all-in-oneenvironment offering:</p><ul><li>Programming (Python, R, etc.)</li><li>Shell Access</li><li>File Browser &amp; Editor</li><li>Plugins</li></ul><p>All within your browser, without heavy windowing systems or VNC,making it a great alternative to traditional remote desktops!</p><h2 id="setup-instructions">Setup Instructions</h2><h3 id="server-side">Server Side</h3><p>First, <ahref="/2025/07/10/Managing-Development-Environments-with-Conda/">installConda and set up a Conda environment</a>.</p><h4 id="install-jupyter-lab">Install Jupyter Lab</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda install -c conda-forge jupyterlab<br></code></pre></td></tr></table></figure><p>Install kernels for Jupyter Lab:</p><p>Python (IPyKernel):</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda install -c conda-forge ipykernel<br></code></pre></td></tr></table></figure><p>R (IRKernel):</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda install -c conda-forge r-irkernel<br></code></pre></td></tr></table></figure><h4 id="launch-jupyter-lab-and-make-it-accessible">Launch Jupyter Laband Make it accessible</h4><p>Start a <code>tmux</code> session.</p><p>Start JupyterLab in it, listening on localhost, with nopassword/token:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">jupyter lab --ip=127.0.0.1 --no-browser --NotebookApp.token=<span class="hljs-string">&#x27;&#x27;</span> --NotebookApp.password=<span class="hljs-string">&#x27;&#x27;</span><br></code></pre></td></tr></table></figure><p>Then open another <code>tmux</code> pane, set up <ahref="https://github.com/jifengwu2k/push-pull-port">push-pull-port</a>,and push SSH port 22 to port <code>$PUBLIC_PORT</code> of remote publicserver <code>$PUBLIC_HOST</code>:</p><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs perl">sh <span class="hljs-keyword">push</span>-<span class="hljs-keyword">local</span>-port.sh -l <span class="hljs-number">22</span> -r $PUBLIC_PORT -u $PUBLIC_USER -h $PUBLIC_HOST <br></code></pre></td></tr></table></figure><p>Then detach from the <code>tmux</code> session.</p><h3 id="client-side">Client Side</h3><p>Set up <ahref="https://github.com/jifengwu2k/push-pull-port">push-pull-port</a>.</p><p>Pull the remote port and forward it to your local <code>8888</code>port:</p><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">sh pull-remote-port<span class="hljs-selector-class">.sh</span> -r <span class="hljs-number">8888</span> -l <span class="hljs-number">8888</span> -u <span class="hljs-variable">$PRIVATE_USER</span> -h <span class="hljs-variable">$PUBLIC_HOST</span> -<span class="hljs-selector-tag">p</span> <span class="hljs-variable">$PUBLIC_PORT</span><br></code></pre></td></tr></table></figure><p>Access in Browser: Open <ahref="http://localhost:8888/lab">http://localhost:8888/lab</a>.</p>]]></content>
     
     
     <categories>
       
-      <category>Software Design</category>
+      <category>Environments</category>
       
-      <category>Shell</category>
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>2025-09 Financial Statement</title>
+    <link href="/2025/10/04/2025-09-Financial-Statement/"/>
+    <url>/2025/10/04/2025-09-Financial-Statement/</url>
+    
+    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs csv">date,name,amount<br>2025-09-01,Cornell Universi NBS REFUND Monthly Dividend,3195.846<br>2025-09-01,ETSY, INC. ETSY.COM*BU BROOKLYN NY,-2.70<br>2025-08-31,GANNETT MEDIA CO 888-426-0491 VA,-1.00<br>2025-09-02,Payment to Chase card ending in &lt;redacted&gt;,-200.00<br>2025-09-02,MIDJOURNEY INC. MIDJOURNEY.CO CA,-10.80<br>2025-09-03,WALMART.COM 800-925-6278 AR,-17.14<br>2025-09-03,MIDJOURNEY INC. MIDJOURNEY.CO CA,-103.68<br>2025-09-04,WALMART.COM 800-925-6278 AR,-82.54<br>2025-09-03,WMT PLUS Sep 2025 800-925-6278 AR,-2.99<br>2025-09-07,Coinbase Oakland CA,-20.00<br>2025-09-08,Payment to Chase card ending in &lt;redacted&gt;,-40.00<br>2025-09-07,WALMART.COM 800-925-6278 AR,-45.47<br>2025-09-10,Payment to Chase card ending in &lt;redacted&gt;,-118.49<br>2025-09-10,WALMART.COM 800-925-6278 AR,-10.70<br>2025-09-12,APPLE.COM/BILL 866-712-7753 CA,-10.99<br>2025-09-12,Payment to Chase card ending in &lt;redacted&gt;,-26.40<br>2025-09-12,WALMART.COM 800-925-6278 AR,-42.48<br>2025-09-15,Payment to Chase card ending in &lt;redacted&gt;,-1668.52<br>2025-09-15,Zelle payment from &lt;redacted&gt;,14.20<br>2025-09-17,Payment to Chase card ending in &lt;redacted&gt;,-170.00<br>2025-09-18,OPENAI OPENAI.COM CA,-10.03<br>2025-09-20,OPENAI OPENAI.COM CA,-45.07<br>2025-09-20,USPS CHANGE OF ADDRESS 800-238-3150 TN,-1.25<br>2025-09-22,Payment to Chase card ending in &lt;redacted&gt;,-118.35<br>2025-09-22,Zelle payment to &lt;redacted&gt;,-15.00<br>2025-09-23,Payment to Chase card ending in &lt;redacted&gt;,-240.69<br>2025-09-29,Payment to Chase card ending in &lt;redacted&gt;,-220.00<br>2025-09-29,Payment to Chase card ending in &lt;redacted&gt;,-29.95<br>2025-09-29,Zelle payment to &lt;redacted&gt;,-28.00<br></code></pre></td></tr></table></figure><p>Total Net: -72.19</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Financial Statements</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>2025-09 Financial Statement</title>
+    <link href="/2025/10/01/2025-09/"/>
+    <url>/2025/10/01/2025-09/</url>
+    
+    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs csv">date,name,amount<br>2025-09-01,Cornell Universi NBS REFUND Monthly Dividend,3195.846<br>2025-09-01,ETSY, INC. ETSY.COM*BU BROOKLYN NY,-2.70<br>2025-08-31,GANNETT MEDIA CO 888-426-0491 VA,-1.00<br>2025-09-02,Payment to Chase card ending in &lt;redacted&gt;,-200.00<br>2025-09-02,MIDJOURNEY INC. MIDJOURNEY.CO CA,-10.80<br>2025-09-03,WALMART.COM 800-925-6278 AR,-17.14<br>2025-09-03,MIDJOURNEY INC. MIDJOURNEY.CO CA,-103.68<br>2025-09-04,WALMART.COM 800-925-6278 AR,-82.54<br>2025-09-03,WMT PLUS Sep 2025 800-925-6278 AR,-2.99<br>2025-09-07,Coinbase Oakland CA,-20.00<br>2025-09-08,Payment to Chase card ending in &lt;redacted&gt;,-40.00<br>2025-09-07,WALMART.COM 800-925-6278 AR,-45.47<br>2025-09-10,Payment to Chase card ending in &lt;redacted&gt;,-118.49<br>2025-09-10,WALMART.COM 800-925-6278 AR,-10.70<br>2025-09-12,APPLE.COM/BILL 866-712-7753 CA,-10.99<br>2025-09-12,Payment to Chase card ending in &lt;redacted&gt;,-26.40<br>2025-09-12,WALMART.COM 800-925-6278 AR,-42.48<br>2025-09-15,Payment to Chase card ending in &lt;redacted&gt;,-1668.52<br>2025-09-15,Zelle payment from &lt;redacted&gt;,14.20<br>2025-09-17,Payment to Chase card ending in &lt;redacted&gt;,-170.00<br>2025-09-18,OPENAI OPENAI.COM CA,-10.03<br>2025-09-20,OPENAI OPENAI.COM CA,-45.07<br>2025-09-20,USPS CHANGE OF ADDRESS 800-238-3150 TN,-1.25<br>2025-09-22,Payment to Chase card ending in &lt;redacted&gt;,-118.35<br>2025-09-22,Zelle payment to &lt;redacted&gt;,-15.00<br>2025-09-23,Payment to Chase card ending in &lt;redacted&gt;,-240.69<br>2025-09-29,Payment to Chase card ending in &lt;redacted&gt;,-220.00<br>2025-09-29,Payment to Chase card ending in &lt;redacted&gt;,-29.95<br>2025-09-29,Zelle payment to &lt;redacted&gt;,-28.00<br></code></pre></td></tr></table></figure><p>Total Net: -72.19</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Financial Statements</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>POSIX Shell Coding How-Tos</title>
+    <link href="/2025/09/28/POSIX-Shell-Coding-How-Tos/"/>
+    <url>/2025/09/28/POSIX-Shell-Coding-How-Tos/</url>
+    
+    <content type="html"><![CDATA[<h2 id="removing-suffix-by-separator">Removing Suffix by Separator</h2><p>Want to strip off everything after the <strong>first or lastoccurrence</strong> of a separator in a string? Suppose your string is<code>$string</code> and the separator is <code>$separator</code>:</p><p>Before the <strong>first</strong> occurrence:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">result=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;string%%&quot;$separator&quot;*&#125;</span>&quot;</span><br></code></pre></td></tr></table></figure><p>Before the <strong>last</strong> occurrence:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">result=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;string%&quot;$separator&quot;*&#125;</span>&quot;</span><br></code></pre></td></tr></table></figure><p>Example:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sh">string=<span class="hljs-string">&#x27;abc-def-ghi&#x27;</span><br>separator=<span class="hljs-string">&#x27;-&#x27;</span><br><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;string%%&quot;$separator&quot;*&#125;</span>&quot;</span>  <span class="hljs-comment"># Outputs: abc</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;string%&quot;$separator&quot;*&#125;</span>&quot;</span>   <span class="hljs-comment"># Outputs: abc-def</span><br></code></pre></td></tr></table></figure><h2 id="appending-content-to-a-command-pipeline">Appending Content to aCommand Pipeline</h2><p>Suppose you have a file and want to process its contents, then appendmore data before passing it all to the next part of a pipeline. The mostrobust, portable (POSIX-compliant) solution is:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">&#123; <span class="hljs-built_in">cat</span> file.txt; <span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;additional content&#x27;</span>; &#125; | your_next_command<br></code></pre></td></tr></table></figure><p>Why this works:</p><ul><li><code>&#123; ...; &#125;</code> groups commands together in the currentshell.</li><li>The pipe (<code>|</code>) passes their combined output.</li><li>This does not create unnecessary subshells and works in all POSIXshells.</li></ul><p><strong>Syntax tip:</strong> A space is required after <code>&#123;</code>and the last command must end in a semicolon (<code>;</code>) before theclosing <code>&#125;</code>.</p><h2 id="safely-using-find-xargs-with-filenames">Safely Using<code>find</code> + <code>xargs</code> with Filenames</h2><p>Using <code>find</code> + <code>xargs</code> with filenames can breakwhen filenames have spaces or special characters. To handle this safely,use null (<code>\0</code>) terminators:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">find mydir -name <span class="hljs-string">&#x27;*.txt&#x27;</span> -print0 | xargs -0 <span class="hljs-built_in">rm</span><br></code></pre></td></tr></table></figure><ul><li><code>-print0</code> makes <code>find</code> use a null character atthe end of each filename.</li><li><code>-0</code> tells <code>xargs</code> to expect null-delimitedinput.</li></ul><p>This combination ensures even weird filenames (with spaces, newlines,quotes, etc.) are handled safely.</p><h2 id="batch-killing-processes">Batch Killing Processes</h2><p>Sometimes we acidentally spawn a series of processes, and we want tokill them. We can look up their pid's through<code>ps -aux | grep &lt;process_name&gt;</code> (as shown below) andmanually run the <code>kill</code> command to kill each process byproviding its pid, but <em>how can we automate this tedioustask</em>?</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ ps aux | grep pipreqs<br>jifengwu   58180  0.0  0.1  46440 27332 pts/0    T    13:38   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/spectria/tildes/tildes --mode no-pin<br>jifengwu   58205  0.1  0.1  48140 29392 pts/0    T    13:38   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/PnX-SI/GeoNature --mode no-pin<br>jifengwu   58224  5.7  0.2  51856 33108 pts/0    T    13:38   0:23 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/fabiandevia/home --mode no-pin<br>jifengwu   58267  4.4  0.2  57880 38204 pts/0    T    13:39   0:17 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/377312117/gitproject --mode no-pin<br>jifengwu   58272  2.3  0.2  53756 34252 pts/0    T    13:39   0:08 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/crazyfish1111/home --mode no-pin<br>jifengwu   58282  0.1  0.1  47840 28132 pts/0    T    13:39   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/Piratenpartei/ekklesia-portal --mode no-pin<br>jifengwu   58295  0.1  0.1  48220 28492 pts/0    T    13:39   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/jauhararifin/ugrade/server --mode no-pin<br>jifengwu   58659  0.3  0.1  48608 29324 pts/0    T    13:41   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/klen/pylama --mode no-pin<br>jifengwu   59564  0.0  0.0  19612  2516 pts/2    S+   13:45   0:00 grep --color=auto pipreqs<br></code></pre></td></tr></table></figure><p>First, we can add <code>grep -v grep</code> to the pipe to <em>hidethe grep processes from the output</em>:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ ps aux | grep pipreqs | grep -v grep<br>jifengwu   58180  0.0  0.1  46440 27332 pts/0    T    13:38   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/spectria/tildes/tildes --mode no-pin<br>jifengwu   58205  0.1  0.1  48140 29392 pts/0    T    13:38   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/PnX-SI/GeoNature --mode no-pin<br>jifengwu   58224  5.6  0.2  51856 33108 pts/0    T    13:38   0:23 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/fabiandevia/home --mode no-pin<br>jifengwu   58267  4.4  0.2  57880 38204 pts/0    T    13:39   0:17 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/377312117/gitproject --mode no-pin<br>jifengwu   58272  2.2  0.2  53756 34252 pts/0    T    13:39   0:08 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/crazyfish1111/home --mode no-pin<br>jifengwu   58282  0.1  0.1  47840 28132 pts/0    T    13:39   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/Piratenpartei/ekklesia-portal --mode no-pin<br>jifengwu   58295  0.1  0.1  48220 28492 pts/0    T    13:39   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/jauhararifin/ugrade/server --mode no-pin<br>jifengwu   58659  0.3  0.1  48608 29324 pts/0    T    13:41   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/klen/pylama --mode no-pin<br></code></pre></td></tr></table></figure><p>Then, we can add <code>awk '&#123;print $2&#125;'</code> to the pipe to invoke<code>awk</code> to <em>trim the second space-delimited component</em>(which in this case is the pid). Now we have a list of the pid's of theprocesses we want to kill:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ ps aux | grep pipreqs | grep -v grep | awk <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span><br>58180<br>58205<br>58224<br>58267<br>58272<br>58282<br>58295<br>58659<br></code></pre></td></tr></table></figure><p>Finally, we can iterate over the pid's in a for-loop to killthem.</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-keyword">for</span> pid <span class="hljs-keyword">in</span> $(ps aux | grep pipreqs | grep -v grep | awk <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span>)<br><span class="hljs-keyword">do</span><br>    <span class="hljs-built_in">kill</span> -15 <span class="hljs-variable">$pid</span><br><span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure><h2 id="copying-files-via-cat-and-dd">Copying Files via <code>cat</code>and <code>dd</code></h2><p><code>cat</code> and <code>dd</code> are standard Unix utilities forhandling file data.</p><ul><li><code>cat</code> outputs the contents of a file to<code>stdout</code>.</li><li><code>dd</code> reads <code>stdin</code> (if no <code>if=</code>)and writes to <code>stdout</code> or a file.</li></ul><p>To copy a file, you can use a Unix pipe (<code>|</code>) to send<code>cat</code>'s output to <code>dd</code>, then write to adestination file:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">cat</span> sourcefile | <span class="hljs-built_in">dd</span> of=destinationfile<br></code></pre></td></tr></table></figure><h3 id="potential-advantages-of-cat-and-dd-over-cp">Potential Advantagesof <code>cat</code> and <code>dd</code> Over <code>cp</code></h3><h4 id="better-progressstatistics"><strong>Betterprogress/statistics</strong></h4><ul><li><code>dd</code> with the <code>status=progress</code> (GNU dd)option shows live copy statistics: <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">cat bigfile | dd <span class="hljs-attribute">of</span>=outfile <span class="hljs-attribute">status</span>=progress<br></code></pre></td></tr></table></figure></li></ul><h4 id="working-around-cp-limitations"><strong>Working Around<code>cp</code> Limitations</strong></h4><ul><li>Some device files, file descriptors, or pseudo-files (like<code>/proc</code> or <code>/sys</code>) do not support <code>cp</code>,but streaming with <code>cat</code> + <code>dd</code> may work.</li></ul><h2 id="parsing-command-line-options">Parsing Command-line Options</h2><p><code>getopts</code> is a built-in Unix shell command for parsingcommand-line options. It is a wrapper around <code>getopt</code>, aPOSIX C library function used to parse command-line options of theUnix/POSIX style. Specifically:</p><ul><li>Options are <em>single-character alphanumerics</em> preceded by a -(hyphen-minus) character, i.e. <code>-a</code>. <code>-b</code>,<code>-c</code>.</li><li>Options can take an argument or none.</li><li>Multiple options can be chained together, as long as the non-lastones are not argument-taking. If <code>-a</code> and <code>-b</code>take no arguments while <code>-c</code> takes an argument,<code>-abc foo</code> is the same as <code>-a -c -e foo</code>, but<code>-bca</code> is not the same as <code>-b -c a</code> due to thepreceding rule.</li><li>When an option takes an argument, this can be in the same token orin the next one. In other words, if <code>-c</code> takes an argument,<code>-cfoo</code> is the same as <code>-c foo</code>.</li></ul><h3 id="optstrings"><code>optstring</code>'s</h3><p>Both getopt and getopts specifies specify options using a<em>optstring</em>. Specifically:</p><ul><li><em>Begin an optstring with <code>:</code>.</em></li><li>To specify an option that <em>does not take an argument</em>, appendits name to the optstring.</li><li>To specify an option that <em>takes an argument</em>, append itsname <em>and <code>:</code></em> to the optstring.</li></ul><p>For example, the optstring that specifies two options<code>-a</code>, <code>-b</code> that do not take arguments and twooptions <code>-c</code>, <code>-d</code> that take arguments is<code>:abc:d:</code>.</p><h3 id="using-getopts-in-a-shell-script">Using <code>getopts</code> in aShell Script</h3><p>In Shell scripts, <code>getopts</code> invoked with an<code>optstring</code> is used with a <code>while</code>-loop to parsecommand-line options.</p><p>Say that our Shell script <code>test_getopts.sh</code> accepts twooptions <code>-a</code>, <code>-b</code> that do not take arguments andtwo options <code>-c</code>, <code>-d</code> that take arguments. OurShell script can look like this:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/sh</span><br><br><span class="hljs-keyword">while</span> <span class="hljs-built_in">getopts</span> <span class="hljs-string">&#x27;:abc:d:&#x27;</span> name<br><span class="hljs-keyword">do</span><br>    <span class="hljs-keyword">case</span> <span class="hljs-variable">$name</span> <span class="hljs-keyword">in</span><br>        a)<br>            <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;You provided option -a&quot;</span><br>            ;;<br>        b)<br>            <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;You provided option -b&quot;</span><br>            ;;<br>        c)<br>            <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;You provided option -c with argument <span class="hljs-variable">$OPTARG</span>&quot;</span><br>            ;;<br>        d)<br>            <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;You provided option -d with argument <span class="hljs-variable">$OPTARG</span>&quot;</span><br>            ;;<br>        :)<br>            <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;Option -<span class="hljs-variable">$OPTARG</span> requires an argument&quot;</span><br>            ;;<br>        ?)<br>            <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;You provided an invalid option -<span class="hljs-variable">$OPTARG</span>&quot;</span><br>            ;;<br>    <span class="hljs-keyword">esac</span><br><span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure><p>Here, <code>getopts</code> is invoked with the <code>optstring</code>for specifying our options, <code>:abc:d:</code>. In each iteration ofthe <code>while</code>-loop, the <em>next option</em> is parsed and theShell variables <code>name</code> and <code>OPTARG</code> are set todifferent values based on different conditions we may encounter.</p><ul><li>If a <em>valid</em> option is detected and that option <em>does nottake an argument</em>, the Shell variable <code>name</code> is set tothe name of the option.</li><li>If a <em>valid</em> option is detected and that option <em>takes anargument</em>:<ul><li>If we have provided an argument, the Shell variable<code>name</code> is set to the name of the option, and the Shellvariable <code>OPTARG</code> is set to the value of the argument.</li><li>If we <em>haven't provided an argument</em>, <em>the Shell variable<code>name</code> is set to <code>:</code>, and the Shell variable<code>OPTARG</code> is set to the name of the argument</em>.</li></ul></li><li>If an <em>invalid</em> option is detected, <em>the Shell variable<code>name</code> is set to <code>?</code>, and the Shell variable<code>OPTARG</code> is set to the name of the argument</em>.</li></ul><p>We can see <code>getopts</code> at work by providing differentcommand-line options when invoking our Shell script.</p><p>Providing no command-line options:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ sh test_getopts.sh<br></code></pre></td></tr></table></figure><p>Providing option <code>-a</code> that do not take arguments:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ sh test_getopts.sh -a<br>You provided option -a<br></code></pre></td></tr></table></figure><p>Providing option <code>-a</code> that do not take arguments<em>twice</em>:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ sh test_getopts.sh -a -a<br>You provided option -a<br>You provided option -a<br>$ sh test_getopts.sh -aa<br>You provided option -a<br>You provided option -a<br></code></pre></td></tr></table></figure><p>Providing option <code>-c</code> that takes an argument with anargument <code>foo</code>:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ sh test_getopts.sh -c foo<br>You provided option -c with argument foo<br></code></pre></td></tr></table></figure><p>Providing option <code>-c</code> that takes an argument with anargument <code>foo</code> <em>twice</em>:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ sh test_getopts.sh -c foo -c bar<br>You provided option -c with argument foo<br>You provided option -c with argument bar<br></code></pre></td></tr></table></figure><p>Providing option <code>-c</code> that takes an argument without anargument:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ sh test_getopts.sh -c<br>Option -c requires an argument<br></code></pre></td></tr></table></figure><p>Providing an invalid argument <code>-e</code>:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ sh test_getopts.sh -e<br>You provided an invalid option -e<br></code></pre></td></tr></table></figure><h3 id="references">References</h3><ul><li>https://www.baeldung.com/linux/grep-exclude-ps-results</li><li>https://stackoverflow.com/questions/46008880/how-to-always-cut-the-pid-from-ps-aux-command</li><li>https://en.wikipedia.org/wiki/Getopts</li><li>https://pubs.opengroup.org/onlinepubs/9699919799/utilities/getopts.html</li><li>https://en.wikipedia.org/wiki/Getopt</li><li>https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Reference</category>
       
     </categories>
     
@@ -53,7 +108,7 @@
     
     <categories>
       
-      <category>Reference</category>
+      <category>Linguistics and Literature</category>
       
     </categories>
     
@@ -72,7 +127,7 @@
     
     <categories>
       
-      <category>Data Science</category>
+      <category>Data Science, Multimedia, and Process Automation</category>
       
     </categories>
     
@@ -91,7 +146,7 @@
     
     <categories>
       
-      <category>Fashion</category>
+      <category>Lifestyle</category>
       
     </categories>
     
@@ -129,7 +184,7 @@
     
     <categories>
       
-      <category>Reference</category>
+      <category>Linguistics and Literature</category>
       
     </categories>
     
@@ -167,26 +222,7 @@
     
     <categories>
       
-      <category>Health</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Manipulating PDFs from the Unix Command Line</title>
-    <link href="/2025/08/27/Manipulating-PDFs-from-the-Unix-Command-Line/"/>
-    <url>/2025/08/27/Manipulating-PDFs-from-the-Unix-Command-Line/</url>
-    
-    <content type="html"><![CDATA[<p>The <a href="https://poppler.freedesktop.org/">Poppler utilities</a>provide many Unix command-line tools for manipulating PDFs. Installvia:</p><ul><li><code>sudo apt-get install poppler-utils</code> (Ubuntu)</li><li><code>sudo apk add poppler-utils</code> (Alpine)</li><li><code>brew install poppler</code> (macOS)</li></ul><h2 id="extract-text-from-a-pdf">Extract Text from a PDF</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdftotext input.pdf output.txt<br></code></pre></td></tr></table></figure><h2 id="merge-pdfs-together">Merge PDFs Together</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdfunite file1.pdf file2.pdf merged.pdf<br></code></pre></td></tr></table></figure><h2 id="split-extract-pages-from-a-pdf">Split (Extract) Pages from aPDF</h2><p>This will split each page of <code>input.pdf</code> to<code>output_1.pdf</code>, <code>output_2.pdf</code>, etc.</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdfseparate input.pdf output_%d.pdf<br></code></pre></td></tr></table></figure>]]></content>
-    
-    
-    <categories>
-      
-      <category>Multimedia</category>
+      <category>Lifestyle</category>
       
     </categories>
     
@@ -205,7 +241,26 @@
     
     <categories>
       
-      <category>Linguistics</category>
+      <category>Linguistics and Literature</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Manipulating PDFs from the Unix Command Line</title>
+    <link href="/2025/08/27/Manipulating-PDFs-from-the-Unix-Command-Line/"/>
+    <url>/2025/08/27/Manipulating-PDFs-from-the-Unix-Command-Line/</url>
+    
+    <content type="html"><![CDATA[<p>The <a href="https://poppler.freedesktop.org/">Poppler utilities</a>provide many Unix command-line tools for manipulating PDFs. Installvia:</p><ul><li><code>sudo apt-get install poppler-utils</code> (Ubuntu)</li><li><code>sudo apk add poppler-utils</code> (Alpine)</li><li><code>brew install poppler</code> (macOS)</li></ul><h2 id="extract-text-from-a-pdf">Extract Text from a PDF</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdftotext input.pdf output.txt<br></code></pre></td></tr></table></figure><h2 id="merge-pdfs-together">Merge PDFs Together</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdfunite file1.pdf file2.pdf merged.pdf<br></code></pre></td></tr></table></figure><h2 id="split-extract-pages-from-a-pdf">Split (Extract) Pages from aPDF</h2><p>This will split each page of <code>input.pdf</code> to<code>output_1.pdf</code>, <code>output_2.pdf</code>, etc.</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdfseparate input.pdf output_%d.pdf<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>Data Science, Multimedia, and Process Automation</category>
       
     </categories>
     
@@ -224,7 +279,7 @@
     
     <categories>
       
-      <category>Development Environments</category>
+      <category>Environments</category>
       
     </categories>
     
@@ -243,7 +298,7 @@
     
     <categories>
       
-      <category>Multimedia</category>
+      <category>Data Science, Multimedia, and Process Automation</category>
       
     </categories>
     
@@ -262,7 +317,7 @@
     
     <categories>
       
-      <category>Food and Drink</category>
+      <category>Lifestyle</category>
       
     </categories>
     
@@ -300,7 +355,7 @@
     
     <categories>
       
-      <category>Food and Drink</category>
+      <category>Lifestyle</category>
       
     </categories>
     
@@ -319,7 +374,7 @@
     
     <categories>
       
-      <category>System Administration</category>
+      <category>Environments</category>
       
     </categories>
     
@@ -338,7 +393,7 @@
     
     <categories>
       
-      <category>Development Environments</category>
+      <category>Environments</category>
       
     </categories>
     
@@ -357,26 +412,7 @@
     
     <categories>
       
-      <category>Data Science</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Copying Files via `cat` and `dd`</title>
-    <link href="/2025/08/12/Copying-Files-via-cat-and-dd/"/>
-    <url>/2025/08/12/Copying-Files-via-cat-and-dd/</url>
-    
-    <content type="html"><![CDATA[<p><code>cat</code> and <code>dd</code> are standard Unix utilities forhandling file data.</p><ul><li><code>cat</code> outputs the contents of a file to<code>stdout</code>.</li><li><code>dd</code> reads <code>stdin</code> (if no <code>if=</code>)and writes to <code>stdout</code> or a file.</li></ul><p>To copy a file, you can use a Unix pipe (<code>|</code>) to send<code>cat</code>'s output to <code>dd</code>, then write to adestination file:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">cat</span> sourcefile | <span class="hljs-built_in">dd</span> of=destinationfile<br></code></pre></td></tr></table></figure><h2 id="potential-advantages-of-cat-and-dd-over-cp">Potential Advantagesof <code>cat</code> and <code>dd</code> Over <code>cp</code></h2><h3 id="better-progressstatistics"><strong>Betterprogress/statistics</strong></h3><ul><li><code>dd</code> with the <code>status=progress</code> (GNU dd)option shows live copy statistics: <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">cat bigfile | dd <span class="hljs-attribute">of</span>=outfile <span class="hljs-attribute">status</span>=progress<br></code></pre></td></tr></table></figure></li></ul><h3 id="working-around-cp-limitations"><strong>Working Around<code>cp</code> Limitations</strong></h3><ul><li>Some device files, file descriptors, or pseudo-files (like<code>/proc</code> or <code>/sys</code>) do not support <code>cp</code>,but streaming with <code>cat</code> + <code>dd</code> may work.</li></ul>]]></content>
-    
-    
-    <categories>
-      
-      <category>System Administration</category>
+      <category>Data Science, Multimedia, and Process Automation</category>
       
     </categories>
     
@@ -395,7 +431,7 @@
     
     <categories>
       
-      <category>Process Automation</category>
+      <category>Data Science, Multimedia, and Process Automation</category>
       
     </categories>
     
@@ -414,7 +450,7 @@
     
     <categories>
       
-      <category>Data Science</category>
+      <category>Data Science, Multimedia, and Process Automation</category>
       
     </categories>
     
@@ -433,7 +469,7 @@
     
     <categories>
       
-      <category>Development Environments</category>
+      <category>Environments</category>
       
     </categories>
     
@@ -452,7 +488,7 @@
     
     <categories>
       
-      <category>Linguistics</category>
+      <category>Linguistics and Literature</category>
       
     </categories>
     
@@ -532,7 +568,7 @@
     
     <categories>
       
-      <category>Development Environments</category>
+      <category>Environments</category>
       
     </categories>
     
@@ -551,7 +587,7 @@
     
     <categories>
       
-      <category>Linguistics</category>
+      <category>Linguistics and Literature</category>
       
     </categories>
     
@@ -1050,25 +1086,6 @@
     <categories>
       
       <category>Conference and Meeting Minutes</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Batch Killing Processes Looked up Through ps -aux | grep &lt;process_name&gt;</title>
-    <link href="/2023/06/10/Batch-Killing-Processes-Looked-up-Through-ps-aux-grep-process_name/"/>
-    <url>/2023/06/10/Batch-Killing-Processes-Looked-up-Through-ps-aux-grep-process_name/</url>
-    
-    <content type="html"><![CDATA[<p>Sometimes we acidentally spawn a series of processes, and we want tokill them. We can look up their pid's through<code>ps -aux | grep &lt;process_name&gt;</code> (as shown below) andmanually run the <code>kill</code> command to kill each process byproviding its pid, but <em>how can we automate this tedioustask</em>?</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ ps aux | grep pipreqs<br>jifengwu   58180  0.0  0.1  46440 27332 pts/0    T    13:38   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/spectria/tildes/tildes --mode no-pin<br>jifengwu   58205  0.1  0.1  48140 29392 pts/0    T    13:38   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/PnX-SI/GeoNature --mode no-pin<br>jifengwu   58224  5.7  0.2  51856 33108 pts/0    T    13:38   0:23 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/fabiandevia/home --mode no-pin<br>jifengwu   58267  4.4  0.2  57880 38204 pts/0    T    13:39   0:17 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/377312117/gitproject --mode no-pin<br>jifengwu   58272  2.3  0.2  53756 34252 pts/0    T    13:39   0:08 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/crazyfish1111/home --mode no-pin<br>jifengwu   58282  0.1  0.1  47840 28132 pts/0    T    13:39   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/Piratenpartei/ekklesia-portal --mode no-pin<br>jifengwu   58295  0.1  0.1  48220 28492 pts/0    T    13:39   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/jauhararifin/ugrade/server --mode no-pin<br>jifengwu   58659  0.3  0.1  48608 29324 pts/0    T    13:41   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/klen/pylama --mode no-pin<br>jifengwu   59564  0.0  0.0  19612  2516 pts/2    S+   13:45   0:00 grep --color=auto pipreqs<br></code></pre></td></tr></table></figure><p>First, we can add <code>grep -v grep</code> to the pipe to <em>hidethe grep processes from the output</em>:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ ps aux | grep pipreqs | grep -v grep<br>jifengwu   58180  0.0  0.1  46440 27332 pts/0    T    13:38   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/spectria/tildes/tildes --mode no-pin<br>jifengwu   58205  0.1  0.1  48140 29392 pts/0    T    13:38   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/PnX-SI/GeoNature --mode no-pin<br>jifengwu   58224  5.6  0.2  51856 33108 pts/0    T    13:38   0:23 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/fabiandevia/home --mode no-pin<br>jifengwu   58267  4.4  0.2  57880 38204 pts/0    T    13:39   0:17 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/377312117/gitproject --mode no-pin<br>jifengwu   58272  2.2  0.2  53756 34252 pts/0    T    13:39   0:08 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/crazyfish1111/home --mode no-pin<br>jifengwu   58282  0.1  0.1  47840 28132 pts/0    T    13:39   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/Piratenpartei/ekklesia-portal --mode no-pin<br>jifengwu   58295  0.1  0.1  48220 28492 pts/0    T    13:39   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/jauhararifin/ugrade/server --mode no-pin<br>jifengwu   58659  0.3  0.1  48608 29324 pts/0    T    13:41   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/klen/pylama --mode no-pin<br></code></pre></td></tr></table></figure><p>Then, we can add <code>awk '&#123;print $2&#125;'</code> to the pipe to invoke<code>awk</code> to <em>trim the second space-delimited component</em>(which in this case is the pid). Now we have a list of the pid's of theprocesses we want to kill:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ ps aux | grep pipreqs | grep -v grep | awk <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span><br>58180<br>58205<br>58224<br>58267<br>58272<br>58282<br>58295<br>58659<br></code></pre></td></tr></table></figure><p>Finally, we can iterate over the pid's in a for-loop to killthem.</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ <span class="hljs-keyword">for</span> pid <span class="hljs-keyword">in</span> $(ps aux | grep pipreqs | grep -v grep | awk <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span>)<br>&gt; <span class="hljs-keyword">do</span><br>&gt; <span class="hljs-built_in">kill</span> -15 <span class="hljs-variable">$pid</span><br>&gt; <span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure><p>References</p><ul><li>https://www.baeldung.com/linux/grep-exclude-ps-results</li><li>https://stackoverflow.com/questions/46008880/how-to-always-cut-the-pid-from-ps-aux-command</li></ul>]]></content>
-    
-    
-    <categories>
-      
-      <category>System Administration</category>
       
     </categories>
     
