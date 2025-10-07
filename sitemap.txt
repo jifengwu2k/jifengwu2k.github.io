@@ -1,3 +1,4 @@
+https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/
 https://jifengwu2k.github.io/index.html
 https://jifengwu2k.github.io/2023/03/01/Type-Theoretic-Constructs-in-CXX/
 https://jifengwu2k.github.io/2023/09/08/The-Cornell-Maryland-Max-Planck-Pre-doctoral-Research-School-2023-Observations-and-Gained-Insights/
@@ -85,7 +86,6 @@ https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/
 https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/
 https://jifengwu2k.github.io/2025/09/15/C-Coding-Guidelines/
 https://jifengwu2k.github.io/2022/10/20/Personal-Website-Design-Considerations/
-https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/
 https://jifengwu2k.github.io/2023/09/30/Understanding-the-Name-Structure-and-Loss-Function-of-the-Variational-Autoencoder/
 https://jifengwu2k.github.io/2023/08/16/Timetable-of-Well-known-Conferences-in-Different-Subdomains-of-Computer-Science/
 https://jifengwu2k.github.io/2022/09/16/Understanding-the-Formulation-of-Information-Entropy/

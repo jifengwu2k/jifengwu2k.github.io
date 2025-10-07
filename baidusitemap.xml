@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/</loc>
+    <lastmod>2025-10-07</lastmod>
+  </url>
+  <url>
     <loc>https://jifengwu2k.github.io/2023/03/01/Type-Theoretic-Constructs-in-CXX/</loc>
     <lastmod>2025-10-06</lastmod>
   </url>
@@ -343,10 +347,6 @@
   <url>
     <loc>https://jifengwu2k.github.io/2022/10/20/Personal-Website-Design-Considerations/</loc>
     <lastmod>2025-08-31</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/</loc>
-    <lastmod>2025-08-22</lastmod>
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2023/09/30/Understanding-the-Name-Structure-and-Loss-Function-of-the-Variational-Autoencoder/</loc>
