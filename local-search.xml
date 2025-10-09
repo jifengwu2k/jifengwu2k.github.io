@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>Paper Reading: Registerless Hardware Description</title>
+    <link href="/2025/10/09/Paper-Reading-Registerless-Hardware-Description/"/>
+    <url>/2025/10/09/Paper-Reading-Registerless-Hardware-Description/</url>
+    
+    <content type="html"><![CDATA[<h2 id="problem-addressed-motivation">Problem Addressed /Motivation</h2><ul><li><strong>Traditional RTL (e.g., Verilog, VHDL):</strong><ul><li>"Tyranny of the clock": Designers must manage schedulers andpipelining, making code verbose and non-portable.</li><li>All hardware state is modeled with explicit registers.</li></ul></li><li><strong>High-Level Synthesis (HLS):</strong><ul><li>Difficult to express simple periodic operations.</li><li>Sequential semantics hinder natural concurrency/parallelism.</li></ul></li><li><strong>Need:</strong> A better approach should:<ul><li>Be expressive for all hardware use-cases (like RTL).</li><li>Be abstract enough for tools to automate pipelining/etc., not tielogic to clocks and registers.</li></ul></li></ul><h2 id="background">Background</h2><ul><li><strong>Registers &amp; Their Use-Cases:</strong><ul><li>Synchronous Technology Backend: pipelining, synchronizers.</li><li>Synchronous Technology Interface: IO timing.</li><li>State: Carrying computation over cycles, FSM state,accumulators.</li></ul></li></ul><h2 id="approach">Approach</h2><ul><li><strong>DF-HDL (e.g., DFiant):</strong><ul><li>Describes hardware by operations and dependencies (token stream),rather than cycles and registers.</li><li>Real-time constraints expressed directly as timers/rates.</li><li>State is managed via <em>signal history</em> (e.g.,<code>.prev</code> gives access to past values), not explicitregisters.</li><li>Registers for pipelining, balancing, etc., are inferred by thetool.</li></ul></li></ul><h2id="what-i-noticed-relationship-to-functional-reactive-programming-frp">WhatI Noticed: Relationship to <ahref="/2024/01/24/Paper-Reading-Asynchronous-Functional-Reactive-Programming-for-GUIs/">FunctionalReactive Programming (FRP)</a></h2><h3 id="explicit-relation"><strong>Explicit Relation</strong></h3><ul><li>Synchronous dataflow languages (Lustre, Signal) are cited asrelatives/"grandfathers" of FRP (Elm).</li><li>Deep similarity with FRP , especially around statepropagation/events over time.<ul><li>Elm's <code>foldp</code>, <code>map</code> ~ DFiant's<code>.prev</code>, stream operations.</li><li>Elm's "state over time" = DFiant's handling of accumulators,averages, etc.</li></ul></li></ul><h3 id="whats-newdifferent-in-dfiant">What's New/Different inDFiant</h3><ul><li>Blends FRP ideas with HW-specific needs:<ul><li>Interfaces with real hardware constraints (timers, IO, pathbalancing).</li><li>Explicit state distinction (commit/derived).</li><li>Enables automatic pipeline/register inference (not in pureFRP).</li></ul></li></ul><h2 id="strengths-weaknesses">7. Strengths / Weaknesses</h2><ul><li><strong>Strengths:</strong><ul><li>More expressive and concise than both RTL and HLS in manycases.</li><li>Reduces manual handling of clock/register intricacies.</li></ul></li><li><strong>Limitations/Questions / To Investigate:</strong><ul><li>Toolchain maturity, synthesis support?<ul><li>How does debug/profiling work? Is Elm-like <ahref="https://www.youtube.com/watch?v=lK0vph1zR8s">time-traveldebugging</a> supported?</li></ul></li><li>Any classes of hardware difficult to describe?</li><li>How portable is generated code across synthesis targets?</li><li>Adoption in industry/real-world examples?</li></ul></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Research Inspiration</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Using Jupyter Lab as a Lightweight Remote Desktop</title>
     <link href="/2025/10/04/Using-Jupyter-Lab-as-a-Lightweight-Remote-Desktop/"/>
     <url>/2025/10/04/Using-Jupyter-Lab-as-a-Lightweight-Remote-Desktop/</url>

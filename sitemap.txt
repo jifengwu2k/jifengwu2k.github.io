@@ -1,3 +1,4 @@
+https://jifengwu2k.github.io/2025/10/09/Paper-Reading-Registerless-Hardware-Description/
 https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/
 https://jifengwu2k.github.io/index.html
 https://jifengwu2k.github.io/2023/03/01/Type-Theoretic-Constructs-in-CXX/
