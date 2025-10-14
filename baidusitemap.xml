@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/</loc>
+    <lastmod>2025-10-14</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/</loc>
+    <lastmod>2025-10-12</lastmod>
+  </url>
+  <url>
     <loc>https://jifengwu2k.github.io/2025/10/09/Paper-Reading-Registerless-Hardware-Description/</loc>
     <lastmod>2025-10-09</lastmod>
   </url>
@@ -335,14 +343,6 @@
   <url>
     <loc>https://jifengwu2k.github.io/2025/10/04/Using-Jupyter-Lab-as-a-Lightweight-Remote-Desktop/</loc>
     <lastmod>2025-10-04</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/</loc>
-    <lastmod>2025-09-28</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/</loc>
-    <lastmod>2025-09-28</lastmod>
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2025/09/15/C-Coding-Guidelines/</loc>

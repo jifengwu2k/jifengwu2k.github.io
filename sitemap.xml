@@ -2,6 +2,24 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/</loc>
+    
+    <lastmod>2025-10-14</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/</loc>
+    
+    <lastmod>2025-10-12</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://jifengwu2k.github.io/2025/10/09/Paper-Reading-Registerless-Hardware-Description/</loc>
     
     <lastmod>2025-10-09</lastmod>
@@ -767,24 +785,6 @@
   </url>
   
   <url>
-    <loc>https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/</loc>
-    
-    <lastmod>2025-09-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/</loc>
-    
-    <lastmod>2025-09-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://jifengwu2k.github.io/2025/09/15/C-Coding-Guidelines/</loc>
     
     <lastmod>2025-09-15</lastmod>
@@ -994,7 +994,7 @@
 
   <url>
     <loc>https://jifengwu2k.github.io/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -1004,77 +1004,77 @@
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Mathematics/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Reflections/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Reference/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/DevOps/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Environments/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Data-Science-Multimedia-and-Process-Automation/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Linguistics-and-Literature/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Lifestyle/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Financial-Statements/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Research-Inspiration/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Design-Patterns/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
