@@ -1,8 +1,10 @@
-https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/
+https://jifengwu2k.github.io/2025/11/26/2025-11-Financial-Statement/
+https://jifengwu2k.github.io/2025/11/04/2025-10-Financial-Statement/
 https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/
+https://jifengwu2k.github.io/index.html
+https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/
 https://jifengwu2k.github.io/2025/10/09/Paper-Reading-Registerless-Hardware-Description/
 https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/
-https://jifengwu2k.github.io/index.html
 https://jifengwu2k.github.io/2023/03/01/Type-Theoretic-Constructs-in-CXX/
 https://jifengwu2k.github.io/2023/09/08/The-Cornell-Maryland-Max-Planck-Pre-doctoral-Research-School-2023-Observations-and-Gained-Insights/
 https://jifengwu2k.github.io/2023/11/05/Sarah-Chasins-Works-on-PL-and-HCI/
