@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://jifengwu2k.github.io/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-managed-Headers-and-Libraries/</loc>
+    <lastmod>2025-11-30</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/</loc>
+    <lastmod>2025-11-30</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/10/04/Using-Jupyter-Lab-as-a-Lightweight-Remote-Desktop/</loc>
+    <lastmod>2025-11-30</lastmod>
+  </url>
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/11/29/Understanding-What-Instructions-Your-Old-x86-CPU-Supports/</loc>
+    <lastmod>2025-11-30</lastmod>
+  </url>
+  <url>
     <loc>https://jifengwu2k.github.io/2025/11/26/2025-11-Financial-Statement/</loc>
     <lastmod>2025-11-26</lastmod>
   </url>
@@ -19,10 +35,6 @@
   <url>
     <loc>https://jifengwu2k.github.io/2025/10/09/Paper-Reading-Registerless-Hardware-Description/</loc>
     <lastmod>2025-10-09</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/</loc>
-    <lastmod>2025-10-07</lastmod>
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2023/03/01/Type-Theoretic-Constructs-in-CXX/</loc>
@@ -342,14 +354,6 @@
   </url>
   <url>
     <loc>https://jifengwu2k.github.io/2025/08/12/How-to-Make-VS-Code-s-Language-Detection-Sane-and-Deterministic/</loc>
-    <lastmod>2025-10-04</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-managed-Headers-and-Libraries/</loc>
-    <lastmod>2025-10-04</lastmod>
-  </url>
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/10/04/Using-Jupyter-Lab-as-a-Lightweight-Remote-Desktop/</loc>
     <lastmod>2025-10-04</lastmod>
   </url>
   <url>

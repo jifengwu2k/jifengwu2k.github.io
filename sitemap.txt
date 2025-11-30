@@ -1,10 +1,13 @@
+https://jifengwu2k.github.io/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-managed-Headers-and-Libraries/
+https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/
+https://jifengwu2k.github.io/2025/10/04/Using-Jupyter-Lab-as-a-Lightweight-Remote-Desktop/
+https://jifengwu2k.github.io/2025/11/29/Understanding-What-Instructions-Your-Old-x86-CPU-Supports/
 https://jifengwu2k.github.io/2025/11/26/2025-11-Financial-Statement/
 https://jifengwu2k.github.io/2025/11/04/2025-10-Financial-Statement/
 https://jifengwu2k.github.io/2025/08/31/PyPI-Packages/
 https://jifengwu2k.github.io/index.html
 https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/
 https://jifengwu2k.github.io/2025/10/09/Paper-Reading-Registerless-Hardware-Description/
-https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/
 https://jifengwu2k.github.io/2023/03/01/Type-Theoretic-Constructs-in-CXX/
 https://jifengwu2k.github.io/2023/09/08/The-Cornell-Maryland-Max-Planck-Pre-doctoral-Research-School-2023-Observations-and-Gained-Insights/
 https://jifengwu2k.github.io/2023/11/05/Sarah-Chasins-Works-on-PL-and-HCI/
@@ -85,8 +88,6 @@ https://jifengwu2k.github.io/2025/08/21/Setting-Up-a-Headless-VNC-Server-for-Rem
 https://jifengwu2k.github.io/2025/08/11/Powering-clangd-based-C-IDEs-with-compile-commands-json/
 https://jifengwu2k.github.io/2025/07/10/Managing-Development-Environments-with-Conda/
 https://jifengwu2k.github.io/2025/08/12/How-to-Make-VS-Code-s-Language-Detection-Sane-and-Deterministic/
-https://jifengwu2k.github.io/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-managed-Headers-and-Libraries/
-https://jifengwu2k.github.io/2025/10/04/Using-Jupyter-Lab-as-a-Lightweight-Remote-Desktop/
 https://jifengwu2k.github.io/2025/09/15/C-Coding-Guidelines/
 https://jifengwu2k.github.io/2022/10/20/Personal-Website-Design-Considerations/
 https://jifengwu2k.github.io/2023/09/30/Understanding-the-Name-Structure-and-Loss-Function-of-the-Variational-Autoencoder/
