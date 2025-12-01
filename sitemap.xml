@@ -2,6 +2,24 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/</loc>
+    
+    <lastmod>2025-12-01</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/11/26/2025-11-Financial-Statement/</loc>
+    
+    <lastmod>2025-12-01</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://jifengwu2k.github.io/index.html</loc>
     
     <lastmod>2025-12-01</lastmod>
@@ -38,27 +56,9 @@
   </url>
   
   <url>
-    <loc>https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/</loc>
-    
-    <lastmod>2025-11-30</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://jifengwu2k.github.io/2025/11/29/Understanding-What-Instructions-Your-Old-x86-CPU-Supports/</loc>
     
     <lastmod>2025-11-30</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/11/26/2025-11-Financial-Statement/</loc>
-    
-    <lastmod>2025-11-26</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
