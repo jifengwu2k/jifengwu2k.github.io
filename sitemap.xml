@@ -2,6 +2,24 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://jifengwu2k.github.io/2025/12/06/Building-C-C-Open-Source-Applications-in-a-Conda-Environment/</loc>
+    
+    <lastmod>2025-12-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://jifengwu2k.github.io/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-managed-Headers-and-Libraries/</loc>
+    
+    <lastmod>2025-12-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://jifengwu2k.github.io/2025/10/04/Using-Jupyter-Lab-as-a-Lightweight-Remote-Desktop/</loc>
     
     <lastmod>2025-12-02</lastmod>
@@ -41,15 +59,6 @@
     <loc>https://jifengwu2k.github.io/2025/11/30/Robust-Rootless-Data-Science-Environments-with-Conda-Compiling-Code-and-Sharing-Ports/</loc>
     
     <lastmod>2025-12-01</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://jifengwu2k.github.io/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-managed-Headers-and-Libraries/</loc>
-    
-    <lastmod>2025-11-30</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -1030,7 +1039,7 @@
 
   <url>
     <loc>https://jifengwu2k.github.io/</loc>
-    <lastmod>2025-12-02</lastmod>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -1040,77 +1049,77 @@
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Mathematics/</loc>
-    <lastmod>2025-12-02</lastmod>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Reflections/</loc>
-    <lastmod>2025-12-02</lastmod>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Reference/</loc>
-    <lastmod>2025-12-02</lastmod>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/DevOps/</loc>
-    <lastmod>2025-12-02</lastmod>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Environments/</loc>
-    <lastmod>2025-12-02</lastmod>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Data-Science-Multimedia-and-Process-Automation/</loc>
-    <lastmod>2025-12-02</lastmod>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Linguistics-and-Literature/</loc>
-    <lastmod>2025-12-02</lastmod>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Lifestyle/</loc>
-    <lastmod>2025-12-02</lastmod>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Financial-Statements/</loc>
-    <lastmod>2025-12-02</lastmod>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Research-Inspiration/</loc>
-    <lastmod>2025-12-02</lastmod>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://jifengwu2k.github.io/categories/Design-Patterns/</loc>
-    <lastmod>2025-12-02</lastmod>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
