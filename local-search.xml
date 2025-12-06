@@ -23,6 +23,25 @@
   
   
   <entry>
+    <title>2025-12 Financial Statement</title>
+    <link href="/2025/12/06/2025-12-Financial-Statement/"/>
+    <url>/2025/12/06/2025-12-Financial-Statement/</url>
+    
+    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs csv">date,name,amount<br>2025-12-01,Cornell Universi NBS REFUND Monthly Dividend,3195.846<br>2025-12-01,LAMBDA CLOUD LAMBDA.AI CA 12/01,-34.08<br>2025-12-02,ETT*CollegetownTerrace 801-8775491 IL 12/01,-1542.95<br>2025-12-03,Payment to Chase card ending in 6502 12/03,-180.63<br>2025-12-03,Payment to Chase card ending in 6502 12/03,-60.54<br>2025-12-03,Cash Redemption,33.31<br>2025-12-03,BOOK TRANSFER CREDIT,300.00<br>2025-12-03,INTERNATIONAL INCOMING WIRE FEE,-15.00<br>2025-12-04,Payment to Chase card ending in 6502 12/04,-23.31<br>2025-12-05,Payment to Chase card ending in 6502 12/05,-820.64<br>2025-12-05,Payment to Chase card ending in 6502 12/05,-253.21<br></code></pre></td></tr></table></figure><p>Total Net: 598.796</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Financial Statements</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Robust, Rootless Data Science Environments with Conda: Compiling Code and Sharing Ports</title>
     <link href="/2025/11/30/Robust-Rootless-Data-Science-Environments-with-Conda-Compiling-Code-and-Sharing-Ports/"/>
     <url>/2025/11/30/Robust-Rootless-Data-Science-Environments-with-Conda-Compiling-Code-and-Sharing-Ports/</url>
