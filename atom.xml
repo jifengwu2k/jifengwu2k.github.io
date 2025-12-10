@@ -6,7 +6,7 @@
   <link href="https://jifengwu2k.github.io/atom.xml" rel="self"/>
   
   <link href="https://jifengwu2k.github.io/"/>
-  <updated>2025-12-08T15:22:22.711Z</updated>
+  <updated>2025-12-10T06:23:58.608Z</updated>
   <id>https://jifengwu2k.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Running a Rootless SSH Server on a Custom Port</title>
+    <link href="https://jifengwu2k.github.io/2025/12/10/Running-a-Rootless-SSH-Server-on-a-Custom-Port/"/>
+    <id>https://jifengwu2k.github.io/2025/12/10/Running-a-Rootless-SSH-Server-on-a-Custom-Port/</id>
+    <published>2025-12-10T05:00:00.000Z</published>
+    <updated>2025-12-10T06:23:58.608Z</updated>
+    
+    <content type="html"><![CDATA[<p>Sometimes you need to spin up an SSH server without changing systemconfigs or needing root. Here's how you can do it, using a custom portand a host key you generate yourself.</p><h2 id="prerequisites">Prerequisites</h2><ul><li><code>/usr/sbin/sshd</code> properly configured to facilitate loginsand <code>ChrootDirectory</code> (usually <code>/var/empty</code>) setup <strong>by root</strong>.</li></ul><blockquote><p><strong>Note:</strong> If <code>/usr/sbin/sshd</code> is not properlyconfigured or you want to reconfigure the logic to facilitate logins(e.g., allow password login), and you <em>don't</em> have root access,this method <em>won't</em> work. Consider alternatives like <ahref="https://en.wikipedia.org/wiki/Telnet">telnet</a> for shell or <ahref="https://en.wikipedia.org/wiki/WebDAV">WebDAV</a> for filetransfers.</p></blockquote><h2 id="generate-a-custom-host-key">Generate a Custom Host Key</h2><p>First, create a new Ed25519 host key (keeps the main host keysuntouched):</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh-keygen -t ed25519 -f <span class="hljs-string">&quot;<span class="hljs-subst">$(realpath <span class="hljs-string">&quot;~/my_host_ed25519_key&quot;</span>)</span>&quot;</span> -N <span class="hljs-string">&#x27;&#x27;</span><br></code></pre></td></tr></table></figure><ul><li>This creates the private key:<code>"$(realpath "~/my_host_ed25519_key")"</code></li><li>And the public key:<code>"$(realpath "~/my_host_ed25519_key.pub")"</code></li><li><code>-N ''</code> means no passphrase</li></ul><h2 id="start-sshd-on-a-custom-port-in-foreground">Start<code>sshd</code> on a Custom Port in Foreground</h2><p>You can launch the SSH daemon on, for example, port 2222, using yourkey:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">/usr/sbin/sshd -D -p 2222 -f /dev/null -o <span class="hljs-string">&quot;HostKey=<span class="hljs-subst">$(realpath <span class="hljs-string">&quot;~/my_host_ed25519_key&quot;</span>)</span>&quot;</span> -o PasswordAuthentication=<span class="hljs-built_in">yes</span> -o PubkeyAuthentication=<span class="hljs-built_in">yes</span><br></code></pre></td></tr></table></figure><p><strong>Explanation:</strong></p><ul><li><code>-D</code> - Don't daemonize (run in the foreground)</li><li><code>-p 2222</code> - Use a non-privileged, custom port</li><li><code>-f /dev/null</code> - Ignore system config.</li><li><code>-o HostKey=...</code> - Use just the specified host key</li></ul><p>Now you or a teammate can connect like:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh -p 2222 &lt;user&gt;@&lt;host&gt;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Sometimes you need to spin up an SSH server without changing system
+configs or needing root. Here&#39;s how you can do it, using a custom por</summary>
+      
+    
+    
+    
+    <category term="Environments" scheme="https://jifengwu2k.github.io/categories/Environments/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>Building C/C++ Open Source Applications in a Conda Environment</title>
@@ -474,30 +497,6 @@ href=&quot;https://www.youtube.com/wat</summary>
     
     
     <category term="Linguistics and Literature" scheme="https://jifengwu2k.github.io/categories/Linguistics-and-Literature/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Manipulating PDFs from the Unix Command Line</title>
-    <link href="https://jifengwu2k.github.io/2025/08/27/Manipulating-PDFs-from-the-Unix-Command-Line/"/>
-    <id>https://jifengwu2k.github.io/2025/08/27/Manipulating-PDFs-from-the-Unix-Command-Line/</id>
-    <published>2025-08-27T04:00:00.000Z</published>
-    <updated>2025-10-04T16:38:06.161Z</updated>
-    
-    <content type="html"><![CDATA[<p>The <a href="https://poppler.freedesktop.org/">Poppler utilities</a>provide many Unix command-line tools for manipulating PDFs. Installvia:</p><ul><li><code>sudo apt-get install poppler-utils</code> (Ubuntu)</li><li><code>sudo apk add poppler-utils</code> (Alpine)</li><li><code>brew install poppler</code> (macOS)</li></ul><h2 id="extract-text-from-a-pdf">Extract Text from a PDF</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdftotext input.pdf output.txt<br></code></pre></td></tr></table></figure><h2 id="merge-pdfs-together">Merge PDFs Together</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdfunite file1.pdf file2.pdf merged.pdf<br></code></pre></td></tr></table></figure><h2 id="split-extract-pages-from-a-pdf">Split (Extract) Pages from aPDF</h2><p>This will split each page of <code>input.pdf</code> to<code>output_1.pdf</code>, <code>output_2.pdf</code>, etc.</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdfseparate input.pdf output_%d.pdf<br></code></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;The &lt;a href=&quot;https://poppler.freedesktop.org/&quot;&gt;Poppler utilities&lt;/a&gt;
-provide many Unix command-line tools for manipulating PDFs. Install
-</summary>
-      
-    
-    
-    
-    <category term="Data Science, Multimedia, and Process Automation" scheme="https://jifengwu2k.github.io/categories/Data-Science-Multimedia-and-Process-Automation/"/>
     
     
   </entry>

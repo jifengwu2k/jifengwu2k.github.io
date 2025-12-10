@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>Running a Rootless SSH Server on a Custom Port</title>
+    <link href="/2025/12/10/Running-a-Rootless-SSH-Server-on-a-Custom-Port/"/>
+    <url>/2025/12/10/Running-a-Rootless-SSH-Server-on-a-Custom-Port/</url>
+    
+    <content type="html"><![CDATA[<p>Sometimes you need to spin up an SSH server without changing systemconfigs or needing root. Here's how you can do it, using a custom portand a host key you generate yourself.</p><h2 id="prerequisites">Prerequisites</h2><ul><li><code>/usr/sbin/sshd</code> properly configured to facilitate loginsand <code>ChrootDirectory</code> (usually <code>/var/empty</code>) setup <strong>by root</strong>.</li></ul><blockquote><p><strong>Note:</strong> If <code>/usr/sbin/sshd</code> is not properlyconfigured or you want to reconfigure the logic to facilitate logins(e.g., allow password login), and you <em>don't</em> have root access,this method <em>won't</em> work. Consider alternatives like <ahref="https://en.wikipedia.org/wiki/Telnet">telnet</a> for shell or <ahref="https://en.wikipedia.org/wiki/WebDAV">WebDAV</a> for filetransfers.</p></blockquote><h2 id="generate-a-custom-host-key">Generate a Custom Host Key</h2><p>First, create a new Ed25519 host key (keeps the main host keysuntouched):</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh-keygen -t ed25519 -f <span class="hljs-string">&quot;<span class="hljs-subst">$(realpath <span class="hljs-string">&quot;~/my_host_ed25519_key&quot;</span>)</span>&quot;</span> -N <span class="hljs-string">&#x27;&#x27;</span><br></code></pre></td></tr></table></figure><ul><li>This creates the private key:<code>"$(realpath "~/my_host_ed25519_key")"</code></li><li>And the public key:<code>"$(realpath "~/my_host_ed25519_key.pub")"</code></li><li><code>-N ''</code> means no passphrase</li></ul><h2 id="start-sshd-on-a-custom-port-in-foreground">Start<code>sshd</code> on a Custom Port in Foreground</h2><p>You can launch the SSH daemon on, for example, port 2222, using yourkey:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">/usr/sbin/sshd -D -p 2222 -f /dev/null -o <span class="hljs-string">&quot;HostKey=<span class="hljs-subst">$(realpath <span class="hljs-string">&quot;~/my_host_ed25519_key&quot;</span>)</span>&quot;</span> -o PasswordAuthentication=<span class="hljs-built_in">yes</span> -o PubkeyAuthentication=<span class="hljs-built_in">yes</span><br></code></pre></td></tr></table></figure><p><strong>Explanation:</strong></p><ul><li><code>-D</code> - Don't daemonize (run in the foreground)</li><li><code>-p 2222</code> - Use a non-privileged, custom port</li><li><code>-f /dev/null</code> - Ignore system config.</li><li><code>-o HostKey=...</code> - Use just the specified host key</li></ul><p>Now you or a teammate can connect like:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh -p 2222 &lt;user&gt;@&lt;host&gt;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>Environments</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Building C/C++ Open Source Applications in a Conda Environment</title>
     <link href="/2025/12/06/Building-C-C-Open-Source-Applications-in-a-Conda-Environment/"/>
     <url>/2025/12/06/Building-C-C-Open-Source-Applications-in-a-Conda-Environment/</url>
