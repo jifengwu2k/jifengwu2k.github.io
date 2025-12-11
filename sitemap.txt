@@ -1,8 +1,8 @@
+https://jifengwu2k.github.io/2025/12/06/Building-C-C-Open-Source-Applications-in-a-Conda-Environment/
 https://jifengwu2k.github.io/2025/12/11/Paper-Reading-AccelOpt-A-Self-Improving-LLM-Agentic-System-for-AI-Accelerator-Kernel-Optimization/
 https://jifengwu2k.github.io/2025/12/06/2025-12-Financial-Statement/
 https://jifengwu2k.github.io/2025/12/10/Running-a-Rootless-SSH-Server-on-a-Custom-Port/
 https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/
-https://jifengwu2k.github.io/2025/12/06/Building-C-C-Open-Source-Applications-in-a-Conda-Environment/
 https://jifengwu2k.github.io/2025/11/26/2025-11-Financial-Statement/
 https://jifengwu2k.github.io/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-managed-Headers-and-Libraries/
 https://jifengwu2k.github.io/2025/10/04/Using-Jupyter-Lab-as-a-Lightweight-Remote-Desktop/
