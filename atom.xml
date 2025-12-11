@@ -6,7 +6,7 @@
   <link href="https://jifengwu2k.github.io/atom.xml" rel="self"/>
   
   <link href="https://jifengwu2k.github.io/"/>
-  <updated>2025-12-10T06:23:58.608Z</updated>
+  <updated>2025-12-11T16:51:53.082Z</updated>
   <id>https://jifengwu2k.github.io/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Paper Reading: AccelOpt: A Self-Improving LLM Agentic System for AI Accelerator Kernel Optimization</title>
+    <link href="https://jifengwu2k.github.io/2025/12/11/Paper-Reading-AccelOpt-A-Self-Improving-LLM-Agentic-System-for-AI-Accelerator-Kernel-Optimization/"/>
+    <id>https://jifengwu2k.github.io/2025/12/11/Paper-Reading-AccelOpt-A-Self-Improving-LLM-Agentic-System-for-AI-Accelerator-Kernel-Optimization/</id>
+    <published>2025-12-11T05:00:00.000Z</published>
+    <updated>2025-12-11T16:51:53.082Z</updated>
+    
+    <content type="html"><![CDATA[<h1id="paper-reading-accelopt-a-self-improving-llm-agentic-system-for-ai-accelerator-kernel-optimization">PaperReading: <a href="http://arxiv.org/abs/2511.15915">"AccelOpt: ASelf-Improving LLM Agentic System for AI Accelerator KernelOptimization"</a></h1><h2 id="summary">Summary</h2><h3 id="approach">Approach</h3><ul><li>Agentic workflow: Three LLM-based agents (Planner, Executor,Summarizer):<ul><li>Planner: proposes optimization plans.</li><li>Executor: codes up, tests, measures kernels.</li><li>Summarizer: distills and records useful strategies.</li></ul></li><li>Optimization memory: Past experiences (slow-fast kernel pairs, codesnippets, and summarized optimization lessons) are stored and reused infuture searches.</li><li>Beam search: LLM agents generate and iteratively improve candidatekernels in parallel.</li></ul><blockquote><p>Prompts included in the appendix.</p><p>Agent suitability: The executor agent’s LLM quality is most critical;planner quality is less sensitive.</p></blockquote><h3 id="benchmark-evaluation">Benchmark &amp; Evaluation</h3><ul><li>NKIBench: a new benchmark suite of Trainium kernels (from real LLMworkloads) with peak performance estimates for each task.</li><li>Experiments on AWS Trainium 1 and 2: Measured:<ul><li>Average % of peak throughput ("absolute" optimization metric).</li><li>Whether AccelOpt could match or beat proprietary models like ClaudeSonnet 4 in both performance and cost.</li></ul></li></ul><h3 id="limitations">Limitations</h3><ul><li>For very hard or poorly specified kernels, performance mayplateau.</li><li>The efficiency of self-improvement is limited by thequality/capability of the underlying LLM, especially forcoding/execution.</li><li>Currently focuses on single-core kernels, not (yet) onmulti-core/large-scale parallelism.</li></ul><h2 id="ideas">Ideas</h2><p>Investigate the Executor, especially how it transforms fuzzy naturallanguage into precise commands.</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1
+id=&quot;paper-reading-accelopt-a-self-improving-llm-agentic-system-for-ai-accelerator-kernel-optimization&quot;&gt;Paper
+Reading: &lt;a href=&quot;http://ar</summary>
+      
+    
+    
+    
+    <category term="Research Inspiration" scheme="https://jifengwu2k.github.io/categories/Research-Inspiration/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>Running a Rootless SSH Server on a Custom Port</title>
@@ -67,9 +91,9 @@ href=&quot;/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-manag
     <link href="https://jifengwu2k.github.io/2025/12/06/2025-12-Financial-Statement/"/>
     <id>https://jifengwu2k.github.io/2025/12/06/2025-12-Financial-Statement/</id>
     <published>2025-12-06T05:00:00.000Z</published>
-    <updated>2025-12-09T13:43:57.499Z</updated>
+    <updated>2025-12-10T15:29:23.698Z</updated>
     
-    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs csv">date,name,amount<br>2025-12-01,Cornell Universi NBS REFUND Monthly Dividend,3195.846<br>2025-12-01,LAMBDA CLOUD LAMBDA.AI CA 12/01,-34.08<br>2025-12-02,ETT*CollegetownTerrace 801-8775491 IL 12/01,-1542.95<br>2025-12-03,Payment to Chase card ending in 6502 12/03,-180.63<br>2025-12-03,Payment to Chase card ending in 6502 12/03,-60.54<br>2025-12-03,Cash Redemption,33.31<br>2025-12-03,BOOK TRANSFER CREDIT,300.00<br>2025-12-03,INTERNATIONAL INCOMING WIRE FEE,-15.00<br>2025-12-04,Payment to Chase card ending in 6502 12/04,-23.31<br>2025-12-05,Payment to Chase card ending in 6502 12/05,-820.64<br>2025-12-05,Payment to Chase card ending in 6502 12/05,-253.21<br>2025-12-08,Payment to Chase card ending in 6502 12/08,-369.02<br></code></pre></td></tr></table></figure><p>Total Net: 229.776</p>]]></content>
+    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs csv">date,name,amount<br>2025-12-01,Cornell Universi NBS REFUND Monthly Dividend,3195.846<br>2025-12-01,LAMBDA CLOUD LAMBDA.AI CA 12/01,-34.08<br>2025-12-02,ETT*CollegetownTerrace 801-8775491 IL 12/01,-1542.95<br>2025-12-03,Payment to Chase card ending in 6502 12/03,-180.63<br>2025-12-03,Payment to Chase card ending in 6502 12/03,-60.54<br>2025-12-03,Cash Redemption,33.31<br>2025-12-03,BOOK TRANSFER CREDIT,300.00<br>2025-12-03,INTERNATIONAL INCOMING WIRE FEE,-15.00<br>2025-12-04,Payment to Chase card ending in 6502 12/04,-23.31<br>2025-12-05,Payment to Chase card ending in 6502 12/05,-820.64<br>2025-12-05,Payment to Chase card ending in 6502 12/05,-253.21<br>2025-12-08,Payment to Chase card ending in 6502 12/08,-369.02<br>2025-12-08,LAMBDA CLOUD LAMBDA.AI CA 12/08,-2.81<br>2025-12-09,CHIPS CREDIT VIA UBS AG,+890.30<br>2025-12-09,DOMESTIC INCOMING WIRE FEE,-15.00<br>2025-12-09,Payment to Chase card ending in 6502 12/09,-412.54<br></code></pre></td></tr></table></figure><p>Total Net: 689.726</p>]]></content>
     
     
       
@@ -470,33 +494,6 @@ href=&quot;https://www.youtube.com/wat</summary>
     
     
     <category term="Lifestyle" scheme="https://jifengwu2k.github.io/categories/Lifestyle/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Philosophical Idioms</title>
-    <link href="https://jifengwu2k.github.io/2025/08/27/Philosophical-Idioms/"/>
-    <id>https://jifengwu2k.github.io/2025/08/27/Philosophical-Idioms/</id>
-    <published>2025-08-27T04:00:00.000Z</published>
-    <updated>2025-10-04T16:42:35.845Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="cutting-through-the-nonsense">Cutting Through the Nonsense</h2><blockquote><p>“艾玛，这不就是咱们屯子里的那个……吗？”</p></blockquote><ul><li>"Ain't that just that ... from our neck o' the woods?"</li></ul><blockquote><p>"... is by definition ..."</p></blockquote><ul><li>Literal: “……从定义上讲/从本质上说是……</li><li>Idiomatic: “……说白了就是……”</li></ul><blockquote><p>"That's a feature, not a bug."</p></blockquote><ul><li>Literal: “那是功能，不是缺陷。”</li><li>Idiomatic: “这是设计好的，不是整劈叉了。”</li></ul><h2 id="your-situation-shapes-your-views">Your Situation Shapes YourViews</h2><blockquote><p>“屁股决定脑袋。”</p></blockquote><ul><li>Literal: "Your ass determines your head."</li><li>Idiomatic: "Where you stand depends on where you sit." (A classicU.S. political saying with the same idea.)</li></ul><h2 id="pragmatism-and-results-driven-thinking">Pragmatism andResults-Driven Thinking</h2><blockquote><p>“实践是检验真理的唯一标准。”</p></blockquote><ul><li>Literal: "Practice is the sole criterion for testing truth."</li><li>Idiomatic: "Actions are the ultimate test of truth."</li></ul><blockquote><p>“不管黑猫白猫，能捉到老鼠就是好猫。”</p></blockquote><ul><li>Literal: "No matter whether it's a black cat or a white cat, as longas it catches mice, it's a good cat."</li><li>Idiomatic: "If it gets the job done, it's good enough."</li></ul><h2 id="knowing-who-you-are-doing-your-own-thing">Knowing Who You Are&amp; Doing Your Own Thing</h2><blockquote><p>“认清自己几斤几两。” “撒泡尿照照自己。”</p></blockquote><ul><li>Literal: "Recognize how many pounds and ounces you weigh." / "Take apiss and look at yourself in it."</li><li>Idiomatic: "Who do you think you are?"</li></ul><blockquote><p>“你们没有资格说，你们从实力地位出发同……谈话。”</p></blockquote><ul><li>"You do not have the qualification to say that you want to speak to... from a position of strength."</li></ul><blockquote><p>“我蛮夷也，不与中国之号谥。”</p></blockquote><ul><li>Literal: "I'm a barbarian; I do not accept the designations of theCentral Kingdom."</li><li>Idiomatic: "I'm a barbarian. I don't play by your rules."</li></ul><blockquote><p>“入关之后自有大儒为我辩经。”</p></blockquote><ul><li>Literal: "After entering the pass, there will naturally be greatscholars to argue scriptures on my behalf."</li><li>Idiomatic: "Let the philosophers debate after I've made mymove."</li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;cutting-through-the-nonsense&quot;&gt;Cutting Through the Nonsense&lt;/h2&gt;
-&lt;blockquote&gt;
-&lt;p&gt;“艾玛，这不就是咱们屯子里的那个……吗？”&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;ul&gt;
-&lt;li&gt;&quot;Ai</summary>
-      
-    
-    
-    
-    <category term="Linguistics and Literature" scheme="https://jifengwu2k.github.io/categories/Linguistics-and-Literature/"/>
     
     
   </entry>
