@@ -1,6 +1,7 @@
+https://jifengwu2k.github.io/2025/09/28/Shell-Coding-Guidelines/
+https://jifengwu2k.github.io/2025/12/06/2025-12-Financial-Statement/
 https://jifengwu2k.github.io/2025/12/06/Building-C-C-Open-Source-Applications-in-a-Conda-Environment/
 https://jifengwu2k.github.io/2025/12/11/Paper-Reading-AccelOpt-A-Self-Improving-LLM-Agentic-System-for-AI-Accelerator-Kernel-Optimization/
-https://jifengwu2k.github.io/2025/12/06/2025-12-Financial-Statement/
 https://jifengwu2k.github.io/2025/12/10/Running-a-Rootless-SSH-Server-on-a-Custom-Port/
 https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/
 https://jifengwu2k.github.io/2025/11/26/2025-11-Financial-Statement/
@@ -71,7 +72,6 @@ https://jifengwu2k.github.io/2022/12/31/Date-and-Time-Types-in-Python/
 https://jifengwu2k.github.io/2023/02/20/Displaying-Information-for-Thrown-and-Caught-Exceptions-to-the-User-in-Python/
 https://jifengwu2k.github.io/2025/07/24/Creating-Custom-Data-Structures-from-Abstract-Containers-in-collections-abc/
 https://jifengwu2k.github.io/2023/10/10/Conversation-with-Prof-Margo-Seltzer/
-https://jifengwu2k.github.io/2025/09/28/Shell-Coding-Guidelines/
 https://jifengwu2k.github.io/2023/12/31/Strategies-Tactics-and-Mindset-Learned-from-The-Ph-D-Grind/
 https://jifengwu2k.github.io/2025/08/22/%E7%AE%80%E6%98%93%E9%A3%9F%E8%B0%B1/
 https://jifengwu2k.github.io/2025/10/04/2025-09-Financial-Statement/
