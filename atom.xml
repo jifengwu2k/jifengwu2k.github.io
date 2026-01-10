@@ -6,7 +6,7 @@
   <link href="https://jifengwu2k.github.io/atom.xml" rel="self"/>
   
   <link href="https://jifengwu2k.github.io/"/>
-  <updated>2026-01-07T23:19:29.847Z</updated>
+  <updated>2026-01-10T05:06:49.108Z</updated>
   <id>https://jifengwu2k.github.io/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Automate Your Workflow with GitHub Actions</title>
+    <link href="https://jifengwu2k.github.io/2026/01/09/Automate-Your-Workflow-with-GitHub-Actions/"/>
+    <id>https://jifengwu2k.github.io/2026/01/09/Automate-Your-Workflow-with-GitHub-Actions/</id>
+    <published>2026-01-10T04:58:54.000Z</published>
+    <updated>2026-01-10T05:06:49.108Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="automate-your-workflow-with-github-actions">Automate YourWorkflow with GitHub Actions</h1><p>One of GitHub's most powerful features is <strong>GitHubActions</strong>, which lets you automate software workflows likebuilding, testing, and deploying your code right from your GitHubrepository.</p><h2 id="key-concepts-of-github-actions">Key Concepts of GitHubActions</h2><p>Understanding the components of GitHub Actions makes it much easierto automate your workflows. Here are the building blocks:</p><h3 id="workflow">Workflow</h3><p>A <strong>workflow</strong> is an automated process you define inyour repo, described in YAML files stored in<code>.github/workflows/</code>. Workflows are triggered by specificevents, such as a push, pull request, or even on a schedule.</p><h3 id="runners">Runners</h3><p>A <strong>runner</strong> is a server that runs your workflows.GitHub provides <em>hosted</em> runners (like<code>ubuntu-latest</code>), but you can also set up your own<em>self-hosted</em> runner.</p><h3 id="jobs">Jobs</h3><p>A <strong>job</strong> is a group of steps that are executedtogether, on the same runner. Each job runs in a fresh environment,ensuring isolation and repeatability.</p><h3 id="steps">Steps</h3><p><strong>Steps</strong> are single tasks inside a job. A step might bea Shell snippet (<code>run:</code>) or a reusable action(<code>uses:</code>). The success of a step is determined by the exitcode: zero for success, nonzero for failure.</p><h2 id="example-test-and-run-in-miniconda-environment">Example: Test andRun in Miniconda Environment</h2><p>Let's see how it all comes together with a simple workflow thatinstalls Miniconda, sets up dependencies, and runs your Python code.</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">name:</span> <span class="hljs-string">Test</span> <span class="hljs-string">and</span> <span class="hljs-string">Run</span> <span class="hljs-string">in</span> <span class="hljs-string">Miniconda</span> <span class="hljs-string">Environment</span><br><br><span class="hljs-comment"># Triggers the workflow on push or pull request events</span><br><span class="hljs-attr">on:</span> [<span class="hljs-string">push</span>, <span class="hljs-string">pull_request</span>]<br><br><span class="hljs-attr">jobs:</span><br>  <span class="hljs-attr">build:</span><br>    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span><br><br>    <span class="hljs-attr">steps:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Checkout</span> <span class="hljs-string">code</span><br>      <span class="hljs-attr">run:</span> <span class="hljs-string">|</span><br><span class="hljs-string">        git clone $&#123;&#123; github.repositoryUrl &#125;&#125;</span><br><span class="hljs-string">        cd $(basename $&#123;&#123; github.repository &#125;&#125; )</span><br><span class="hljs-string"></span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Download</span> <span class="hljs-string">Miniconda</span> <span class="hljs-string">installer</span><br>      <span class="hljs-attr">run:</span> <span class="hljs-string">|</span><br><span class="hljs-string">        wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh</span><br><span class="hljs-string"></span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Install</span> <span class="hljs-string">Miniconda</span><br>      <span class="hljs-attr">run:</span> <span class="hljs-string">|</span><br><span class="hljs-string">        bash miniconda.sh -b -p $HOME/miniconda</span><br><span class="hljs-string">        echo &quot;$HOME/miniconda/bin&quot; &gt;&gt; $GITHUB_PATH</span><br><span class="hljs-string"></span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Initialize</span> <span class="hljs-string">conda</span><br>      <span class="hljs-attr">run:</span> <span class="hljs-string">|</span><br><span class="hljs-string">        source $HOME/miniconda/bin/activate</span><br><span class="hljs-string">        conda init bash</span><br><span class="hljs-string"></span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Verify</span> <span class="hljs-string">conda</span> <span class="hljs-string">installation</span><br>      <span class="hljs-attr">run:</span> <span class="hljs-string">conda</span> <span class="hljs-string">--version</span><br><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Install</span> <span class="hljs-string">dependencies</span><br>      <span class="hljs-attr">run:</span> <span class="hljs-string">|</span><br><span class="hljs-string">        conda install -y numpy pandas</span><br><span class="hljs-string"></span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Run</span> <span class="hljs-string">your</span> <span class="hljs-string">code</span><br>      <span class="hljs-attr">run:</span> <span class="hljs-string">|</span><br>        <span class="hljs-string">python</span> <span class="hljs-string">your_script.py</span><br></code></pre></td></tr></table></figure><p><strong>What happens in this workflow?</strong></p><ul><li><strong>Checks out your code</strong> so it's available to therunner.</li><li><strong>Downloads and installs Miniconda</strong>.</li><li><strong>Initializes conda</strong> and verifies that it works.</li><li><strong>Installs your dependencies</strong> (here,<code>numpy</code> and <code>pandas</code>).</li><li><strong>Runs your Python script</strong> - as you'd do locally!</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;automate-your-workflow-with-github-actions&quot;&gt;Automate Your
+Workflow with GitHub Actions&lt;/h1&gt;
+&lt;p&gt;One of GitHub&#39;s most powerful feature</summary>
+      
+    
+    
+    
+    <category term="DevOps" scheme="https://jifengwu2k.github.io/categories/DevOps/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>My Go-To Foods and Their Nutrition Facts</title>
@@ -466,31 +490,6 @@ solutions often come with privacy concerns and usage limitations. Ol</summary>
     
     
     <category term="Reference" scheme="https://jifengwu2k.github.io/categories/Reference/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>座右铭</title>
-    <link href="https://jifengwu2k.github.io/2025/08/31/%E5%BA%A7%E5%8F%B3%E9%93%AD/"/>
-    <id>https://jifengwu2k.github.io/2025/08/31/%E5%BA%A7%E5%8F%B3%E9%93%AD/</id>
-    <published>2025-08-31T04:00:00.000Z</published>
-    <updated>2025-10-04T16:41:43.993Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="freedom-perception">Freedom &amp; Perception</h2><blockquote><p>The best slave is the one who thinks he is free.</p></blockquote><blockquote><p>Every accusation is a confession.</p></blockquote><h2 id="change-action">Change &amp; Action</h2><blockquote><p>Philosophers have only interpreted the world, in various ways; thepoint, however, is to change it.</p></blockquote><h2 id="vision-strategy">Vision &amp; Strategy</h2><blockquote><p>左牵黄，右擎苍，锦帽貂裘，千骑卷平冈。</p></blockquote><blockquote><p>不谋万世者，不足谋一时；不谋全局者，不足谋一域。</p></blockquote><blockquote><p>It is hallowed by no traditions; it is hampered by none. Its fingerposts all point forward.</p></blockquote><blockquote><p>剧是必须从序幕开始的，但序幕还不是高潮。</p></blockquote><blockquote><p>一张白纸，没有负担，好写最新最美的文字，好画最新最美的画图。</p></blockquote><blockquote><p>……结合各自具体实际开拓创新，特别是在前沿实践、未知领域，鼓励大胆探索、敢为人先，寻求有效解决新矛盾新问题的思路和办法，努力创造可复制、可推广的新鲜经验。</p></blockquote><h2 id="practical-wisdom-problem-solving">Practical Wisdom &amp; ProblemSolving</h2><blockquote><p>Smart data structures and dumb code works a lot better than the otherway around.</p></blockquote><blockquote><p>Premature optimization is the root of all evil.</p></blockquote><blockquote><p>The biggest lesson that can be read from 70 years of AI research isthat general methods that leverage computation are ultimately the mosteffective, and by a large margin.</p><p>Building in how we think we think does not work in the long run.</p><p>The only thing that matters in the long run is the leveraging ofcomputation.</p><p>AI researchers have often tried to build knowledge into their agents,this always helps in the short term, and is personally satisfying to theresearcher, but in the long run it plateaus and even inhibits furtherprogress, and breakthrough progress eventually arrives by an opposingapproach based on scaling computation by search and learning.</p><p>The eventual success is tinged with bitterness, and oftenincompletely digested, because it is success over a favored,human-centric approach.</p></blockquote>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;freedom-perception&quot;&gt;Freedom &amp;amp; Perception&lt;/h2&gt;
-&lt;blockquote&gt;
-&lt;p&gt;The best slave is the one who thinks he is free.&lt;/p&gt;
-&lt;/blockquote&gt;</summary>
-      
-    
-    
-    
-    <category term="Linguistics and Literature" scheme="https://jifengwu2k.github.io/categories/Linguistics-and-Literature/"/>
     
     
   </entry>
