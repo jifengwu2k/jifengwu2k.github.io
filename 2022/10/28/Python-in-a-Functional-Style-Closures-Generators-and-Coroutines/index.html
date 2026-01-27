@@ -1,0 +1,969 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Python in a Functional Style: Closures, Generators, and CoroutinesJifeng Wu 2022-10-28     Closures👈 Generators Coroutines     All Python functions are closures.  Function code. Execution environm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python in a Functional Style: Closures, Generators, and Coroutines">
+<meta property="og:url" content="https://jifengwu2k.github.io/2022/10/28/Python-in-a-Functional-Style-Closures-Generators-and-Coroutines/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="Python in a Functional Style: Closures, Generators, and CoroutinesJifeng Wu 2022-10-28     Closures👈 Generators Coroutines     All Python functions are closures.  Function code. Execution environm">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/abbaswu/abbaswu.github.io-images/main/grammar.png">
+<meta property="article:published_time" content="2022-10-28T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:06:34.305Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/abbaswu/abbaswu.github.io-images/main/grammar.png">
+  
+  
+  
+  <title>Python in a Functional Style: Closures, Generators, and Coroutines - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Python in a Functional Style: Closures, Generators, and Coroutines</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-28 00:00" pubdate>
+          October 28, 2022
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          14k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          119 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python in a Functional Style: Closures, Generators, and Coroutines</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <hr>
+<!-- _class: lead -->
+
+<h1 id="Python-in-a-Functional-Style-Closures-Generators-and-Coroutines"><a href="#Python-in-a-Functional-Style-Closures-Generators-and-Coroutines" class="headerlink" title="Python in a Functional Style: Closures, Generators, and Coroutines"></a>Python in a Functional Style: Closures, Generators, and Coroutines</h1><p>Jifeng Wu</p>
+<p>2022-10-28</p>
+<hr>
+<!-- header: Contents -->
+
+<ul>
+<li>Closures👈</li>
+<li>Generators</li>
+<li>Coroutines</li>
+</ul>
+<hr>
+<!-- header: Closures -->
+
+<p>All Python functions are <strong>closures</strong>.</p>
+<ul>
+<li>Function code.</li>
+<li>Execution environment of function code (variables it depend on).</li>
+</ul>
+<p>A nested function can be returned. This is a common design pattern for creating <strong>tailored functions</strong>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_greeting_function</span>(<span class="params">name</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">greeting_function</span>():</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;Hello, <span class="subst">&#123;name&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> greeting_function</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>All Python functions are <strong>closures</strong>.</p>
+<ul>
+<li>Function code.</li>
+<li>Execution environment of function code (variables it depend on).</li>
+</ul>
+<p>A nested function can be returned. This is a common design pattern for creating <strong>tailored functions</strong>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>function_greeting_a = get_greeting_function(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>function_greeting_a()</span><br><span class="line">Hello, A</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>function_greeting_b = get_greeting_function(<span class="string">&#x27;B&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>function_greeting_b()</span><br><span class="line">Hello, B</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>Look into a closure’s <code>cell_contents</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>function_greeting_a.__closure__</span><br><span class="line">(&lt;cell at <span class="number">0x7f3c81849ca8</span>: <span class="built_in">str</span> <span class="built_in">object</span> at <span class="number">0x7f3c8185ac70</span>&gt;,)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>function_greeting_a.__closure__[<span class="number">0</span>]</span><br><span class="line">&lt;cell at <span class="number">0x7f3c81849ca8</span>: <span class="built_in">str</span> <span class="built_in">object</span> at <span class="number">0x7f3c8185ac70</span>&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>function_greeting_a.__closure__[<span class="number">0</span>].cell_contents</span><br><span class="line"><span class="string">&#x27;A&#x27;</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>function_greeting_b.__closure__</span><br><span class="line">(&lt;cell at <span class="number">0x7f3c81849c18</span>: <span class="built_in">str</span> <span class="built_in">object</span> at <span class="number">0x7f3c82f18e30</span>&gt;,)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>function_greeting_b.__closure__[<span class="number">0</span>]</span><br><span class="line">&lt;cell at <span class="number">0x7f3c81849c18</span>: <span class="built_in">str</span> <span class="built_in">object</span> at <span class="number">0x7f3c82f18e30</span>&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>function_greeting_b.__closure__[<span class="number">0</span>].cell_contents</span><br><span class="line"><span class="string">&#x27;B&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>Should an inner function <strong>use an outer function’s local variable</strong> (instead of <strong>shadowing it</strong>), that local variable should be declared <code>nonlocal</code> within the inner function. Not using <code>nonlocal</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">outer_function</span>():</span><br><span class="line">    string = <span class="string">&#x27;Hello&#x27;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner_function</span>():</span><br><span class="line">        <span class="comment"># Shadows the local variable `string` of `outer_function`</span></span><br><span class="line">        string = <span class="string">&#x27;World&#x27;</span></span><br><span class="line">    inner_function()</span><br><span class="line">    <span class="keyword">return</span> string</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>outer_function()</span><br><span class="line"><span class="string">&#x27;Hello&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>Should an inner function <strong>use an outer function’s local variable</strong> (instead of <strong>shadowing it</strong>), that local variable should be declared <code>nonlocal</code> within the inner function. Using <code>nonlocal</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">outer_function</span>():</span><br><span class="line">    string = <span class="string">&#x27;Hello&#x27;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner_function</span>():</span><br><span class="line">        <span class="comment"># Uses the local variable `string` of `outer_function`</span></span><br><span class="line">        <span class="keyword">nonlocal</span> string</span><br><span class="line">        string = <span class="string">&#x27;World&#x27;</span></span><br><span class="line">    inner_function()</span><br><span class="line">    <span class="keyword">return</span> string</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>outer_function()</span><br><span class="line"><span class="string">&#x27;World&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><strong>Creating and returning a nested function based on a function argument</strong> is widely used in Python, called <strong>decorating a function</strong>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">cached</span>(<span class="params">function</span>):</span><br><span class="line">    cache = &#123;&#125;</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">cached_function</span>(<span class="params">*args</span>):</span><br><span class="line">        <span class="keyword">nonlocal</span> function, cache</span><br><span class="line">        <span class="keyword">if</span> args <span class="keyword">in</span> cache:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;Cache hit with args: <span class="subst">&#123;args&#125;</span>&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span> cache[args]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;Cache miss with args: <span class="subst">&#123;args&#125;</span>&#x27;</span>)</span><br><span class="line">            result = function(*args)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;Writing f(<span class="subst">&#123;args&#125;</span>) =&gt; <span class="subst">&#123;result&#125;</span> to cache&#x27;</span>)</span><br><span class="line">            cache[args] = result</span><br><span class="line">            <span class="keyword">return</span> result</span><br><span class="line">    <span class="keyword">return</span> cached_function</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>Python even has special syntatical support for this.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@cached</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fib</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">if</span> n &lt; <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">elif</span> n &lt; <span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> fib(n - <span class="number">1</span>) + fib(n - <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">4</span>]: fib(<span class="number">5</span>)                                                                                       </span><br><span class="line">Cache miss <span class="keyword">with</span> args: (<span class="number">5</span>,)</span><br><span class="line">Cache miss <span class="keyword">with</span> args: (<span class="number">4</span>,)</span><br><span class="line">Cache miss <span class="keyword">with</span> args: (<span class="number">3</span>,)</span><br><span class="line">Cache miss <span class="keyword">with</span> args: (<span class="number">2</span>,)</span><br><span class="line">Cache miss <span class="keyword">with</span> args: (<span class="number">1</span>,)</span><br><span class="line">Writing f((<span class="number">1</span>,)) =&gt; <span class="number">1</span> to cache</span><br><span class="line">Cache miss <span class="keyword">with</span> args: (<span class="number">0</span>,)</span><br><span class="line">Writing f((<span class="number">0</span>,)) =&gt; <span class="number">0</span> to cache</span><br><span class="line">Writing f((<span class="number">2</span>,)) =&gt; <span class="number">1</span> to cache</span><br><span class="line">Cache hit <span class="keyword">with</span> args: (<span class="number">1</span>,)</span><br><span class="line">Writing f((<span class="number">3</span>,)) =&gt; <span class="number">2</span> to cache</span><br><span class="line">Cache hit <span class="keyword">with</span> args: (<span class="number">2</span>,)</span><br><span class="line">Writing f((<span class="number">4</span>,)) =&gt; <span class="number">3</span> to cache</span><br><span class="line">Cache hit <span class="keyword">with</span> args: (<span class="number">3</span>,)</span><br><span class="line">Writing f((<span class="number">5</span>,)) =&gt; <span class="number">5</span> to cache</span><br><span class="line">Out[<span class="number">4</span>]: <span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p>$O(n)$ time complexity.</p>
+<hr>
+<p>LeetCode problem: Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses. </p>
+<p>Example 1:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: n = 3</span><br><span class="line">Output: [&quot;((()))&quot;,&quot;(()())&quot;,&quot;(())()&quot;,&quot;()(())&quot;,&quot;()()()&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>Example 2:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: n = 1</span><br><span class="line">Output: [&quot;()&quot;]</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><img src="https://raw.githubusercontent.com/abbaswu/abbaswu.github.io-images/main/grammar.png" srcset="/img/loading.gif" lazyload alt="bg left contain"></p>
+<p>We write a Context Free Grammar and analyze it:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">S -&gt; S S&#x27; | S&#x27; .</span><br><span class="line">S&#x27; -&gt; ( S ) | ( ) .</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://mdaines.github.io/grammophone/#">https://mdaines.github.io/grammophone/#</a></p>
+</blockquote>
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@cached</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">s_generator</span>(<span class="params">number_of_parenthesis</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;s_generator(<span class="subst">&#123;number_of_parenthesis&#125;</span>)&#x27;</span>)</span><br><span class="line">    </span><br><span class="line">    return_value = []</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># s -&gt; ss .</span></span><br><span class="line">    <span class="keyword">if</span> number_of_parenthesis &gt;= <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">for</span> ss_string <span class="keyword">in</span> ss_generator(number_of_parenthesis):</span><br><span class="line">            return_value.append(ss_string)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># s -&gt; s ss .</span></span><br><span class="line">    <span class="keyword">if</span> number_of_parenthesis &gt;= <span class="number">2</span>: </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, number_of_parenthesis):</span><br><span class="line">            <span class="keyword">for</span> s_string, ss_string <span class="keyword">in</span> itertools.product(</span><br><span class="line">                s_generator(i),</span><br><span class="line">                ss_generator(number_of_parenthesis - i)</span><br><span class="line">            ):</span><br><span class="line">                return_value.append(s_string + ss_string)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> return_value</span><br></pre></td></tr></table></figure>
+
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@cached</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ss_generator</span>(<span class="params">number_of_parenthesis</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;ss_generator(<span class="subst">&#123;number_of_parenthesis&#125;</span>)&#x27;</span>)</span><br><span class="line">    </span><br><span class="line">    return_value = []</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># ss -&gt; ( ) .</span></span><br><span class="line">    <span class="keyword">if</span> number_of_parenthesis == <span class="number">1</span>:</span><br><span class="line">        return_value.append(<span class="string">&#x27;()&#x27;</span>)</span><br><span class="line">    <span class="comment"># ss -&gt; ( s ) .</span></span><br><span class="line">    <span class="keyword">if</span> number_of_parenthesis &gt; <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">for</span> s_string <span class="keyword">in</span> s_generator(number_of_parenthesis - <span class="number">1</span>):</span><br><span class="line">            return_value.append(<span class="string">&#x27;(&#x27;</span> + s_string + <span class="string">&#x27;)&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> return_value</span><br></pre></td></tr></table></figure>
+
+<hr>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: n = 3</span><br><span class="line">Output: [&quot;((()))&quot;,&quot;(()())&quot;,&quot;(())()&quot;,&quot;()(())&quot;,&quot;()()()&quot;]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">4</span>]: s_generator(<span class="number">3</span>)                                                                               </span><br><span class="line">s_generator(<span class="number">3</span>)</span><br><span class="line">ss_generator(<span class="number">3</span>)</span><br><span class="line">s_generator(<span class="number">2</span>)</span><br><span class="line">ss_generator(<span class="number">2</span>)</span><br><span class="line">s_generator(<span class="number">1</span>)</span><br><span class="line">ss_generator(<span class="number">1</span>)</span><br><span class="line">Out[<span class="number">4</span>]: [<span class="string">&#x27;((()))&#x27;</span>, <span class="string">&#x27;(()())&#x27;</span>, <span class="string">&#x27;()(())&#x27;</span>, <span class="string">&#x27;(())()&#x27;</span>, <span class="string">&#x27;()()()&#x27;</span>]</span><br><span class="line"></span><br><span class="line">In [<span class="number">5</span>]: s_generator.cache_info()                                                                     </span><br><span class="line">Out[<span class="number">5</span>]: CacheInfo(hits=<span class="number">3</span>, misses=<span class="number">3</span>, maxsize=<span class="literal">None</span>, currsize=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">6</span>]: ss_generator.cache_info()                                                                    </span><br><span class="line">Out[<span class="number">6</span>]: CacheInfo(hits=<span class="number">3</span>, misses=<span class="number">3</span>, maxsize=<span class="literal">None</span>, currsize=<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>Closures also provide an efficient mechanism for <strong>maintaining state between several calls</strong>. Traditional (OOP) approach:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Countdown</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, n</span>):</span><br><span class="line">        <span class="variable language_">self</span>.n = n</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">next_value</span>(<span class="params">self</span>):</span><br><span class="line">        old_value = <span class="variable language_">self</span>.n</span><br><span class="line">        <span class="variable language_">self</span>.n -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> old_value</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>Closure-based approach:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">countdown</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_next_value</span>():</span><br><span class="line">        <span class="keyword">nonlocal</span> n</span><br><span class="line">        old_value = n</span><br><span class="line">        n -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> old_value</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> get_next_value</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>This is not only clean but also <strong>fast</strong>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">test_object_oriented_approach</span>():</span><br><span class="line">    c = Countdown(<span class="number">1_000_000</span>)</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        value = c.next_value()</span><br><span class="line">        <span class="keyword">if</span> value == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_functional_approach</span>():</span><br><span class="line">    get_next_value = countdown(<span class="number">1_000_000</span>)</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        value = get_next_value()</span><br><span class="line">        <span class="keyword">if</span> value == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">5</span>]: %timeit test_object_oriented_approach()</span><br><span class="line"><span class="number">182</span> ms ± <span class="number">2.61</span> ms per loop (mean ± std. dev. of <span class="number">7</span> runs, <span class="number">1</span> loop each)</span><br><span class="line"></span><br><span class="line">In [<span class="number">6</span>]: %timeit test_functional_approach()</span><br><span class="line"><span class="number">96.8</span> ms ± <span class="number">1.18</span> ms per loop (mean ± std. dev. of <span class="number">7</span> runs, <span class="number">10</span> loops each)</span><br></pre></td></tr></table></figure>
+
+<p>Why?</p>
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">9</span>]: c = Countdown(<span class="number">1_000_000</span>)</span><br><span class="line">In [<span class="number">10</span>]: dis(c.next_value)</span><br><span class="line">  <span class="number">6</span>           <span class="number">0</span> LOAD_FAST                <span class="number">0</span> (<span class="variable language_">self</span>)</span><br><span class="line">              <span class="number">2</span> LOAD_ATTR                <span class="number">0</span> (n)</span><br><span class="line">              <span class="number">4</span> STORE_FAST               <span class="number">1</span> (old_value)</span><br><span class="line"></span><br><span class="line">  <span class="number">7</span>           <span class="number">6</span> LOAD_FAST                <span class="number">0</span> (<span class="variable language_">self</span>)</span><br><span class="line">              <span class="number">8</span> DUP_TOP</span><br><span class="line">             <span class="number">10</span> LOAD_ATTR                <span class="number">0</span> (n)</span><br><span class="line">             <span class="number">12</span> LOAD_CONST               <span class="number">1</span> (<span class="number">1</span>)</span><br><span class="line">             <span class="number">14</span> INPLACE_SUBTRACT</span><br><span class="line">             <span class="number">16</span> ROT_TWO</span><br><span class="line">             <span class="number">18</span> STORE_ATTR               <span class="number">0</span> (n)</span><br><span class="line"></span><br><span class="line">  <span class="number">8</span>          <span class="number">20</span> LOAD_FAST                <span class="number">1</span> (old_value)</span><br><span class="line">             <span class="number">22</span> RETURN_VALUE</span><br></pre></td></tr></table></figure>
+
+<p>12 instructions, 2 <code>LOAD_ATTR</code> instructions, 1 <code>STORE_ATTR</code> instruction.</p>
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">11</span>]: get_next_value = countdown(<span class="number">1_000_000</span>)</span><br><span class="line">In [<span class="number">12</span>]: dis(get_next_value)</span><br><span class="line">  <span class="number">4</span>           <span class="number">0</span> LOAD_DEREF               <span class="number">0</span> (n)</span><br><span class="line">              <span class="number">2</span> STORE_FAST               <span class="number">0</span> (old_value)</span><br><span class="line"></span><br><span class="line">  <span class="number">5</span>           <span class="number">4</span> LOAD_DEREF               <span class="number">0</span> (n)</span><br><span class="line">              <span class="number">6</span> LOAD_CONST               <span class="number">1</span> (<span class="number">1</span>)</span><br><span class="line">              <span class="number">8</span> INPLACE_SUBTRACT</span><br><span class="line">             <span class="number">10</span> STORE_DEREF              <span class="number">0</span> (n)</span><br><span class="line"></span><br><span class="line">  <span class="number">6</span>          <span class="number">12</span> LOAD_FAST                <span class="number">0</span> (old_value)</span><br><span class="line">             <span class="number">14</span> RETURN_VALUE</span><br></pre></td></tr></table></figure>
+
+<p>8 instructions, NO <code>LOAD_ATTR</code>, <code>STORE_ATTR</code> instructions.</p>
+<hr>
+<!-- header: Contents -->
+
+<ul>
+<li>Closures</li>
+<li>Generators👈</li>
+<li>Coroutines</li>
+</ul>
+<hr>
+<!-- header: Generators -->
+
+<p>When we define a function containing the <code>yield</code> keyword, we define a generator. Defining a generator allows the user to define a <strong>custom iterator</strong> in the style of defining a function.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">countdown</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">while</span> n &gt; <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">yield</span> n</span><br><span class="line">        n -= <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>We create a <strong>generator object</strong> when we call a generator definition. The generator object can be used like any iterator:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">2</span>]: c = countdown(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: <span class="built_in">next</span>(c)</span><br><span class="line">Out[<span class="number">3</span>]: <span class="number">5</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">4</span>]: <span class="built_in">next</span>(c)</span><br><span class="line">Out[<span class="number">4</span>]: <span class="number">4</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">5</span>]: <span class="keyword">for</span> value <span class="keyword">in</span> c:</span><br><span class="line">   ...:     <span class="built_in">print</span>(value)</span><br><span class="line">   ...:</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>When we call <code>next()</code> on a generator object, it will execute code, until it encounters a <code>yield</code> statement. The <code>yield</code> statement tells the generator object to <strong>return a value, and continue execution from here when <code>next()</code> is called again</strong>. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">2</span>]: c = countdown(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: <span class="built_in">next</span>(c)</span><br><span class="line">Out[<span class="number">3</span>]: <span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p>This executes:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> n &gt; <span class="number">0</span>:</span><br><span class="line">    <span class="keyword">yield</span> n</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>When we call <code>next()</code> on a generator object, it will execute code, until it encounters a <code>yield</code> statement. The <code>yield</code> statement tells the generator object to <strong>return a value, and continue execution from here when <code>next()</code> is called again</strong>. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">4</span>]: <span class="built_in">next</span>(c)</span><br><span class="line">Out[<span class="number">4</span>]: <span class="number">4</span></span><br></pre></td></tr></table></figure>
+
+<p>This executes:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">   n -= <span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> n &gt; <span class="number">0</span>:</span><br><span class="line">   <span class="keyword">yield</span> n</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>This is called <strong>lazy evaluation</strong>. This can dramatically boost performance and reduce memory usage in some applications. For example:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_comments_from_file</span>(<span class="params">file</span>):</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(file, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> fp:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> fp:</span><br><span class="line">            <span class="comment"># strip whitespace</span></span><br><span class="line">            stripped_line = line.strip()</span><br><span class="line">            <span class="comment"># check if the line is empty after stripping whitespace</span></span><br><span class="line">            <span class="keyword">if</span> stripped_line:</span><br><span class="line">                <span class="comment"># check if the line is a comment</span></span><br><span class="line">                <span class="keyword">if</span> stripped_line[<span class="number">0</span>] == <span class="string">&#x27;#&#x27;</span>:</span><br><span class="line">                    <span class="comment"># if it is, yield it</span></span><br><span class="line">                    <span class="keyword">yield</span> stripped_line</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>This will <strong>NOT</strong> read the whole file into memory. Only when the user calls <code>next()</code> on the generator object, will the generator read the file <strong>LINE BY LINE</strong> (with only <strong>ONE LINE</strong> of the file in memory at once), and return the next comment line.</p>
+<p>This is an efficient way of extracting comments from GB-sized files (such as logs).</p>
+<hr>
+<h2 id="itertools"><a href="#itertools" class="headerlink" title="itertools"></a>itertools</h2><p>Python provides many functions for creating an iterator from another iterator. For example:</p>
+<ul>
+<li><code>itertools.permutations(iterable [, r])</code></li>
+<li><code>itertools.combinations(iterable, r)</code></li>
+<li><code>itertools.product(iter1, iter2, iterN, [repeat=1])</code></li>
+</ul>
+<hr>
+<p>Widely used in algorithms: <code>itertools.permutations(iterable [,r])</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">1</span>]: <span class="keyword">import</span> itertools</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: numbers = <span class="built_in">range</span>(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: permutations_of_two_numbers_iterator = itertools.permutations(numbers, r=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">4</span>]: <span class="built_in">next</span>(permutations_of_two_numbers_iterator)</span><br><span class="line">Out[<span class="number">4</span>]: (<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">5</span>]: <span class="built_in">next</span>(permutations_of_two_numbers_iterator)</span><br><span class="line">Out[<span class="number">5</span>]: (<span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">6</span>]: <span class="built_in">next</span>(permutations_of_two_numbers_iterator)</span><br><span class="line">Out[<span class="number">6</span>]: (<span class="number">0</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>Widely used in algorithms: <code>itertools.combinations(iterable ,r)</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">1</span>]: <span class="keyword">import</span> itertools</span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: numbers = <span class="built_in">range</span>(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: <span class="keyword">for</span> first, second <span class="keyword">in</span> itertools.combinations(numbers, <span class="number">2</span>):</span><br><span class="line">   ...:     <span class="built_in">print</span>(first, second)</span><br><span class="line">   ...:</span><br><span class="line"><span class="number">0</span> <span class="number">1</span></span><br><span class="line"><span class="number">0</span> <span class="number">2</span></span><br><span class="line"><span class="number">0</span> <span class="number">3</span></span><br><span class="line"><span class="number">1</span> <span class="number">2</span></span><br><span class="line"><span class="number">1</span> <span class="number">3</span></span><br><span class="line"><span class="number">2</span> <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>Widely used in algorithms: <code>itertools.product(iter1, iter2, iterN, [repeat=1])</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">1</span>]: <span class="keyword">import</span> itertools</span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: first_list = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line">In [<span class="number">3</span>]: second_list = [<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;c&#x27;</span>]</span><br><span class="line">In [<span class="number">4</span>]: third_list = [<span class="literal">True</span>,<span class="literal">False</span>]</span><br><span class="line"></span><br><span class="line">In [<span class="number">5</span>]: it = itertools.product(first_list, second_list, third_list)</span><br><span class="line"></span><br><span class="line">In [<span class="number">6</span>]: <span class="built_in">next</span>(it)</span><br><span class="line">Out[<span class="number">6</span>]: (<span class="number">1</span>, <span class="string">&#x27;a&#x27;</span>, <span class="literal">True</span>)</span><br><span class="line">In [<span class="number">7</span>]: <span class="built_in">next</span>(it)</span><br><span class="line">Out[<span class="number">7</span>]: (<span class="number">1</span>, <span class="string">&#x27;a&#x27;</span>, <span class="literal">False</span>)</span><br><span class="line">In [<span class="number">8</span>]: <span class="built_in">next</span>(it)</span><br><span class="line">Out[<span class="number">8</span>]: (<span class="number">1</span>, <span class="string">&#x27;b&#x27;</span>, <span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<!-- header: Contents -->
+
+<ul>
+<li>Closures</li>
+<li>Generators</li>
+<li>Coroutines👈</li>
+</ul>
+<hr>
+<!-- header: Coroutines -->
+
+<p>Starting from Python 2.5, the <code>yield</code> statement can be used as an <strong>right value</strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">captured_input = <span class="keyword">yield</span> value_to_yield</span><br></pre></td></tr></table></figure>
+
+<p>Generators defined like this can <strong>accept sent input</strong> while providing output. These generators are called <strong>coroutines</strong>.</p>
+<hr>
+<p>The concept of coroutines was proposed in the 60s, but only gained traction in recent years.</p>
+<p>Coroutines can be seen as a combination of <strong>subroutines</strong> and <strong>threads</strong>.</p>
+<ul>
+<li>Can <strong>pause and restart</strong> during execution.</li>
+<li>Controlled by <strong>itself</strong> instead of the operating system.</li>
+<li>Different coroutines run within a thread are <strong>concurrent</strong> instead of <strong>parallel</strong>.</li>
+</ul>
+<hr>
+<p>Simple example:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">update_mean</span>():</span><br><span class="line">    current_input = <span class="keyword">yield</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">sum</span> = current_input</span><br><span class="line">    count = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        current_input = <span class="keyword">yield</span> <span class="built_in">sum</span> / count</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">sum</span> += current_input</span><br><span class="line">        count += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>Simple example:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">3</span>]: updater = update_mean()</span><br><span class="line"></span><br><span class="line">In [<span class="number">4</span>]: <span class="built_in">next</span>(updater)</span><br></pre></td></tr></table></figure>
+
+<p>This executes:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">current_input = <span class="keyword">yield</span></span><br></pre></td></tr></table></figure>
+
+<p>And the coroutine waits for an input to be sent.</p>
+<hr>
+<p>Send an input:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">5</span>]: updater.send(<span class="number">2</span>)</span><br><span class="line">Out[<span class="number">5</span>]: <span class="number">2.0</span></span><br></pre></td></tr></table></figure>
+
+<p>The coroutine receives the input, and executes:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sum</span> = current_input</span><br><span class="line">count = <span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    current_input = <span class="keyword">yield</span> <span class="built_in">sum</span> / count</span><br></pre></td></tr></table></figure>
+
+<p>And the coroutine waits for an input to be sent.</p>
+<hr>
+<p>Send an input:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">6</span>]: updater.send(<span class="number">4</span>)</span><br><span class="line">Out[<span class="number">6</span>]: <span class="number">3.0</span></span><br></pre></td></tr></table></figure>
+
+<p>The coroutine receives the input, and executes:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">    <span class="built_in">sum</span> += current_input</span><br><span class="line">    count += <span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    current_input = <span class="keyword">yield</span> <span class="built_in">sum</span> / count</span><br></pre></td></tr></table></figure>
+
+<p>And the coroutine waits again for an input to be sent.</p>
+<hr>
+<p>More complicated example: set-associative cache simulation</p>
+<ul>
+<li><p><code>number_of_cache_sets</code> * Set</p>
+<ul>
+<li><code>number_of_ways_of_associativity</code> * Block<ul>
+<li><code>block_size_in_bytes</code> * Byte</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>The whole set-associative cache is a coroutine receiving <code>(address, is_write)</code> tuples as input, and calculating <code>(cache_hit, writeback_address)</code> tuples as output.</p>
+<ul>
+<li>It models <strong>each set</strong> as a coroutine receiving <code>(tag, is_write)</code> tuples as input, and calculating <code>(cache_hit, writeback_address)</code> tuples as output.<ul>
+<li>Different coroutine definitions for round-robin, LRU, etc.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>The whole set-associative cache</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">cache_coroutine</span>(<span class="params">cache_set_coroutine_function, block_size_in_bytes, number_of_ways_of_associativity, number_of_cache_sets</span>):</span><br><span class="line">    <span class="comment"># create cache_set_coroutine_list and activate each cache_set_coroutine</span></span><br><span class="line">    cache_set_coroutine_list = [ cache_set_coroutine_function(number_of_ways_of_associativity) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(number_of_cache_sets) ]</span><br><span class="line">    <span class="keyword">for</span> cache_set_coroutine <span class="keyword">in</span> cache_set_coroutine_list:</span><br><span class="line">        <span class="built_in">next</span>(cache_set_coroutine)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># get function_to_split_address and function_to_merge_address</span></span><br><span class="line">    function_to_split_address, function_to_merge_address = get_functions_to_split_and_merge_address(</span><br><span class="line">        block_size_in_bytes,</span><br><span class="line">        number_of_cache_sets</span><br><span class="line">    )</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># receive address, is_write</span></span><br><span class="line">    <span class="comment"># yields nothing</span></span><br><span class="line">    address, is_write = <span class="keyword">yield</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="comment"># splits address</span></span><br><span class="line">        tag, cache_set_index, offset = function_to_split_address(address)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># send (tag, is_write) to the appropriate cache_set_coroutine</span></span><br><span class="line">        cache_hit, victim_tag, writeback_required = cache_set_coroutine_list[cache_set_index].send((tag, is_write))</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># create writeback_address if (victim_tag is not None) and writeback_required</span></span><br><span class="line">        <span class="keyword">if</span> (victim_tag <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>) <span class="keyword">and</span> writeback_required:</span><br><span class="line">            writeback_address = function_to_merge_address(victim_tag, cache_set_index, <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            writeback_address = <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># receive address, is_write</span></span><br><span class="line">        <span class="comment"># yield cache_hit, writeback_address</span></span><br><span class="line">        address, is_write = <span class="keyword">yield</span> cache_hit, writeback_address</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>Cache Set with LRU replacement policy</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">lru_cache_set_coroutine</span>(<span class="params">associativity</span>):</span><br><span class="line">    tag_list = [ <span class="literal">None</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(associativity) ]</span><br><span class="line">    dirty_bit_list = [ <span class="literal">False</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(associativity) ]</span><br><span class="line">    </span><br><span class="line">    indices_in_lru_order = OrderedDict()</span><br><span class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> <span class="built_in">range</span>(associativity - <span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">        indices_in_lru_order[index] = <span class="literal">None</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># receive first tag and is_write</span></span><br><span class="line">    tag, is_write = <span class="keyword">yield</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        cache_hit = <span class="literal">False</span></span><br><span class="line">        victim_tag = <span class="literal">None</span></span><br><span class="line">        writeback_required = <span class="literal">False</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># find tag_index</span></span><br><span class="line">            tag_index = tag_list.index(tag)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># tag_index found</span></span><br><span class="line">            cache_hit = <span class="literal">True</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> is_write:</span><br><span class="line">                dirty_bit_list[tag_index] = <span class="literal">True</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># move tag_index to the end of indices_in_lru_order</span></span><br><span class="line">            indices_in_lru_order.move_to_end(tag_index)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">except</span> ValueError:</span><br><span class="line">            <span class="comment"># tag_index not found</span></span><br><span class="line">            <span class="comment"># get index_of_victim from indices_in_lru_order</span></span><br><span class="line">            index_of_victim, _ = indices_in_lru_order.popitem(last=<span class="literal">False</span>)</span><br><span class="line">            </span><br><span class="line">            victim_tag = tag_list[index_of_victim]</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> dirty_bit_list[index_of_victim]:</span><br><span class="line">                writeback_required = <span class="literal">True</span></span><br><span class="line">            </span><br><span class="line">            tag_list[index_of_victim] = tag</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> is_write:</span><br><span class="line">                dirty_bit_list[index_of_victim] = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                dirty_bit_list[index_of_victim] = <span class="literal">False</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># insert index_of_victim to the end of indices_in_lru_order</span></span><br><span class="line">            indices_in_lru_order[index_of_victim] = <span class="literal">None</span></span><br><span class="line">            </span><br><span class="line">        <span class="comment"># receive tag and is_write</span></span><br><span class="line">        <span class="comment"># yield (cache_hit, victim_tag, writeback_required)</span></span><br><span class="line">        tag, is_write = <span class="keyword">yield</span> (cache_hit, victim_tag, writeback_required)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<ul>
+<li>Suppose our cache has only <em>eight</em> blocks and each block contains <em>four</em> words.</li>
+<li>The cache is <em>2-way</em> set associative, so there are four sets of two blocks.</li>
+<li>The write policy is <em>write-back</em> and write-allocate.</li>
+<li><em>LRU replacement</em> is used.</li>
+</ul>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://courses.cs.washington.edu/courses/cse378/02sp/sections/section9-3.html">https://courses.cs.washington.edu/courses/cse378/02sp/sections/section9-3.html</a></p>
+</blockquote>
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">3</span>]: cache = cache_coroutine(lru_cache_set_coroutine, block_size_in_bytes=<span class="number">4</span> *</span><br><span class="line">   ...:  <span class="number">2</span>, number_of_ways_of_associativity=<span class="number">2</span>, number_of_cache_sets=<span class="number">4</span>)          </span><br><span class="line"></span><br><span class="line">In [<span class="number">4</span>]: <span class="built_in">next</span>(cache)                                                             </span><br><span class="line"></span><br><span class="line">In [<span class="number">5</span>]: cache.send((<span class="number">0</span>, <span class="literal">True</span>))                                                   </span><br><span class="line">Out[<span class="number">5</span>]: (<span class="literal">False</span>, <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">6</span>]: cache.send((<span class="number">64</span>, <span class="literal">False</span>))                                                 </span><br><span class="line">Out[<span class="number">6</span>]: (<span class="literal">False</span>, <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">7</span>]: cache.send((<span class="number">4</span>, <span class="literal">True</span>))                                                   </span><br><span class="line">Out[<span class="number">7</span>]: (<span class="literal">True</span>, <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">8</span>]: cache.send((<span class="number">40</span>, <span class="literal">True</span>))                                                  </span><br><span class="line">Out[<span class="number">8</span>]: (<span class="literal">False</span>, <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">9</span>]: cache.send((<span class="number">68</span>, <span class="literal">False</span>))                                                 </span><br><span class="line">Out[<span class="number">9</span>]: (<span class="literal">True</span>, <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">10</span>]: cache.send((<span class="number">128</span>, <span class="literal">True</span>))                                                </span><br><span class="line">Out[<span class="number">10</span>]: (<span class="literal">False</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">11</span>]: cache.send((<span class="number">0</span>, <span class="literal">False</span>))                                                 </span><br><span class="line">Out[<span class="number">11</span>]: (<span class="literal">False</span>, <span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Design-Patterns/" class="category-chain-item">Design Patterns</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python in a Functional Style: Closures, Generators, and Coroutines</div>
+      <div>https://jifengwu2k.github.io/2022/10/28/Python-in-a-Functional-Style-Closures-Generators-and-Coroutines/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 28, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/29/Paper-Reading-Dynamic-Taint-Analysis-for-Automatic-Detection-Analysis-and-Signature-Generation-of-Exploits-on-Commodity-Software/" title="Paper Reading: Dynamic Taint Analysis for Automatic Detection, Analysis, and Signature Generation of Exploits on Commodity Software">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Paper Reading: Dynamic Taint Analysis for Automatic Detection, Analysis, and Signature Generation of Exploits on Commodity Software</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/26/Paper-Reading-The-Fundamentals-of-Writing-Questions/" title="Paper Reading: The Fundamentals of Writing Questions">
+                        <span class="hidden-mobile">Paper Reading: The Fundamentals of Writing Questions</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

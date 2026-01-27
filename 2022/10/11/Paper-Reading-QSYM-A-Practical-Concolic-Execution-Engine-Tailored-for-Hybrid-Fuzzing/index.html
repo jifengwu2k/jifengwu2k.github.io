@@ -1,0 +1,751 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="NOTE: This is a Paper Reading for Topics in Programming Languages: Automated Testing, Bug Detection, and Program Analysis. The original paper can be found here. What is the problem being tackled? How">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Paper Reading: QSYM: A Practical Concolic Execution Engine Tailored for Hybrid Fuzzing">
+<meta property="og:url" content="https://jifengwu2k.github.io/2022/10/11/Paper-Reading-QSYM-A-Practical-Concolic-Execution-Engine-Tailored-for-Hybrid-Fuzzing/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="NOTE: This is a Paper Reading for Topics in Programming Languages: Automated Testing, Bug Detection, and Program Analysis. The original paper can be found here. What is the problem being tackled? How">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-10-11T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:07:18.441Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Paper Reading: QSYM: A Practical Concolic Execution Engine Tailored for Hybrid Fuzzing - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Paper Reading: QSYM: A Practical Concolic Execution Engine Tailored for Hybrid Fuzzing</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-11 00:00" pubdate>
+          October 11, 2022
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.6k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          47 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Paper Reading: QSYM: A Practical Concolic Execution Engine Tailored for Hybrid Fuzzing</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>NOTE: This is a Paper Reading for <a target="_blank" rel="noopener" href="https://www.carolemieux.com/teaching/CPSC539L_2022w1.html">Topics in Programming Languages: Automated Testing, Bug Detection, and Program Analysis</a>. The original paper can be found <a target="_blank" rel="noopener" href="https://www.usenix.org/system/files/conference/usenixsecurity18/sec18-yun.pdf">here</a>.</p>
+<h1 id="What-is-the-problem-being-tackled-How-was-it-addressed-by-prior-work"><a href="#What-is-the-problem-being-tackled-How-was-it-addressed-by-prior-work" class="headerlink" title="What is the problem being tackled? How was it addressed by prior work?"></a>What is the problem being tackled? How was it addressed by prior work?</h1><p>There are two notable technologies to automatically find vulnerabilities in software:</p>
+<ul>
+<li>Coverage-guided fuzzing, quickly explores the input space, but only good at discovering inputs leading to an execution path with loose branch conditions</li>
+<li>Concolic execution, good at finding inputs driving the program into tight and complex branch conditions, but very expensive to formulate and solve constraints</li>
+</ul>
+<p>A hybrid approach, hybrid fuzzing, was recently proposed.</p>
+<ul>
+<li>The fuzzer will quickly explore trivial input spaces (loose conditions)</li>
+<li>The concolic execution will solve the complex branches (tight conditions)</li>
+<li>Still suffer from scaling to find real bugs in real-world applications. Bottlenecks are their concolic executors. The symbolic emulation is too slow in formulating path constraints, and it is often not even possible to generate constraints due to incomplete and erroneous environment models.</li>
+</ul>
+<h1 id="What-are-the-innovation-s-proposed-in-this-paper-Which-technical-innovations-are-most-compelling-to-you"><a href="#What-are-the-innovation-s-proposed-in-this-paper-Which-technical-innovations-are-most-compelling-to-you" class="headerlink" title="What are the innovation(s) proposed in this paper? Which technical innovations are most compelling to you?"></a>What are the innovation(s) proposed in this paper? Which technical innovations are most compelling to you?</h1><p>Concolic executors adopt IR in their symbolic emulation. Although IR makes implementation easy, it incurs additional overhead and  blocks further optimization. According to our measurement with real-world software, only 30% of instructions require symbolic execution. This implies an instruction-level approach has an opportunity to reduce the number of unnecessary symbolic executions.</p>
+<p>Concolic execution engines use snapshot techniques to reduce the overhead of re-executing a target program when exploring its multiple paths. However, in hybrid fuzzing, test cases from the fuzzer are associated with greatly different paths, rendering snapshoting inefficient. Furthermore, snapshots cannot reflect external status, and solving this problem through full system concolic execution or external environment modeling is expensive and&#x2F;or inaccurate.</p>
+<p>Concolic execution tries to guarantee soundness by collecting complete constraints. However, this can be expensive, and also over-constrain a path, limiting finding future paths.</p>
+<p>To solve these problems, Qsym uses Intel Pin along with a coverage-guided fuzzer:</p>
+<ul>
+<li>Get input test cases and validate newly produced test cases (potentially unsound) from the fuzzer.</li>
+<li>Employ instruction-level taint tracking, and only symbolically execute tainted instructions.</li>
+<li>Generate more relaxed (incomplete) forms of constraints that can be easily solved (can result in unsound test cases, but quickly checked with fuzzer).</li>
+<li>Fast execution makes re-execution much preferable to snapshoting for repetitive concolic testing.</li>
+<li>Considers external environments as “black-boxes” and simply executes them concretely (can result in unsound test cases, but quickly checked with fuzzer).</li>
+<li>Chooses the last constraint of a path for optimistic solving. It typically has a very simple form, and avoids solving irrelevant constraints repeatedly tested by fuzzers. <strong>This can be applied to other domains to speed up symbolic execution, if the domain has an efficient validator like a fuzzer.</strong></li>
+<li>If a basic block has been executed too frequently in a context (a call stack of the current execution), Qsym stops generating further constraints from it. Extremely suitable for loops. <strong>This can directly be applied to other concolic executors as a heuristic path exploration strategy.</strong></li>
+</ul>
+<h1 id="How-are-those-innovations-evaluated-How-does-the-paper’s-evaluation-match-with-the-proposed-problem-statement"><a href="#How-are-those-innovations-evaluated-How-does-the-paper’s-evaluation-match-with-the-proposed-problem-statement" class="headerlink" title="How are those innovations evaluated? How does the paper’s evaluation match with the proposed problem statement?"></a>How are those innovations evaluated? How does the paper’s evaluation match with the proposed problem statement?</h1><p>A series of experiments are conducted.</p>
+<ol>
+<li>To highlight the effectiveness, we applied QSYM to non-trivial programs that are large in size and well-tested - all applications and libraries tested by OSS-Fuzz.</li>
+<li>To show how effectively our concolic executor can assist a fuzzer in discovering new code paths, we measured the achieved code coverage during the fuzzing process using Qsym and AFM with a varying number of input seed files. We selected libpng as a fuzzing target because it contained various narrow-ranged checks.</li>
+<li>To show the performance benefits of QSYM’s symbolic emulation, we used the DARPA CGC dataset to compare QSYM with Driller, which placed third in the CGC competition.</li>
+<li>To evaluate the effect of optimistic solving, we compared Qsym with others using the LAVA dataset, a test suite that injects hard-to-find bugs in Linux utilities to evaluate bug-finding techniques.</li>
+<li>To show the effect of basic block pruning, we evaluated Qsym with and without this technique with four widely-used open-source programs - libjpeg, libpng, libtiff, and file.</li>
+<li>The author then analyzes new bugs found by Qsym.</li>
+</ol>
+<p>These experiments comprehensively assess different innovations and support the notion that Qsym “scales to find real bugs in real-world applications”. However, I do have some questions concerning the experimental study, stated below.</p>
+<h1 id="What-remains-unclear-after-reading-the-paper-Are-there-any-clarification-questions-whose-answers-would-substantially-change-your-opinion-of-the-paper"><a href="#What-remains-unclear-after-reading-the-paper-Are-there-any-clarification-questions-whose-answers-would-substantially-change-your-opinion-of-the-paper" class="headerlink" title="What remains unclear after reading the paper? Are there any clarification questions whose answers would substantially change your opinion of the paper?"></a>What remains unclear after reading the paper? Are there any clarification questions whose answers would substantially change your opinion of the paper?</h1><p>Qsym generates more relaxed (incomplete) forms of constraints that can be easily solved. Specifically how this is done is not clear.</p>
+<p>Questions concerning the experimental study:</p>
+<ol>
+<li>The experiments “to highlight the effectiveness” and “to show the performance benefits of QSYM’s symbolic emulation” seem to be redundant.</li>
+<li>To show how effectively our concolic executor can assist a fuzzer in discovering new code paths, we compared Qsym with AFM on libpng, because it contained various narrow-ranged checks. The benchmark appears to be cherry-picked. This is also the case with “to show the effect of basic block pruning”.</li>
+<li>Why are completely different datasets used in different experiments?</li>
+</ol>
+<h1 id="Which-problems-remain-unsolved-after-this-paper-Do-you-foresee-any-barriers-to-the-applicability-of-the-technique-proposed-in-the-paper"><a href="#Which-problems-remain-unsolved-after-this-paper-Do-you-foresee-any-barriers-to-the-applicability-of-the-technique-proposed-in-the-paper" class="headerlink" title="Which problems remain unsolved after this paper? Do you foresee any barriers to the applicability of the technique proposed in the paper?"></a>Which problems remain unsolved after this paper? Do you foresee any barriers to the applicability of the technique proposed in the paper?</h1><p>The coverage-guided fuzzer used within Qsym is “vanilla” AFL. Other coverage-guided fuzzers exist that enhance AFL. How Qsym can complement these fuzzers can be a direction for future research.</p>
+<p>Unlike other IR-based executors, QSYM cannot test programs targeting other architectures. We plan to overcome this limitation by improving QSYM to work with architecture specifications, rather than a specific architecture implementation. <strong>(Is taint analysis on IR+JIT also a possible solution?)</strong></p>
+<p>QSYM currently supports only memory, arithmetic, bitwise, and vector instructions. Other instructions, including floating-point operations, remain to be supported.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Research-Inspiration/" class="category-chain-item">Research Inspiration</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Paper Reading: QSYM: A Practical Concolic Execution Engine Tailored for Hybrid Fuzzing</div>
+      <div>https://jifengwu2k.github.io/2022/10/11/Paper-Reading-QSYM-A-Practical-Concolic-Execution-Engine-Tailored-for-Hybrid-Fuzzing/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 11, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/13/Paper-Reading-Breaking-the-Barriers-to-Successful-Refactoring-Observations-and-Tools-for-Extract-Method/" title="Paper Reading: Breaking the Barriers to Successful Refactoring: Observations and Tools for Extract Method">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Paper Reading: Breaking the Barriers to Successful Refactoring: Observations and Tools for Extract Method</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/11/Paper-Reading-Semantic-Fuzzing-with-Zest/" title="Paper Reading: Semantic Fuzzing with Zest">
+                        <span class="hidden-mobile">Paper Reading: Semantic Fuzzing with Zest</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,801 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="While SSH is a staple tool and almost universally understood among Linux users, setting up VNC for remote desktop access - especially headlessly or with virtual framebuffers - remains mysterious to ma">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Setting Up a Headless VNC Server for Remote Desktop Access">
+<meta property="og:url" content="https://jifengwu2k.github.io/2025/08/21/Setting-Up-a-Headless-VNC-Server-for-Remote-Desktop-Access/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="While SSH is a staple tool and almost universally understood among Linux users, setting up VNC for remote desktop access - especially headlessly or with virtual framebuffers - remains mysterious to ma">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-08-21T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-26T22:05:14.230Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Setting Up a Headless VNC Server for Remote Desktop Access - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Setting Up a Headless VNC Server for Remote Desktop Access</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-08-21 00:00" pubdate>
+          August 21, 2025
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.6k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          47 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Setting Up a Headless VNC Server for Remote Desktop Access</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>While SSH is a staple tool and almost universally understood among Linux users, setting up <strong>VNC for remote desktop access</strong> - especially headlessly or with virtual framebuffers - remains mysterious to many, and for good reasons:</p>
+<ul>
+<li>Requires understanding of X11 and graphical sessions (DISPLAY variables, X servers, etc.)</li>
+<li>Involves properly launching graphical sessions</li>
+</ul>
+<p>However, for many professionals, researchers, and IT administrators, secure remote desktop access is not just a convenience - it’s an inelastic requirement. Unlike other features you can work around or delay, robust GUI access to a remote host is sometimes the only way to get mission-critical work done. For example:</p>
+<ul>
+<li><strong>Work-from-home</strong> mean you need to access graphical applications (like IDEs, simulators, and visualization tools) installed on remote lab or office machines.</li>
+<li><strong>Remote servers without physical monitors</strong> demand a headless-only setup - you can’t just “plug in a monitor and keyboard” to start a desktop session.</li>
+</ul>
+<p>In these scenarios, there is <strong>no substitute</strong> - the need is inelastic. You must have a reliable, secure way to run and manage desktops remotely. Frustratingly, most available documentation is scattered, outdated, or omits crucial details.</p>
+<p>That’s why this guide exists: to provide you with a <strong>direct, practical roadmap for setting up a robust remote desktop workflow</strong>, no matter where you work.</p>
+<h2 id="The-Three-Components-of-Headless-VNC"><a href="#The-Three-Components-of-Headless-VNC" class="headerlink" title="The Three Components of Headless VNC"></a>The Three Components of Headless VNC</h2><p>Three key components work together to present a remote desktop via VNC:</p>
+<h3 id="Xvfb-X-Virtual-Framebuffer"><a href="#Xvfb-X-Virtual-Framebuffer" class="headerlink" title="Xvfb (X Virtual Framebuffer)"></a>Xvfb (X Virtual Framebuffer)</h3><p>Xvfb is a “headless” X server that implements the X11 protocol and acts like a display server, but renders everything to memory instead of a physical monitor.</p>
+<h3 id="x11vnc"><a href="#x11vnc" class="headerlink" title="x11vnc"></a>x11vnc</h3><p>This utility acts as a bridge, allowing VNC clients to view and interact with an existing X server session. It:</p>
+<ul>
+<li>Connects to the X server’s framebuffer (in this case, Xvfb’s in-memory screen)</li>
+<li>Reads pixels from the X server, and writes mouse&#x2F;keyboard events</li>
+<li>Presents those images to a VNC client over the network, and listens for events</li>
+</ul>
+<h3 id="GUI-Applications"><a href="#GUI-Applications" class="headerlink" title="GUI Applications"></a>GUI Applications</h3><p>These render to Xvfb’s in-memory screen instead of a physical monitor via the <code>DISPLAY</code> environment variable.</p>
+<h2 id="Step-by-Step-Setup-Guide"><a href="#Step-by-Step-Setup-Guide" class="headerlink" title="Step-by-Step Setup Guide"></a>Step-by-Step Setup Guide</h2><h3 id="Prerequisites-Remote-Host"><a href="#Prerequisites-Remote-Host" class="headerlink" title="Prerequisites (Remote Host)"></a>Prerequisites (Remote Host)</h3><p>First, install the necessary packages on the <strong>remote host</strong>:</p>
+<ul>
+<li><code>xvfb</code></li>
+<li><code>x11vnc</code></li>
+<li><code>xterm</code> (for demonstration purposes in this tutorial)</li>
+</ul>
+<p><strong>We would have to run <code>xvfb</code>, <code>x11vnc</code>, and <code>xterm</code> concurrently.</strong> For this purpose, I recommend using <code>tmux</code> (or any other comparable tool) to manage multiple terminal windows and persistent sessions.</p>
+<h3 id="Start-the-Virtual-Display-Remote-Host"><a href="#Start-the-Virtual-Display-Remote-Host" class="headerlink" title="Start the Virtual Display (Remote Host)"></a>Start the Virtual Display (Remote Host)</h3><p>In your first terminal window on the remote host, start Xvfb:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">Xvfb :1 -screen 0 800x600x16<br></code></pre></td></tr></table></figure>
+
+<p>This creates a virtual X11 display number <code>:1</code> (using TCP port 6001) with resolution <code>800x600</code> and 16-bit color depth.</p>
+<p><strong>Xvfb has properly started only if the above command neither logs output nor exits after being invoked.</strong> If it logs messages or exits immediately, there’s a problem to solve before moving on. Common issues include:</p>
+<ul>
+<li>Port 6001 already in use (try a different display number like <code>:2</code>)</li>
+<li>Permission issues with <code>/tmp/.X11-unix</code> directory. The <code>/tmp/.X11-unix</code> directory must be readable and writable. <strong>In some environments like WSL, this directory might be read-only, which will prevent Xvfb from starting properly.</strong></li>
+</ul>
+<h3 id="Launch-the-VNC-Server-Remote-Host"><a href="#Launch-the-VNC-Server-Remote-Host" class="headerlink" title="Launch the VNC Server (Remote Host)"></a>Launch the VNC Server (Remote Host)</h3><p>In a second terminal window on the remote host, start x11vnc:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">x11vnc -display :1 -rfbport 5901 -localhost -forever<br></code></pre></td></tr></table></figure>
+
+<p>This command:</p>
+<ul>
+<li>Connects to the virtual X server’s framebuffer at display <code>:1</code></li>
+<li>Listens for VNC connections on port 5901</li>
+<li>Restricts connections to localhost only (for security, VNC is not encrypted)<ul>
+<li><strong>Never expose VNC directly to the public Internet!</strong></li>
+</ul>
+</li>
+<li>With <code>-forever</code>, x11vnc won’t exit after the last client disconnects</li>
+</ul>
+<p>After running the command:</p>
+<ul>
+<li>It may report <strong>authentication or password-related errors</strong> (which is <strong>acceptable</strong>).</li>
+<li>But it should <strong>NOT</strong> exit after running for a while. If it exits after running for a while, there’s a problem to solve before moving on.</li>
+</ul>
+<h3 id="Secure-Access-with-SSH-Tunneling-Local-Machine"><a href="#Secure-Access-with-SSH-Tunneling-Local-Machine" class="headerlink" title="Secure Access with SSH Tunneling (Local Machine)"></a>Secure Access with SSH Tunneling (Local Machine)</h3><p>VNC is not encrypted, so we’ll use SSH tunneling on your <strong>local machine</strong> for security.</p>
+<p>You can either use basic SSH port forwarding (which may be confusing), or <a target="_blank" rel="noopener" href="https://github.com/jifengwu2k/port-tunnel-manager">set up the <code>pull_remote_port.sh</code> wrapper</a> on your <strong>local machine</strong> to pull the remote host’s port 5901 to <code>localhost:5901</code>. After <strong>cloning its GitHub repository and completing its prerequisites</strong>, run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">bash pull_remote_port.sh [-p &lt;ssh_port&gt;] -u &lt;remote_user&gt; -h &lt;remote_host&gt; -r 5901 -l 5901<br></code></pre></td></tr></table></figure>
+
+<p>This makes the remote host’s VNC port available on your local machine via a secure SSH tunnel.</p>
+<h3 id="Test-with-a-Simple-Application-Remote-Host"><a href="#Test-with-a-Simple-Application-Remote-Host" class="headerlink" title="Test with a Simple Application (Remote Host)"></a>Test with a Simple Application (Remote Host)</h3><p>In a third terminal window on the <strong>remote host</strong>, launch a test application:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># The `DISPLAY=:1` environment variable must be set</span><br><span class="hljs-comment"># For all GUI apps you wish to appear in the VNC session</span><br><span class="hljs-built_in">export</span> DISPLAY=:1<br>xterm<br></code></pre></td></tr></table></figure>
+
+<p>Now connect to your VNC server on your <strong>local machine</strong> using a VNC client (like TigerVNC, RealVNC, or Remmina) pointing to <code>localhost:5901</code>. You should see the xterm window.</p>
+<h3 id="Using-Desktop-Environments-Remote-Host"><a href="#Using-Desktop-Environments-Remote-Host" class="headerlink" title="Using Desktop Environments (Remote Host)"></a>Using Desktop Environments (Remote Host)</h3><p>For a full desktop experience rather than just single applications, you can install a desktop environment.</p>
+<h4 id="Lightweight-Options"><a href="#Lightweight-Options" class="headerlink" title="Lightweight Options"></a>Lightweight Options</h4><ul>
+<li>Openbox</li>
+<li>Fluxbox</li>
+<li>IceWM</li>
+<li>WindowMaker</li>
+</ul>
+<h4 id="Full-Desktop-Environments"><a href="#Full-Desktop-Environments" class="headerlink" title="Full Desktop Environments"></a>Full Desktop Environments</h4><ul>
+<li>GNOME</li>
+<li>KDE Plasma</li>
+<li>MATE</li>
+<li>Cinnamon</li>
+<li>LXDE</li>
+<li>LXQt</li>
+</ul>
+<h3 id="Important-Caveat-Single-Instance-Applications"><a href="#Important-Caveat-Single-Instance-Applications" class="headerlink" title="Important Caveat: Single-Instance Applications"></a>Important Caveat: Single-Instance Applications</h3><p>Many desktop applications are designed to run <strong>only one instance per user account</strong>:</p>
+<ul>
+<li>Browsers: Firefox, Chrome&#x2F;Chromium</li>
+<li>Advanced editors: gedit, kate, geany (configurable), code&#x2F;VSCode</li>
+<li>File managers: nautilus, pcmanfm (configurable), dolphin</li>
+<li>Document viewers: evince</li>
+<li>Many modern GTK&#x2F;Qt apps that use D-Bus for activation</li>
+</ul>
+<p><strong>If your remote host has a physical desktop, and such an app is already running on your physical desktop</strong>, new instances will try to communicate with the existing instance via D-Bus, <strong>creating windows on your physical desktop instead of in your virtual framebuffer, even after <code>export DISPLAY=:1</code>.</strong></p>
+<p>Solution:</p>
+<ul>
+<li>Ensure applications aren’t already running on your main desktop before launching them in your VNC session.</li>
+<li>Or use a different user account for VNC access.</li>
+</ul>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Setting up a headless VNC server might seem complex at first, but by understanding the three components (Xvfb, x11vnc, and your GUI applications) and following this recipe, you can create a reliable remote desktop solution. Remember to always use SSH tunneling for security and be mindful of single-instance applications.</p>
+<p>With this setup, you can enjoy full graphical desktop access to your remote Linux machines, opening up possibilities for remote administration, development, and troubleshooting.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Environments/" class="category-chain-item">Environments</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Setting Up a Headless VNC Server for Remote Desktop Access</div>
+      <div>https://jifengwu2k.github.io/2025/08/21/Setting-Up-a-Headless-VNC-Server-for-Remote-Desktop-Access/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>August 21, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/08/21/Eating-in-the-Americas-Down-to-earth-Foodstuffs/" title="Eating in the Americas - Down-to-earth Foodstuffs">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Eating in the Americas - Down-to-earth Foodstuffs</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/08/12/How-to-Make-VS-Code-s-Language-Detection-Sane-and-Deterministic/" title="How to Make VS Code&#39;s Language Detection Sane (and Deterministic)">
+                        <span class="hidden-mobile">How to Make VS Code&#39;s Language Detection Sane (and Deterministic)</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

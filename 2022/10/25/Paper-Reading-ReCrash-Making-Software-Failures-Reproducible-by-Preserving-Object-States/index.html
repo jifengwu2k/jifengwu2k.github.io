@@ -1,0 +1,875 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="NOTE: This is a Paper Reading for Advanced Software Engineering. The original paper can be found here. BackgroundReproduction is key to finding and fixing software problems and verifying proposed solu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Paper Reading: ReCrash: Making Software Failures Reproducible by Preserving Object States">
+<meta property="og:url" content="https://jifengwu2k.github.io/2022/10/25/Paper-Reading-ReCrash-Making-Software-Failures-Reproducible-by-Preserving-Object-States/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="NOTE: This is a Paper Reading for Advanced Software Engineering. The original paper can be found here. BackgroundReproduction is key to finding and fixing software problems and verifying proposed solu">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/abbaswu/abbaswu.github.io-images/main/subject_programs_and_crashes_used_in_our_experimental_study.png">
+<meta property="article:published_time" content="2022-10-25T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:06:11.605Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/abbaswu/abbaswu.github.io-images/main/subject_programs_and_crashes_used_in_our_experimental_study.png">
+  
+  
+  
+  <title>Paper Reading: ReCrash: Making Software Failures Reproducible by Preserving Object States - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Paper Reading: ReCrash: Making Software Failures Reproducible by Preserving Object States</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-25 00:00" pubdate>
+          October 25, 2022
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.9k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          58 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Paper Reading: ReCrash: Making Software Failures Reproducible by Preserving Object States</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>NOTE: This is a Paper Reading for <a target="_blank" rel="noopener" href="https://github.com/ubccpsc/507/tree/2022sept">Advanced Software Engineering</a>. The original paper can be found <a target="_blank" rel="noopener" href="https://doi.org/10.1007/978-3-540-70592-5_23">here</a>.</p>
+<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><p>Reproduction is key to finding and fixing software problems and verifying proposed solutions, but reproduction can be difficult.</p>
+<ul>
+<li>Nondeterminism: A problem may depend on timing (e.g., context switching), memory layout (e.g., hash codes), or random number generators.</li>
+<li>Remote detection: A problem may be discovered by someone other than the developer, and it may depend on implicit program inputs such as user GUI actions, environment variables, the state of the file system, operating system behavior, etc. This information may be easy to miss, difficult to collect, or confidential.</li>
+<li>Test case complexity: The exposing execution might be complex, and the buggy method might be called multiple times before the bug is triggered.</li>
+</ul>
+<hr>
+<h1 id="Proposed-Solution-ReCrash"><a href="#Proposed-Solution-ReCrash" class="headerlink" title="Proposed Solution: ReCrash"></a>Proposed Solution: ReCrash</h1><p>ReCrash maintains a <strong>shadow stack</strong> with copies of the receiver and arguments to each method during execution of the target program.</p>
+<ul>
+<li>Several copy strategies</li>
+<li>Several optimizations</li>
+</ul>
+<p>When the program crashes, ReCrash serializes the shadow stack, and generates <strong>unit tests</strong> by calling <strong>each</strong> method on the shadow call stack with their receiver and arguments.</p>
+<ul>
+<li>Calling the method at top of the call stack may not provide enough context.</li>
+<li>Calling a method closer to the bottom provides more context, but is less likely to reproduce the original failure.</li>
+</ul>
+<hr>
+<h1 id="Proposed-Solution-ReCrash-1"><a href="#Proposed-Solution-ReCrash-1" class="headerlink" title="Proposed Solution: ReCrash"></a>Proposed Solution: ReCrash</h1><p>Assumption:</p>
+<ul>
+<li>It is possible to reproduce many failures with only some of the information available on entry to the methods on the stack at the time of the failure.<ul>
+<li>Many bugs are dependent on small parts of the heap.</li>
+<li>Good object-oriented style encapsulates important state nearby.</li>
+<li>Good object-oriented style avoids excessive use of globals.</li>
+</ul>
+</li>
+<li>ReCrash has access to and will store any parts of the global state or environment that are passed as method arguments.</li>
+</ul>
+<p><strong>Question: What if global state is read or written in the method?</strong></p>
+<hr>
+<h1 id="Monitoring-Phase"><a href="#Monitoring-Phase" class="headerlink" title="Monitoring Phase"></a>Monitoring Phase</h1><ul>
+<li>Several copy strategies</li>
+<li>Several optimizations<ul>
+<li>Monitoring fewer methods</li>
+<li>Second-chance mode</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="Copy-Strategies"><a href="#Copy-Strategies" class="headerlink" title="Copy Strategies"></a>Copy Strategies</h1><p>An argument may be side-effected between the method entry and the point of the failure in the method. Copying strategies:</p>
+<ul>
+<li>Reference: copying only the reference to the argument.</li>
+<li>Shallow: copying the argument itself.</li>
+<li>Depth-i: copying all the state reachable with $\le i$ dereferences from the argument.</li>
+<li>Deep-copy: copying the entire state.</li>
+</ul>
+<p>Options:</p>
+<ul>
+<li>Used-fields: deeper copying on fields that are used (read or written) in the method.</li>
+</ul>
+<p>ReCrash always uses the reference strategy for immutable parameters. </p>
+<hr>
+<h1 id="Monitoring-Fewer-Methods"><a href="#Monitoring-Fewer-Methods" class="headerlink" title="Monitoring Fewer Methods"></a>Monitoring Fewer Methods</h1><p>Dosen’t monitor methods that cannot be used in the generated tests, or are unlikely to expose problems.</p>
+<ul>
+<li>non-public methods</li>
+<li>empty methods</li>
+<li>simple methods such as getters and setters (no more than 6 opcodes)</li>
+</ul>
+<hr>
+<h1 id="Second-chance-Mode"><a href="#Second-chance-Mode" class="headerlink" title="Second-chance Mode"></a>Second-chance Mode</h1><ul>
+<li>ReCrash initially monitors no method calls.</li>
+<li>Each time a failure occurs, ReCrash enables method argument monitoring for all methods found on the stack trace.</li>
+<li>Efficient, but requires a failure to be repeated twice. If the developer doesn’t mind missing the first time a failure happens, and the failure occurs relatively often, second chance mode is a good fit.</li>
+</ul>
+<p><strong>Question: could recording all inputs provided to the program be used in tandom with second-chance mode (such that the failure is probable to happen the second time)?</strong></p>
+<hr>
+<h1 id="Test-Generation-Phase"><a href="#Test-Generation-Phase" class="headerlink" title="Test Generation Phase"></a>Test Generation Phase</h1><p>ReCrash generates a test for each of the methods in the shadow stack.</p>
+<ul>
+<li>Restores the state of the arguments that were passed to a method.</li>
+<li>Invokes the method the same way it was invoked in the original execution. Only tests that end with the same exception as the original failure are saved.</li>
+<li>Storing more than one test that ends with the same failure is useful. Some tests reproduce a failure, but would not help the developer understand, fix, or check her solution.</li>
+</ul>
+<hr>
+<h1 id="Experimental-Study"><a href="#Experimental-Study" class="headerlink" title="Experimental Study"></a>Experimental Study</h1><p>Subject programs:</p>
+<ul>
+<li>Javac-jsr308: the OpenJDK Java compiler, extended with JSR308 (“Annotations on Java Types”), with four crashes provided by the developers.</li>
+<li>SVNKit: a subversion  client, with three crash examples from bug reports.</li>
+<li>Eclipsec: a Java compiler included in the Eclipse JDT, with a crash found in the Eclipse bug database.</li>
+<li>BST: a toy subject program used by Csallner in evaluating CnC, with three crashes found by CnC.</li>
+</ul>
+<hr>
+<h1 id="Experimental-Study-1"><a href="#Experimental-Study-1" class="headerlink" title="Experimental Study"></a>Experimental Study</h1><p>For each subject program:</p>
+<ul>
+<li>Run PIDASA for parameter immutability classification.</li>
+<li>For different argument copying strategies, with and without second-chance mode:<ul>
+<li>Run ReCrash on inputs that made the subject programs crash.</li>
+<li>Count how many test cases reproduced each crash.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Question: how useful would ReCrash be in reality where it is unknown whether the subject projects could crash, and which inputs would make the subject programs crash?</strong></p>
+<hr>
+<h1 id="Experimental-Study-2"><a href="#Experimental-Study-2" class="headerlink" title="Experimental Study"></a>Experimental Study</h1><p>Research questions:</p>
+<ul>
+<li>How reliably can ReCrashJ reproduce crashes?</li>
+<li>What is the size of the stored deep copy of the shadow stack?</li>
+<li>Are the tests generated by ReCrash useful for debugging?<ul>
+<li>Like a <strong>case study</strong>: an analysis of two crashes, and comments from developers</li>
+</ul>
+</li>
+<li>What is the overhead (time and memory) of running ReCrash?</li>
+</ul>
+<p>Aspects assessed:</p>
+<ul>
+<li>different argument copying strategies</li>
+<li>with and without second-chance mode</li>
+</ul>
+<hr>
+<h1 id="How-reliably-can-ReCrash-reproduce-crashes"><a href="#How-reliably-can-ReCrash-reproduce-crashes" class="headerlink" title="How reliably can ReCrash reproduce crashes?"></a>How reliably can ReCrash reproduce crashes?</h1><p>ReCrash was able to reproduce the crash in all cases.</p>
+<ul>
+<li>For some crashes, every candidate test case reproduces the crash.</li>
+<li>For other crashes, only a subset of the generated test cases reproduces the crash.</li>
+</ul>
+<p>In most cases, simply copying references is enough to reproduce crashes. In other cases, using the shallow copying strategy with used-fields was necessary.</p>
+<hr>
+<h1 id="What-is-the-size-of-the-stored-deep-copy-of-the-shadow-stack"><a href="#What-is-the-size-of-the-stored-deep-copy-of-the-shadow-stack" class="headerlink" title="What is the size of the stored deep copy of the shadow stack?"></a>What is the size of the stored deep copy of the shadow stack?</h1><p><img src="https://raw.githubusercontent.com/abbaswu/abbaswu.github.io-images/main/subject_programs_and_crashes_used_in_our_experimental_study.png" srcset="/img/loading.gif" lazyload alt="Subject Programs and Crashes Used in our Experimental Study"></p>
+<p><strong>Question: why isn’t it compared with the program size and the program memory usage?</strong></p>
+<hr>
+<h1 id="An-analysis-of-two-crashes"><a href="#An-analysis-of-two-crashes" class="headerlink" title="An analysis of two crashes"></a>An analysis of two crashes</h1><p>Eclipsec bug e1:</p>
+<ul>
+<li>Eclipsec crashes in callee <code>canBeInstantiated</code> because an earlier if statement in the caller <code>resolveType</code> failed to set a boolean flag <code>hasError</code> to true.</li>
+<li>The test case for <code>canBeInstantiated</code> will reproduce the crash, but is not helpful.</li>
+<li>Demonstrates importance of generating tests for multiple methods on the stack.</li>
+</ul>
+<p>Javac-jsr308 bug j4:</p>
+<ul>
+<li>Compiling source code containing an annotation with too many arguments results in an index-out-of-bounds exception in method <code>visitMethodInvocation</code>. </li>
+<li>The generated test does not require the whole source code and encodes only the necessary minimum to reproduce the crash.</li>
+<li>Useful when the compiler crash happens in the field, and the user cannot provide the entire source code for debugging.</li>
+</ul>
+<hr>
+<h1 id="Comments-from-Developers"><a href="#Comments-from-Developers" class="headerlink" title="Comments from Developers"></a>Comments from Developers</h1><p>We gave the tests for j1-4 to two Javac-jsr308 developers and asked for comments about the tests’ usefulness, receiving positive responses.</p>
+<ul>
+<li>I often have to climb back up through a stack trace when debugging. ReCrash seems to generate a test method for multiple levels of the stack, making it useful.</li>
+<li>I find that you wouldn’t have to wait for the crash to occur again useful.</li>
+<li>When I set a break point, the break point maybe be executed multiple times before the error. Using ReCrash, I was able to jump (almost directly) to the necessary breakpoint.</li>
+</ul>
+<p><strong>Question: Why only analyze two crashes and ask only two developers?</strong></p>
+<hr>
+<h1 id="What-is-the-overhead-time-and-memory-of-running-ReCrash"><a href="#What-is-the-overhead-time-and-memory-of-running-ReCrash" class="headerlink" title="What is the overhead (time and memory) of running ReCrash?"></a>What is the overhead (time and memory) of running ReCrash?</h1><h2 id="Time-overhead"><a href="#Time-overhead" class="headerlink" title="Time overhead"></a>Time overhead</h2><p>Non second-chance mode:</p>
+<ul>
+<li>Copying only the references can be expensive (11%-42%), and shallow copying with used-fields is similar (13%–60%). Usable for in-house testing.</li>
+<li>Deep copying is completely unusable (12,000%-638,000%).</li>
+</ul>
+<p>Second-chance mode:</p>
+<ul>
+<li>A barely noticeable 0%–1.7% under copying only the references and shallow copying with used-fields, after a crash has already been observed.</li>
+</ul>
+<hr>
+<h1 id="What-is-the-overhead-time-and-memory-of-running-ReCrash-1"><a href="#What-is-the-overhead-time-and-memory-of-running-ReCrash-1" class="headerlink" title="What is the overhead (time and memory) of running ReCrash?"></a>What is the overhead (time and memory) of running ReCrash?</h1><h2 id="Memory-overhead"><a href="#Memory-overhead" class="headerlink" title="Memory overhead"></a>Memory overhead</h2><p>Non second-chance mode:</p>
+<ul>
+<li>0.2M–4.7M (2.6%-90.3%) under shallow copying with used-fields.</li>
+</ul>
+<p>Second-chance mode:</p>
+<ul>
+<li>negligible</li>
+</ul>
+<hr>
+<h1 id="Conclusions"><a href="#Conclusions" class="headerlink" title="Conclusions"></a>Conclusions</h1><p>ReCrashJ is usable in real software deployment</p>
+<ul>
+<li>Simple to implement</li>
+<li>Scalable</li>
+<li>Generates simple, helpful test cases that effectively reproduce failures</li>
+<li>Time and memory overhead (13%–60%, 2.6%-90.3%) under non second-chance mode and shallow copying with used-fields usable for in-house testing</li>
+<li>Extremely efficient under second-chance mode</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Research-Inspiration/" class="category-chain-item">Research Inspiration</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Paper Reading: ReCrash: Making Software Failures Reproducible by Preserving Object States</div>
+      <div>https://jifengwu2k.github.io/2022/10/25/Paper-Reading-ReCrash-Making-Software-Failures-Reproducible-by-Preserving-Object-States/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 25, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/25/Paper-Reading-All-You-Ever-Wanted-to-Know-About-Dynamic-Taint-Analysis-and-Forward-Symbolic-Execution-but-might-have-been-afraid-to-ask/" title="Paper Reading: All You Ever Wanted to Know About Dynamic Taint Analysis and Forward Symbolic Execution (but might have been afraid to ask)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Paper Reading: All You Ever Wanted to Know About Dynamic Taint Analysis and Forward Symbolic Execution (but might have been afraid to ask)</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/24/Paper-Reading-Evolutionary-Generation-of-Whole-Test-Suites/" title="Paper Reading: Evolutionary Generation of Whole Test Suites">
+                        <span class="hidden-mobile">Paper Reading: Evolutionary Generation of Whole Test Suites</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

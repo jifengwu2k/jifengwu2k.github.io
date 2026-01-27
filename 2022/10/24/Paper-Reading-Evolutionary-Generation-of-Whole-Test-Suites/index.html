@@ -1,0 +1,919 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="NOTE: This is a Paper Reading for Topics in Programming Languages: Automated Testing, Bug Detection, and Program Analysis. The original paper can be found here. BackgroundAutomatically deriving test c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Paper Reading: Evolutionary Generation of Whole Test Suites">
+<meta property="og:url" content="https://jifengwu2k.github.io/2022/10/24/Paper-Reading-Evolutionary-Generation-of-Whole-Test-Suites/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="NOTE: This is a Paper Reading for Topics in Programming Languages: Automated Testing, Bug Detection, and Program Analysis. The original paper can be found here. BackgroundAutomatically deriving test c">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-10-24T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:06:44.533Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Paper Reading: Evolutionary Generation of Whole Test Suites - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Paper Reading: Evolutionary Generation of Whole Test Suites</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-24 00:00" pubdate>
+          October 24, 2022
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          89 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Paper Reading: Evolutionary Generation of Whole Test Suites</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>NOTE: This is a Paper Reading for <a target="_blank" rel="noopener" href="https://www.carolemieux.com/teaching/CPSC539L_2022w1.html">Topics in Programming Languages: Automated Testing, Bug Detection, and Program Analysis</a>. The original paper can be found <a target="_blank" rel="noopener" href="https://doi.org/10.1109/QSIC.2011.19">here</a>.</p>
+<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><p>Automatically deriving test cases for realistically sized programs:</p>
+<ul>
+<li>Select one coverage goal (e.g., program branch) at a time, and derive a test case that exercises this particular goal.<ul>
+<li>Solving path constraints generated with symbolic execution &#x2F; dynamic symbolic execution</li>
+<li>Meta-heuristic search techniques</li>
+<li>Mutation testing</li>
+</ul>
+</li>
+<li>Alternative approaches not directly aimed to achieve code coverage<ul>
+<li>Randoop<ul>
+<li>incrementally generate sequences of function calls to find buggy test sequences</li>
+<li>requires automated oracles (e.g. developer-written assertions and exceptions)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="Problems"><a href="#Problems" class="headerlink" title="Problems"></a>Problems</h1><p>Many coverage goals are unreachable.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">push</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (size &gt;= values.length) &#123;</span><br><span class="line">        resize();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (size &lt; values.length) &#123;</span><br><span class="line">        values[size++] = x;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// UNREACHABLE</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="Problems-1"><a href="#Problems-1" class="headerlink" title="Problems"></a>Problems</h1><p>Some coverage goals are more difficult to satisfy than others.</p>
+<p>The order of coverage goals is important: a lucky choice can result in a good test suite, while an unlucky choice can result in a waste of resources.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">push</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (size &gt;= values.length) &#123;</span><br><span class="line">        <span class="comment">// HARD</span></span><br><span class="line">        resize();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// EASY</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (size &lt; values.length) &#123;</span><br><span class="line">        values[size++] = x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="Problems-2"><a href="#Problems-2" class="headerlink" title="Problems"></a>Problems</h1><p>Satisfying a particular coverage goal frequently entails satisfying further coverage goals by accident.</p>
+<p>The order of coverage goals is important.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pop</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// May imply coverage in `push` and `resize`</span></span><br><span class="line">        <span class="keyword">return</span> values[size];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">EmptyStackException</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="Our-Solution-EvoSuite"><a href="#Our-Solution-EvoSuite" class="headerlink" title="Our Solution: EvoSuite"></a>Our Solution: EvoSuite</h1><ul>
+<li>Optimize an entire test suite at once instead of considering distinct test cases.</li>
+<li>Evolve a population of test suites towards satisfying a coverage criterion.</li>
+<li>Assume automated oracles are not available, and require the outputs of the test cases to be manually verified.<ul>
+<li>The generated test suites should be of manageable size.</li>
+</ul>
+</li>
+</ul>
+<p>Solves the problem of:</p>
+<ul>
+<li>difficult and unreachable coverage goals</li>
+<li>order of coverage goals</li>
+<li>accidentally satisfying further coverage goals</li>
+</ul>
+<hr>
+<h1 id="Our-Solution-EvoSuite-1"><a href="#Our-Solution-EvoSuite-1" class="headerlink" title="Our Solution: EvoSuite"></a>Our Solution: EvoSuite</h1><p>Questions:</p>
+<ul>
+<li>We are interested in sequences in OOP. Should coverage in terms of a new ordering seen in the last $n$ function calls in the sequence should make more sense? (Praveen)</li>
+<li>It seems like Evosuite offloads the responsibility of adding in correct assertions to the developers. How easy is it for the developers to do this, especially when compared with manually writing all of the test suite? (Shizuko, ToTo, Larry)</li>
+</ul>
+<hr>
+<h1 id="EvoSuite-Modeling"><a href="#EvoSuite-Modeling" class="headerlink" title="EvoSuite Modeling"></a>EvoSuite Modeling</h1><p>Population 1 .. M Test Suite 1 .. N Test Case 1 .. L Statement</p>
+<p>Four types of statements are modeled.</p>
+<ul>
+<li>Primitive statements: numeric variables (e.g. <code>int var0 = 54;</code>)</li>
+<li>Constructor statements: new instances of a class (e.g. <code>Stack var1 = new Stack();</code>). All parameters of the constructor call have to be values of previous statements.</li>
+<li>Field statements: public fields of objects (e.g. <code>int var2 = var1.size;</code>). If the field is non-static, then the source object of the field has to be a value of a previous statement.</li>
+<li>Method statements: public methods of objects (e.g. <code>int var3 = var1.pop();</code>). The source object and all parameters have to be values of previous statements.</li>
+</ul>
+<hr>
+<h1 id="EvoSuite-Modeling-1"><a href="#EvoSuite-Modeling-1" class="headerlink" title="EvoSuite Modeling"></a>EvoSuite Modeling</h1><p>The set of available classes, their public constructors, methods, and fields are extracted from the given software under test.</p>
+<p>An optimal solution is a test suite that covers all the feasible branches&#x2F;methods and is minimal in the number of statements.</p>
+<hr>
+<h1 id="EvoSuite-Process-Overview"><a href="#EvoSuite-Process-Overview" class="headerlink" title="EvoSuite Process Overview"></a>EvoSuite Process Overview</h1><ul>
+<li>Randomly generate a set of initial test suites.</li>
+<li>Evolve using evolutionary search towards satisfying a coverage criterion.</li>
+<li>Minimize the best resulting test suite.</li>
+</ul>
+<p>Questions:</p>
+<ul>
+<li>How are test suites randomly generated? The author discusses “sampling”. Where are we sampling from? (Larry, Jifeng)</li>
+</ul>
+<hr>
+<h1 id="Evolutionary-Search"><a href="#Evolutionary-Search" class="headerlink" title="Evolutionary Search"></a>Evolutionary Search</h1><ul>
+<li>Test Suite Fitness Function</li>
+<li>Crossover</li>
+<li>Accepting the Mutated Offspring</li>
+<li>Bloat Control</li>
+</ul>
+<hr>
+<h1 id="Test-Suite-Fitness-Function"><a href="#Test-Suite-Fitness-Function" class="headerlink" title="Test Suite Fitness Function"></a>Test Suite Fitness Function</h1><p>Covering all branches $B$ and methods $M$ of a program.</p>
+<ul>
+<li>To estimates how close a test suite $T$ is to covering all branches $B$ of a program, for each branch $b$, <strong>minimal branch distance</strong> $d_{min}(b, T)$ is measured. If the branch predicate is $x \ge 10$, and during execution, $x &#x3D;&#x3D; 5$, then the minimal branch distance is $10 - 5 &#x3D; 5$.</li>
+<li>The minimal branch distance is then normalized to get the <strong>branch distance</strong> $d(b, T) &#x3D; f(d_{min}(b, T))$, where $f(x) &#x3D; \frac{x}{x + 1}$.</li>
+</ul>
+<p>$fitness(T) &#x3D; |M| - |M_T| + \sum_{b \in B}{d(b, T)}$</p>
+<p>If execution exceeds a time limit of 5 minutes, maximum fitness is automatically assigned.</p>
+<hr>
+<h1 id="Test-Suite-Fitness-Function-1"><a href="#Test-Suite-Fitness-Function-1" class="headerlink" title="Test Suite Fitness Function"></a>Test Suite Fitness Function</h1><p>Questions:</p>
+<ul>
+<li>What does branch distance actually mean? Why do we use it? (Eric, Rut, Yayu, Udit, Jifeng)</li>
+<li>Doesn’t $\sum_{b \in B}{d(b, T)}$ already consider that branch distances are maximal in unvisited methods? Why do we need an additional $|M| - |M_T|$ term? Furthermore, different methods could have a different number of branches. Should the branch distance sum for all branches within a method be normalized? (Jifeng)</li>
+</ul>
+<hr>
+<h1 id="Crossover"><a href="#Crossover" class="headerlink" title="Crossover"></a>Crossover</h1><p>Rank selection based on the fitness function is used to select two parent test suites $P_1$ and $P_2$ for crossover. In case of ties, smaller test suites are assigned better ranks.</p>
+<p>During crossover:</p>
+<ul>
+<li>a random value $\alpha$ is chosen from $(0, 1)$</li>
+<li>the first offspring test suite $O_1$ will contain the first $\alpha |P_1|$ test cases from $P_1$ and the last $(1 - \alpha)|P_2|$ test cases from $P_2$</li>
+<li>the second offspring test suite $O_2$ will contain the first $\alpha |P_2|$ test cases from $P_2$ and the last $(1 - \alpha)|P_1|$ test cases from $P_1$</li>
+<li>because test cases are independent, $O_1$ and $O_2$ will always be valid</li>
+</ul>
+<hr>
+<h1 id="Mutation"><a href="#Mutation" class="headerlink" title="Mutation"></a>Mutation</h1><p>The two offspring test suites $O_1$ and $O_2$ are then mutated.</p>
+<p>When a test suite T is mutated, each of its <strong>test cases</strong> is mutated with probability $\frac{1}{|T|}$.</p>
+<p>If a test case $t$ is mutated, <strong>remove statements</strong>, <strong>change statements</strong>, and <strong>insert statements</strong> are each applied with probability $\frac{1}{3}$. Then, a number of new random test cases are added to $T$.</p>
+<hr>
+<h1 id="Remove-Statements"><a href="#Remove-Statements" class="headerlink" title="Remove Statements"></a>Remove Statements</h1><ul>
+<li>If a test case $t$ contains $n$ statements, each statement is removed with probability $\frac{1}{n}$.</li>
+<li>If the removed statement $s_i$ is subsequently used by $s_j (j &gt; i)$, try to replace this use with another statement before $s_j$.<ul>
+<li>If this is not possible, recursively remove $s_j$.</li>
+</ul>
+</li>
+<li>If all statements have been removed from $t$, remove $t$ from $T$.</li>
+</ul>
+<hr>
+<h1 id="Change-Statements"><a href="#Change-Statements" class="headerlink" title="Change Statements"></a>Change Statements</h1><ul>
+<li>If a test case $t$ contains $n$ statements, each statement is changed with probability $\frac{1}{n}$.</li>
+<li>If the changed statement $s_i$ is a primitive statement, its numeric value is changed by a random value.</li>
+<li>Otherwise, a method, field, or constructor with the same return type is randomly chosen.</li>
+</ul>
+<hr>
+<h1 id="Insert-Statements"><a href="#Insert-Statements" class="headerlink" title="Insert Statements"></a>Insert Statements</h1><ul>
+<li>With probability $p$, a new statement is inserted at a random position in the test case.</li>
+<li>With probability $p^2$, a second statement is inserted, and so on.</li>
+</ul>
+<hr>
+<p>Questions:</p>
+<ul>
+<li>What are the justifications for the probabilities? (Kevin)</li>
+<li>Can we change the probabilities used in the mutation and insertion by using method calls they kept track of and variables generated in each iteration? (Joyce)</li>
+<li>When deleting, if the statement is chosen from the beginning few statements, is there a high probability that many&#x2F;multiple following statements would be removed? Because an initial statement usually has a higher probability of containing an initialization&#x2F;declaration function. (Rut)</li>
+<li>Why is the probability of inserting the first, second, etc. statement different? This is not the case with remove statements and change statements. (Jifeng)</li>
+<li>To mutate and generate test cases, the GA algorithm should have knowledge of the programming language constructs, fields &amp; methods of the software under test, etc. Does this require a significant engineering effort? (Udit)</li>
+</ul>
+<hr>
+<h1 id="Accepting-the-Mutated-Offspring"><a href="#Accepting-the-Mutated-Offspring" class="headerlink" title="Accepting the Mutated Offspring"></a>Accepting the Mutated Offspring</h1><p>The coverage achieved by the Mutated Offspring is measured by the Test Suite Fitness Function.</p>
+<p>Conditions for accepting the mutated offspring:</p>
+<ul>
+<li>The coverage achieved by the Mutated Offspring <strong>exceeds that achieved by its parents</strong>, or is on par with that achieved by its parents, <strong>and that the mutated offspring are shorter</strong>.</li>
+<li>Their length do not exceed <strong>twice</strong> that of the Test Suite with the best coverage in the community.</li>
+</ul>
+<hr>
+<h1 id="Accepting-the-Mutated-Offspring-1"><a href="#Accepting-the-Mutated-Offspring-1" class="headerlink" title="Accepting the Mutated Offspring"></a>Accepting the Mutated Offspring</h1><p>Questions:</p>
+<ul>
+<li>Are the parents removed before adding the children? (Rut)</li>
+<li>Compared with the single branch strategy, only the crossover is different, and the mutation is done in the same way. (Tarcisio)</li>
+</ul>
+<hr>
+<h1 id="Bloat-Control"><a href="#Bloat-Control" class="headerlink" title="Bloat Control"></a>Bloat Control</h1><p>A <strong>variable size representation</strong> could lead to bloat, where <strong>small negligible improvements in the fitness value are obtained with larger solutions.</strong></p>
+<p>This is a <strong>very common problem in Genetic Programming</strong>.</p>
+<p>The following measures are used for bloat control:</p>
+<ul>
+<li>Limit the maximum number $N$ of test cases within a test suite and the maximum number of statements $L$ within a test case. (still need to choose comparatively larger $N$ and $L$ and then reduce their length during&#x2F;after the search to dramatically boost coverage)</li>
+<li>Crossover selection policy</li>
+<li>Mutated offspring acception policy</li>
+</ul>
+<hr>
+<h1 id="Bloat-Control-1"><a href="#Bloat-Control-1" class="headerlink" title="Bloat Control"></a>Bloat Control</h1><p>Questions:</p>
+<ul>
+<li>Does coverage-guided fuzzing, which uses a variant of Genetic Programming, suffer from bloat? If so, could any measures be applied to solve this problem? (Jifeng)</li>
+<li>How to reduce the length during&#x2F;after the search? (Yayu, Jifeng)</li>
+</ul>
+<hr>
+<h1 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h1><p>EvoSuite is compared with the traditional single branch approach on top of EvoSuite infrastructure.</p>
+<ul>
+<li>Offspring is generated using the crossover function, but is conducted on two sequences of statements.<ul>
+<li>Because there are dependencies between statements, the statements of the second part are appended one at a time, trying to satisfy dependencies with existing values, generating new values if necessary.</li>
+</ul>
+</li>
+<li>The traditional approach level plus normalized branch distance fitness function is used.</li>
+</ul>
+<p>The two approaches are compared on five open source libraries and a subset of an industrial case study project previously used by Arcuri et al. The units are testable without complex interactions with external resources and are not multithreaded.</p>
+<hr>
+<h1 id="Evaluation-1"><a href="#Evaluation-1" class="headerlink" title="Evaluation"></a>Evaluation</h1><p>“Best practices” based on past experience are used for EvoSuite:</p>
+<ul>
+<li>Population size: 80</li>
+<li>Maximum test suite size $N &#x3D; 100$</li>
+<li>Maximum test case size $L &#x3D; 80$</li>
+<li>The initial test suites are generated with 2 test cases each</li>
+<li>Initial probability for test case insertion: 0.1</li>
+<li>Crossover probability: 3 &#x2F; 4</li>
+<li>Initial probability for statement insertion: 0.5</li>
+</ul>
+<hr>
+<h1 id="Evaluation-2"><a href="#Evaluation-2" class="headerlink" title="Evaluation"></a>Evaluation</h1><p>The search operators for test cases make use of only the type information in the test cluster, and so difficulties can arise when method signatures are imprecise. To overcome this problem for container classes, we always put Integer objects into container classes, and cast returned Object instances back to Integer.</p>
+<p>As the length of test cases can vary greatly and longer test cases generally have higher coverage, we decided to take the number of executed statements as execution limit. The search is performed until either a solution with 100% branch coverage is found, or $k &#x3D; 1,000,000$ statements have been executed as part of the fitness evaluations.</p>
+<hr>
+<h1 id="Evaluation-3"><a href="#Evaluation-3" class="headerlink" title="Evaluation"></a>Evaluation</h1><p>Questions:</p>
+<ul>
+<li>Why not compare EvoSuite to any other (non genetic-testing based) approach? (Zack)</li>
+<li>Why “the units are testable without complex interactions with external resources and are not multithreaded”? (Marie)</li>
+<li>Is there a justification for these “best practices”? (Praveen, Kevin, Madonna, Jifeng)</li>
+<li>Do the “best practices” overfit the 5 open-source libraries? (Joyce)</li>
+<li>Why the choice of an Integer? And does it work in practice? Given that the internals of the program might be expecting something else? (Rut)</li>
+</ul>
+<hr>
+<h1 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h1><ul>
+<li>Whole test suite generation achieves higher coverage than single branch test case generation.</li>
+<li>Whole test suite generation produces smaller test suites than single branch test case generation.</li>
+</ul>
+<hr>
+<h1 id="Results-1"><a href="#Results-1" class="headerlink" title="Results"></a>Results</h1><p>Questions:</p>
+<ul>
+<li>While we have focused on branch coverage in this paper, the findings also carry over to other test criteria is an unwarranted extrapolation. (Zack)</li>
+<li>Evosuite claims that the test cases are smaller, but how much smaller? (not obvious from Figure 7) (ToTo)</li>
+<li>High coverage test suite does not necessary mean high bug-finding abilities.</li>
+<li>How does the performance compare to other tools? (ToTo, Praveen, Kevin, Madonna)</li>
+<li>The authors did not evaluate EvoSuite against a human in software engineering. Whether EvoSuite will improve the ability to test software from a software developer’s point of view is unknown. (Marie)</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Research-Inspiration/" class="category-chain-item">Research Inspiration</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Paper Reading: Evolutionary Generation of Whole Test Suites</div>
+      <div>https://jifengwu2k.github.io/2022/10/24/Paper-Reading-Evolutionary-Generation-of-Whole-Test-Suites/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 24, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/25/Paper-Reading-ReCrash-Making-Software-Failures-Reproducible-by-Preserving-Object-States/" title="Paper Reading: ReCrash: Making Software Failures Reproducible by Preserving Object States">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Paper Reading: ReCrash: Making Software Failures Reproducible by Preserving Object States</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/20/Personal-Website-Design-Considerations/" title="Personal Website Design Considerations">
+                        <span class="hidden-mobile">Personal Website Design Considerations</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,730 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Anyone who’s used Visual Studio Code long enough has probably run into some surprisingly silly (and maddening) mistakes from its automatic language detection. Things get especially annoying with tempo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to Make VS Code&#39;s Language Detection Sane (and Deterministic)">
+<meta property="og:url" content="https://jifengwu2k.github.io/2025/08/12/How-to-Make-VS-Code-s-Language-Detection-Sane-and-Deterministic/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="Anyone who’s used Visual Studio Code long enough has probably run into some surprisingly silly (and maddening) mistakes from its automatic language detection. Things get especially annoying with tempo">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-08-12T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:07:29.389Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>How to Make VS Code&#39;s Language Detection Sane (and Deterministic) - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">How to Make VS Code's Language Detection Sane (and Deterministic)</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-08-12 00:00" pubdate>
+          August 12, 2025
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.4k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          45 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">How to Make VS Code&#39;s Language Detection Sane (and Deterministic)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Anyone who’s used Visual Studio Code long enough has probably run into some surprisingly silly (and maddening) mistakes from its automatic language detection.</p>
+<p>Things get especially annoying with temporary or scratch files: VS Code tries too hard to be clever and ends up insisting your random notes are “Groovy” or “Shell” scripts. If you’re like me, you just want <strong>files with clear, non-ambiguous extensions</strong> mapped correctly, and everything else opened as <strong>plain text</strong>. Simpler, saner, less frustrating.</p>
+<h2 id="The-Fix-Use-Explicit-File-Associations"><a href="#The-Fix-Use-Explicit-File-Associations" class="headerlink" title="The Fix: Use Explicit File Associations"></a>The Fix: Use Explicit File Associations</h2><p>By explicitly listing out the extension - language bindings in your <code>settings.json</code>, you can make VS Code behave in a much more predictable way.</p>
+<ul>
+<li>For every common, unambiguous extension (<code>.js</code>, <code>.py</code>, <code>.cpp</code>, etc.), set the language association directly.</li>
+<li>For ambiguous or tricky cases (like <code>.m</code> for both Objective-C and MATLAB), don’t specify anything - you can always override them manually.</li>
+<li>For all other files (including all extensionless files and temporary files), <strong>force them to open as plain text</strong>.</li>
+</ul>
+<p>This means no more unwanted language features popping up, and every common language just works.</p>
+<h2 id="How-to-Set-It-Up"><a href="#How-to-Set-It-Up" class="headerlink" title="How to Set It Up"></a>How to Set It Up</h2><ol>
+<li>Open the command palette (<code>Ctrl+Shift+P</code> &#x2F; <code>Cmd+Shift+P</code>).</li>
+<li>Type and select: <code>Preferences: Open Settings (JSON)</code></li>
+<li>Replace any existing <code>&quot;files.associations&quot;</code> block in your global <code>settings.json</code>:</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;files.associations&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;Dockerfile&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dockerfile&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;Makefile&quot;</span><span class="punctuation">:</span> <span class="string">&quot;makefile&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.abap&quot;</span><span class="punctuation">:</span> <span class="string">&quot;abap&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.bat&quot;</span><span class="punctuation">:</span> <span class="string">&quot;bat&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.bib&quot;</span><span class="punctuation">:</span> <span class="string">&quot;bibtex&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.c&quot;</span><span class="punctuation">:</span> <span class="string">&quot;c&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.cc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cpp&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.clj&quot;</span><span class="punctuation">:</span> <span class="string">&quot;clojure&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.cljc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;clojure&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.cljs&quot;</span><span class="punctuation">:</span> <span class="string">&quot;clojure&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.cmd&quot;</span><span class="punctuation">:</span> <span class="string">&quot;bat&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.coffee&quot;</span><span class="punctuation">:</span> <span class="string">&quot;coffeescript&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.cpp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cpp&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.cs&quot;</span><span class="punctuation">:</span> <span class="string">&quot;csharp&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.cshtml&quot;</span><span class="punctuation">:</span> <span class="string">&quot;razor&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.css&quot;</span><span class="punctuation">:</span> <span class="string">&quot;css&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.cu&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cuda-cpp&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.cuh&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cuda-cpp&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.cxx&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cpp&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.d&quot;</span><span class="punctuation">:</span> <span class="string">&quot;d&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.dart&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dart&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.diff&quot;</span><span class="punctuation">:</span> <span class="string">&quot;diff&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.erl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;erlang&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.fs&quot;</span><span class="punctuation">:</span> <span class="string">&quot;fsharp&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.fsi&quot;</span><span class="punctuation">:</span> <span class="string">&quot;fsharp&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.fsx&quot;</span><span class="punctuation">:</span> <span class="string">&quot;fsharp&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.go&quot;</span><span class="punctuation">:</span> <span class="string">&quot;go&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.groovy&quot;</span><span class="punctuation">:</span> <span class="string">&quot;groovy&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.haml&quot;</span><span class="punctuation">:</span> <span class="string">&quot;haml&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.handlebars&quot;</span><span class="punctuation">:</span> <span class="string">&quot;handlebars&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.hbs&quot;</span><span class="punctuation">:</span> <span class="string">&quot;handlebars&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.hpp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cpp&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.hrl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;erlang&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.hs&quot;</span><span class="punctuation">:</span> <span class="string">&quot;haskell&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.htm&quot;</span><span class="punctuation">:</span> <span class="string">&quot;html&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.html&quot;</span><span class="punctuation">:</span> <span class="string">&quot;html&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.ini&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ini&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.jade&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jade&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.java&quot;</span><span class="punctuation">:</span> <span class="string">&quot;java&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.jl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;julia&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.js&quot;</span><span class="punctuation">:</span> <span class="string">&quot;javascript&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.json&quot;</span><span class="punctuation">:</span> <span class="string">&quot;json&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.jsonc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;jsonc&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.jsx&quot;</span><span class="punctuation">:</span> <span class="string">&quot;javascriptreact&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.less&quot;</span><span class="punctuation">:</span> <span class="string">&quot;less&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.lua&quot;</span><span class="punctuation">:</span> <span class="string">&quot;lua&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.markdown&quot;</span><span class="punctuation">:</span> <span class="string">&quot;markdown&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.md&quot;</span><span class="punctuation">:</span> <span class="string">&quot;markdown&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.ml&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ocaml&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.mli&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ocaml&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.mm&quot;</span><span class="punctuation">:</span> <span class="string">&quot;objective-cpp&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.p6&quot;</span><span class="punctuation">:</span> <span class="string">&quot;raku&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.pas&quot;</span><span class="punctuation">:</span> <span class="string">&quot;pascal&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.patch&quot;</span><span class="punctuation">:</span> <span class="string">&quot;diff&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.php&quot;</span><span class="punctuation">:</span> <span class="string">&quot;php&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.php4&quot;</span><span class="punctuation">:</span> <span class="string">&quot;php&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.php5&quot;</span><span class="punctuation">:</span> <span class="string">&quot;php&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.phtml&quot;</span><span class="punctuation">:</span> <span class="string">&quot;php&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.pl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;perl&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.pl6&quot;</span><span class="punctuation">:</span> <span class="string">&quot;raku&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.pm&quot;</span><span class="punctuation">:</span> <span class="string">&quot;perl&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.ps1&quot;</span><span class="punctuation">:</span> <span class="string">&quot;powershell&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.psm1&quot;</span><span class="punctuation">:</span> <span class="string">&quot;powershell&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.pug&quot;</span><span class="punctuation">:</span> <span class="string">&quot;pug&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.py&quot;</span><span class="punctuation">:</span> <span class="string">&quot;python&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.r&quot;</span><span class="punctuation">:</span> <span class="string">&quot;r&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.raku&quot;</span><span class="punctuation">:</span> <span class="string">&quot;raku&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.rakumod&quot;</span><span class="punctuation">:</span> <span class="string">&quot;raku&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.rb&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ruby&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.rs&quot;</span><span class="punctuation">:</span> <span class="string">&quot;rust&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.sass&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sass&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.scss&quot;</span><span class="punctuation">:</span> <span class="string">&quot;scss&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.sh&quot;</span><span class="punctuation">:</span> <span class="string">&quot;shellscript&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.shader&quot;</span><span class="punctuation">:</span> <span class="string">&quot;shaderlab&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.slim&quot;</span><span class="punctuation">:</span> <span class="string">&quot;slim&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.sql&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sql&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.styl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;stylus&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.svelte&quot;</span><span class="punctuation">:</span> <span class="string">&quot;svelte&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.swift&quot;</span><span class="punctuation">:</span> <span class="string">&quot;swift&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.tex&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tex&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.ts&quot;</span><span class="punctuation">:</span> <span class="string">&quot;typescript&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.tsx&quot;</span><span class="punctuation">:</span> <span class="string">&quot;typescriptreact&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.txt&quot;</span><span class="punctuation">:</span> <span class="string">&quot;plaintext&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.vb&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vb&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.vue&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vue&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.xml&quot;</span><span class="punctuation">:</span> <span class="string">&quot;xml&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.xsl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;xsl&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.xslt&quot;</span><span class="punctuation">:</span> <span class="string">&quot;xsl&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.yaml&quot;</span><span class="punctuation">:</span> <span class="string">&quot;yaml&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*.yml&quot;</span><span class="punctuation">:</span> <span class="string">&quot;yaml&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;*&quot;</span><span class="punctuation">:</span> <span class="string">&quot;plaintext&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Notice the last line: <code>&quot;*&quot;: &quot;plaintext&quot;</code> - this forces every file <strong>not matched above</strong>, including all files with no extension, to open as plain text.</p>
+<h3 id="Why-this-is-so-much-better"><a href="#Why-this-is-so-much-better" class="headerlink" title="Why this is so much better"></a>Why this is so much better</h3><ul>
+<li><strong>No more weird guesses:</strong> Scratch files stay as plain text.</li>
+<li><strong>You get what you expect:</strong> Every major extension gets its proper language features.</li>
+<li><strong>You can still override manually:</strong> For rare ambiguous cases, you can still set the language from the bottom right and VS Code remembers per file.</li>
+</ul>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>VS Code’s default language detection tries to be smart, but often outsmarts itself. By making associations deterministic and catching all other files as plain text, you make your workflow saner and more predictable.</p>
+<p>Try it out and enjoy a quieter, less-annoying VS Code!</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Environments/" class="category-chain-item">Environments</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>How to Make VS Code&#39;s Language Detection Sane (and Deterministic)</div>
+      <div>https://jifengwu2k.github.io/2025/08/12/How-to-Make-VS-Code-s-Language-Detection-Sane-and-Deterministic/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>August 12, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/08/21/Setting-Up-a-Headless-VNC-Server-for-Remote-Desktop-Access/" title="Setting Up a Headless VNC Server for Remote Desktop Access">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Setting Up a Headless VNC Server for Remote Desktop Access</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/08/12/Manipulating-DataFrame-s-Using-pandas/" title="Manipulating `DataFrame`s Using `pandas`">
+                        <span class="hidden-mobile">Manipulating `DataFrame`s Using `pandas`</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,753 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Co-Designing for Transparency: Lessons from Building a Document Organization Tool in the Criminal Justice DomainInvestigative journalists and public defenders are crucial in scrutinizing and litigatin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sarah Chasins&#39; Works on PL and HCI">
+<meta property="og:url" content="https://jifengwu2k.github.io/2023/11/05/Sarah-Chasins-Works-on-PL-and-HCI/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="Co-Designing for Transparency: Lessons from Building a Document Organization Tool in the Criminal Justice DomainInvestigative journalists and public defenders are crucial in scrutinizing and litigatin">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-11-05T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:06:21.797Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Sarah Chasins&#39; Works on PL and HCI - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Sarah Chasins' Works on PL and HCI</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-05 00:00" pubdate>
+          November 5, 2023
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.2k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          61 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Sarah Chasins&#39; Works on PL and HCI</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Co-Designing-for-Transparency-Lessons-from-Building-a-Document-Organization-Tool-in-the-Criminal-Justice-Domain"><a href="#Co-Designing-for-Transparency-Lessons-from-Building-a-Document-Organization-Tool-in-the-Criminal-Justice-Domain" class="headerlink" title="Co-Designing for Transparency: Lessons from Building a Document Organization Tool in the Criminal Justice Domain"></a><a target="_blank" rel="noopener" href="https://dl.acm.org/doi/10.1145/3593013.3594093">Co-Designing for Transparency: Lessons from Building a Document Organization Tool in the Criminal Justice Domain</a></h1><p>Investigative journalists and public defenders are crucial in scrutinizing and litigating significant matters concerning police violence and misconduct. However, they often need help navigating through vast, unordered heaps of data, which adds strain to their resource-constrained teams.</p>
+<p>In partnership with U.S. public defenders and investigative journalists, we developed an AI-enhanced tool through a joint design effort to aid in working with such data. This process offered us valuable insights into the requirements of resource-constrained teams dealing with large data sets, including how some experts became self-taught programmers to streamline their workflows.</p>
+<p>We pinpointed three primary data needs throughout our collaborative design journey and established five design objectives.</p>
+<h2 id="Three-Primary-Data-Needs"><a href="#Three-Primary-Data-Needs" class="headerlink" title="Three Primary Data Needs"></a>Three Primary Data Needs</h2><p>Data Cleaning, particularly the process of de-duplication. That involves identifying identical (images of pages are pixel-for-pixel copies of each other) or nearly identical data (images are not pixel-for-pixel identical but capture the same physical document) within a dataset.</p>
+<p>Data Extraction. The professionals also struggled in extracting relevant information such as names, dates, locations, and case numbers from case files due to their disparate formats and layouts, necessitating extensive, hands-on work.</p>
+<p>Data Organization. There was a need to systematically organize PDF documents by specific cases, complicated by the fact that cases may be spread across numerous documents and folders, or conversely, several cases might be compiled into one extensive PDF.</p>
+<h2 id="Five-Fundamental-Design-Principles"><a href="#Five-Fundamental-Design-Principles" class="headerlink" title="Five Fundamental Design Principles"></a>Five Fundamental Design Principles</h2><p>Human Control and Intervention. The design must prioritize aiding users over complete automation of the process.</p>
+<p>Non-Interference with Existing Practices. The design should integrate seamlessly with existing workflows and practices.</p>
+<p>Adaptability to Data Diversity.</p>
+<p>High-level Abstractions. General-purpose languages like Python or R demand extensive technical expertise. Pre-built software, on the other hand, offers limited flexibility.</p>
+<p>Cost-Sensitive Solutions.</p>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>Participants in our sessions became adept in all three programming paradigms (visual, PBE, and text-based interfaces).</p>
+<ul>
+<li>This contradicts the common misconception that non-technical experts need formal coding training to handle text-based programming; if the tools are appropriately supportive, they can.</li>
+<li>Rather than creating new code, participants preferred to modify what was already there. Particularly with text-based coding, almost all chose to adapt sample code instead of originating their own, aligning with previous research on the blank-page syndrome.</li>
+</ul>
+<hr>
+<h1 id="A-Need-Finding-Study-with-Users-of-Geospatial-Data"><a href="#A-Need-Finding-Study-with-Users-of-Geospatial-Data" class="headerlink" title="A Need-Finding Study with Users of Geospatial Data"></a><a target="_blank" rel="noopener" href="https://dl.acm.org/doi/abs/10.1145/3544548.3581370">A Need-Finding Study with Users of Geospatial Data</a></h1><p>Current geospatial analysis and visualization tools present significant learning curves and usability challenges.</p>
+<ul>
+<li>Finding and transforming geospatial data to specific spatiotemporal constraints.</li>
+<li>Grasping the behavior of geospatial operators.</li>
+<li>Tracking the provenance of geospatial data, including cross-system provenance.</li>
+<li>Exploring the cartographic design space.</li>
+</ul>
+<h2 id="Grasping-the-behavior-of-geospatial-operators"><a href="#Grasping-the-behavior-of-geospatial-operators" class="headerlink" title="Grasping the behavior of geospatial operators"></a>Grasping the behavior of geospatial operators</h2><p>Users had to run operators and manually check outputs to understand operator semantics.</p>
+<p>Live programming, which offers users immediate visual feedback on program behavior using concrete inputs, could align with users’ existing debugging patterns of using small collections of geographic features or pixels as test cases to infer operator behavior.</p>
+<h2 id="Tracking-the-provenance-of-geospatial-data-including-cross-system-provenance"><a href="#Tracking-the-provenance-of-geospatial-data-including-cross-system-provenance" class="headerlink" title="Tracking the provenance of geospatial data, including cross-system provenance"></a>Tracking the provenance of geospatial data, including cross-system provenance</h2><p>The GIS tools used by participants did not track the steps leading to final outputs, complicating the replication of previous analyses. </p>
+<p>Modifying maps or adapting them to new datasets often meant laboriously reverse engineering the initial analysis steps.</p>
+<p>Creating repeatable and communicable geospatial workflows was a struggle for GIS users. Limitations in current history features made it difficult to recover information on the current analysis state or revisit past analysis decisions.</p>
+<p>The problem of tracking provenance across different systems was also prominent.</p>
+<p>Users often kept informal records of the steps taken in data acquisition, cleaning, analysis, and visualization, which spanned several applications. For instance, one user used macOS Notes to detail a process involving data transfer between Sentinel Hub, QGIS, Illustrator, and Photoshop, documenting everything from selecting a Sentinel-2 image to reassembling raster segments in Illustrator. This kind of multi-tool orchestration was typical among our subjects, yet none had automated systems to log data lineage across these platforms.</p>
+<h2 id="Exploring-the-cartographic-design-space"><a href="#Exploring-the-cartographic-design-space" class="headerlink" title="Exploring the cartographic design space"></a>Exploring the cartographic design space</h2><p>Many participants used direct manipulation tools for geospatial data visualization, which discarded all geographical metadata, posing challenges to revising the analysis after starting the visualization. This uncovers a potential for development in tools that (1) unify geospatial analysis with cartographic design and (2) preserve the geospatial data aspects of visual elements while supporting direct manipulation.</p>
+<p>Existing research suggests that combining scripting with direct manipulation for visually oriented tasks is feasible. The Sketch-n-sketch application is a testament to the successful merger of these methods for SVG graphics.</p>
+<p>Such a combined approach could also remedy the fundamental issue participants faced when using direct manipulation tools for cartography: the need to recreate map designs in code after finishing a design.</p>
+<hr>
+<h1 id="How-Statically-Typed-Functional-Programmers-Write-Code"><a href="#How-Statically-Typed-Functional-Programmers-Write-Code" class="headerlink" title="How Statically-Typed Functional Programmers Write Code"></a><a target="_blank" rel="noopener" href="https://dl.acm.org/doi/10.1145/3485532">How Statically-Typed Functional Programmers Write Code</a></h1><p>A deeper comprehension of the coding methods of statically-typed functional programmers could lead to the creation of more practical tools, more user-friendly programming languages, and better gateways into programming communities.</p>
+<p>These programmers utilize their compilers for more than just producing an executable; they also use compilers as corrective and directive aids.</p>
+<ul>
+<li>Compilers as corrective tools. Compiler error messages were useful not just to fix their programs but also to correct their mental models of the problem domain.</li>
+<li>Compilers as directive tools. Many developers treat compiler errors as to-do lists, guiding their subsequent coding actions. A typical process includes beginning a program change with a minor alteration and compiling to receive error-driven sub-tasks - essentially turning error messages into a step-by-step guide for coding.</li>
+</ul>
+<p>It’s not uncommon for programmers to compile their code with the expectation of errors, using the compiler to validate the direction of their development.</p>
+<p>Statically-typed functional programmers often seek feedback from automated tools even when their code isn’t yet operational, suggesting that such tools should strive to extract as much information as possible from non-compilable code.</p>
+<p>When comparing pattern matching with combinators, statically-typed functional programmers report less cognitive and time pressure with the former. This could be due to pattern matching’s explicit textual representation of tasks, explicit handling of recursion, or consistent interface across various data structures. Nonetheless, some programmers prefer to rewrite their code using combinators eventually. Ideally, a tool would assist in this process, starting with a data type and guiding the programmer through case completion, subsequently offering a series of combinators as a refined alternative.</p>
+<p>It is beneficial to recognize which language constructs allow for low-workload or opportunistic construction and how these constructs are valued within the programming community.</p>
+<p>There’s a demand for tools that minimize the difficulty of altering types during development. Furthermore, these tools should facilitate the natural cyclic changes of a developer’s focus between modifying types and modifying expressions, possibly by employing program repair techniques to predict how changes in one will affect the other.</p>
+<p>Program sketches provide a wealth of information about undefined functions, like inferred types and potential uses. Since statically-typed functional programmers regularly employ this method of drafting and refining code, there’s a clear opportunity for tools that could enhance or even automate parts of this practice.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Research-Inspiration/" class="category-chain-item">Research Inspiration</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Sarah Chasins&#39; Works on PL and HCI</div>
+      <div>https://jifengwu2k.github.io/2023/11/05/Sarah-Chasins-Works-on-PL-and-HCI/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>November 5, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/12/24/Linear-Regression-Ridge-Regression-Lasso-Regression-and-Kernel-Ridge-Regression/" title="Linear Regression, Ridge Regression, Lasso Regression, and Kernel Ridge Regression">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linear Regression, Ridge Regression, Lasso Regression, and Kernel Ridge Regression</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/10/23/Conversation-with-Prof-Robert-Xiao/" title="Conversation with Prof. Robert Xiao">
+                        <span class="hidden-mobile">Conversation with Prof. Robert Xiao</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,771 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="NOTE: This is a Paper Reading for Topics in Programming Languages: Automated Testing, Bug Detection, and Program Analysis. The original paper can be found here. To be honest, I found the paper to be a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Paper Reading: Precise Interprocedural Dataflow Analysis via Graph Reachability">
+<meta property="og:url" content="https://jifengwu2k.github.io/2022/11/07/Paper-Reading-Precise-Interprocedural-Dataflow-Analysis-via-Graph-Reachability/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="NOTE: This is a Paper Reading for Topics in Programming Languages: Automated Testing, Bug Detection, and Program Analysis. The original paper can be found here. To be honest, I found the paper to be a">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/3/38/Equivalentie.svg">
+<meta property="og:image" content="https://picx1.zhimg.com/v2-f2b6351350543806f3a1b5f709071f78_1440w.jpg?source=172ae18b">
+<meta property="article:published_time" content="2022-11-07T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:07:15.865Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/3/38/Equivalentie.svg">
+  
+  
+  
+  <title>Paper Reading: Precise Interprocedural Dataflow Analysis via Graph Reachability - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Paper Reading: Precise Interprocedural Dataflow Analysis via Graph Reachability</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-07 00:00" pubdate>
+          November 7, 2022
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.3k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          45 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Paper Reading: Precise Interprocedural Dataflow Analysis via Graph Reachability</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>NOTE: This is a Paper Reading for <a target="_blank" rel="noopener" href="https://www.carolemieux.com/teaching/CPSC539L_2022w1.html">Topics in Programming Languages: Automated Testing, Bug Detection, and Program Analysis</a>. The original paper can be found <a target="_blank" rel="noopener" href="https://doi.org/10.1145/199448.199462">here</a>.</p>
+<p>To be honest, I found the paper to be almost unreadable due to it being full of unfamiliar concepts and abstract formalizations. I tried my best to do some studying into the topic so that I can understand the problem that they are trying to solve, and important aspects of their algorithm, better.</p>
+<h1 id="Graph-Reachability"><a href="#Graph-Reachability" class="headerlink" title="Graph Reachability"></a>Graph Reachability</h1><p>Graph Reachability means whether it is possible to get from one vertex to another vertex within a graph.</p>
+<p>In an Undirected Graph $G(V, E)$, Graph Reachability between <em>one pair of nodes</em> can be calculated using Breadth-First Search, while Graph Reachability between <em>all pair of nodes</em> can be reduced to calculating the Connected Components of the Undirected Graph, which is an efficient algorithm with $O(|V| + |E|)$ time complexity.</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/3/38/Equivalentie.svg" srcset="/img/loading.gif" lazyload alt="Connected Components within an Undirected Graph"></p>
+<p>In a Directed Graph, Graph Reachability between <em>one pair of nodes</em> can also be calculated using Breadth-First Search. <strong>However, there is no efficient algorithm that can calculate Graph Reachability between <em>all pair of nodes</em> for all Directed Graphs.</strong></p>
+<p>For <em>any</em> Directed Graph, calculating Graph Reachability between <em>all pair of nodes</em> can be reduced to calculating <strong>All Pairs Shortest Distance</strong> using the Floyd-Warshall Algorithm, which has an $O({|V|}^3)$ time complexity.</p>
+<p>More efficient algorithms are only applicable to Planar Directed Graphs.</p>
+<h1 id="Data-Flow-Analysis"><a href="#Data-Flow-Analysis" class="headerlink" title="Data Flow Analysis"></a>Data Flow Analysis</h1><p>Constant Propogation (determining whether variables at a given point in the program are guaranteed to have constant values) and Live Variable Analysis (determining at a given point in the program, which variables might be used before being overwritten) are two commonly encountered examples of Data Flow Analysis.</p>
+<p>Given a program’s Control Flow Graph, Data Flow Analysis:</p>
+<ul>
+<li>Associates each Node of the Control Flow Graph with Information concerning the Variables within that Node (known as <em>Dataflow Fact</em>‘s, usually a Mapping between Variables and their Values or Properties)</li>
+<li>Models the effect of executing a Node with a <em>Dataflow Function</em>.</li>
+</ul>
+<p>In most Data Flow Analysis problems, we take one of the following approaches to obtain the Dataflow Facts for each Node:</p>
+<ul>
+<li>Summarizing paths entering the Node from the Start, such as in Constant Propogation. Known as “Forward Problem”‘s.</li>
+<li>Summarizing paths exiting the Node from the Exit, such as in Live Variable Analysis. Known as “Backward Problem”‘s.</li>
+</ul>
+<p>How we summarize paths is known as the <em>Confluence Operator</em>.</p>
+<p>Data Flow Analysis problems can also be divided into “may” problems and “must” problems.</p>
+<ul>
+<li>In “may” problems, the Dataflow Facts for each Node include information about what may be true. An example is Live Variable Analysis, where we determine whether a variable <em>may</em> be used before being overwritten in a given point in the program.</li>
+<li>In “must” problems, the Dataflow Facts for each Node include information about what must be true. An example is Constant Propogation, where we determine whether a variable <em>must</em> have a given value in a given point in the program.</li>
+</ul>
+<p>Many interesting Data Flow Analysis problems, such as Live Variable Analysis, can be modeled as GEN&#x2F;KILL problems, or bit-vector problems, in which:</p>
+<ul>
+<li>A set of variables, $KILL[n]$, is defined at Node $n$.</li>
+<li>A set of variables, $GEN[n]$, is used at Node $n$.</li>
+<li>We use Union or Intersection to summarize paths entering a Node to obtain the Dataflow Facts for the Node.</li>
+</ul>
+<h1 id="Interprocedural-Dataflow-Analysis"><a href="#Interprocedural-Dataflow-Analysis" class="headerlink" title="Interprocedural Dataflow Analysis"></a>Interprocedural Dataflow Analysis</h1><p>The goal of Interprocedural Dataflow Analysis is to capture an Abstraction of the Effect of calling a Procedure in Dataflow Analysis.</p>
+<p>A naive approach to Interprocedural Dataflow Analysis is to reduce it to Intraprocedural Dataflow Analysis in some way.</p>
+<ul>
+<li>Procedure Inlining<ul>
+<li>Exponentially increases the Control Flow Graph</li>
+<li>Cannot handle recursion</li>
+</ul>
+</li>
+<li>Context Sensitive Procedure Inlining<ul>
+<li>Uses Context Information (often an Approximation of the Call Stack) to distinguish between different Calls of the same Procedure, and reduce the number of inlined Procedures.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>However, even after research, I have failed to understand the more complicated approaches (as well as the approaches proposed in this Paper).</p>
+<p>I can only get the point that the author shows that many Interprocedural Dataflow Analysis problems, in which:</p>
+<ul>
+<li>A finite set of Dataflow Facts</li>
+<li>Dataflow Functions distribute over the Confluence Operator (which I don’t fully understand)</li>
+</ul>
+<p>including GEN&#x2F;KILL problems, or bit-vector problems, can be reduced to a Graph Reachability Problem on a Directed Graph.</p>
+<p>Furthermore, I believe the main contribution of this paper is theoretical, but what is its value in real-world Dataflow Analysis problems, especially considering that the Time Complexity of Graph Reachability Problems on Directed Graphs are high?</p>
+<p>I honestly hope that I can get some insight into these approaches during our class on Monday. Thank you!</p>
+<hr>
+<h1 id="Feedback-from-the-Class-Discussion"><a href="#Feedback-from-the-Class-Discussion" class="headerlink" title="Feedback from the Class Discussion"></a>Feedback from the Class Discussion</h1><p>Some of the paper’s idea comes from Abstract Interpretation. It is nice theoretically, but it is far from implementation.</p>
+<p>Graph Reachability in the context of Interprocedure Analysis is also known as Context-Free Language Reachability and Dyck Reachability.</p>
+<p><strong>In the context of this paper, there are multiple Dataflow Functions, one for each Node in the Control Flow Graph. Given a Node in the Control Flow Graph, we use Pattern Matching to determine what its Dataflow Function is.</strong> Lambdas are used to represent these Dataflow Functions. Explanation for the notations: $\lambda <parameters>.&lt;return_value&gt;$ means <code>def f(&lt;parameters&gt;): return &lt;return_value&gt;</code>.</p>
+<p>In the context of this paper, we require all Dataflow Functions to be distributive over the Meet Function (Confluence Function). This means that, given the Meet Function $\Pi$ and a Dataflow Function $f$, $f(X<del>\Pi</del>Y) &#x3D; f(X)<del>\Pi</del>f(Y)$ for any two Dataflow Facts $X, Y$. </p>
+<p>Each Dataflow Function can be visualized using a Graph Representation. The Edges represent Dependencies between Facts of the Variables in the Old Dataflow Facts and Facts of the Variables in the New Dataflow Facts.</p>
+<p><img src="https://picx1.zhimg.com/v2-f2b6351350543806f3a1b5f709071f78_1440w.jpg?source=172ae18b" srcset="/img/loading.gif" lazyload alt="Graph Representation of Dataflow Functions, `x` is Shorthand for the Facts of `x`"></p>
+<p>Worklist Algorithm: an Algorithm which takes Objects from a Worklist (a Queue of some sort) one at a time, processes it in some way, and perhaps further adds new Objects to the Worklist, until some Target is reached. Example: Breadth First Search.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Research-Inspiration/" class="category-chain-item">Research Inspiration</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Paper Reading: Precise Interprocedural Dataflow Analysis via Graph Reachability</div>
+      <div>https://jifengwu2k.github.io/2022/11/07/Paper-Reading-Precise-Interprocedural-Dataflow-Analysis-via-Graph-Reachability/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>November 7, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/11/13/Paper-Reading-Modular-Checking-for-Buffer-Overflows-in-the-Large/" title="Paper Reading: Modular Checking for Buffer Overflows in the Large">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Paper Reading: Modular Checking for Buffer Overflows in the Large</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/02/Paper-Reading-Mining-Input-Grammars-from-Dynamic-Taints/" title="Paper Reading: Mining Input Grammars from Dynamic Taints">
+                        <span class="hidden-mobile">Paper Reading: Mining Input Grammars from Dynamic Taints</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

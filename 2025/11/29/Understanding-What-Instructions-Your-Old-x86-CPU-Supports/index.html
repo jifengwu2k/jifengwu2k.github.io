@@ -1,0 +1,742 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="If you’re experimenting with running software on an old x86 CPU, it helps to know precisely which instructions are available. This blog post walks through inspecting CPU instructions with a C utility,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Understanding What Instructions Your Old x86 CPU Supports">
+<meta property="og:url" content="https://jifengwu2k.github.io/2025/11/29/Understanding-What-Instructions-Your-Old-x86-CPU-Supports/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="If you’re experimenting with running software on an old x86 CPU, it helps to know precisely which instructions are available. This blog post walks through inspecting CPU instructions with a C utility,">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-11-29T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:07:30.137Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Understanding What Instructions Your Old x86 CPU Supports - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Understanding What Instructions Your Old x86 CPU Supports</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-11-29 00:00" pubdate>
+          November 29, 2025
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.5k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          47 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Understanding What Instructions Your Old x86 CPU Supports</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>If you’re experimenting with running software on an old x86 CPU, it helps to know precisely which instructions are available. This blog post walks through inspecting CPU instructions with a C utility, explains their significance, and clarifies which compiler flags to use so your software runs reliably.</p>
+<h2 id="Why-CPU-Instructions-Matter"><a href="#Why-CPU-Instructions-Matter" class="headerlink" title="Why CPU Instructions Matter"></a>Why CPU Instructions Matter</h2><p>Modern software and operating systems increasingly rely on CPU instructions that didn’t exist on older chips. For example:</p>
+<ul>
+<li><strong>SSE&#x2F;SSE2</strong> instructions are quietly assumed by many Linux distributions and applications.</li>
+<li>Features like <strong>CMPXCHG8B</strong> and <strong>RDTSC</strong> are outright required by kernels and some programs.</li>
+<li>Missing SIMD or specific instructions can make multimedia or even standard code painfully slow.</li>
+</ul>
+<p>By checking what instructions your processor supports, you avoid mysterious crashes, performance issues, or software that refuses to run.</p>
+<h2 id="Checking-CPU-Instructions-with-C-Code"><a href="#Checking-CPU-Instructions-with-C-Code" class="headerlink" title="Checking CPU Instructions with C Code"></a>Checking CPU Instructions with C Code</h2><p>The following C program queries x86 feature bits using the CPUID instruction. It works on Linux and Windows, with either gcc or MSVC. Save it as <code>i386cpufeatures.c</code>:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdint.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(_MSC_VER)</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;intrin.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cpuid.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Helper functions for cpuid</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">cpuid</span><span class="params">(<span class="type">uint32_t</span> leaf, <span class="type">uint32_t</span> *eax, <span class="type">uint32_t</span> *ebx, <span class="type">uint32_t</span> *ecx, <span class="type">uint32_t</span> *edx)</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(_MSC_VER)</span></span><br><span class="line">    <span class="type">int</span> regs[<span class="number">4</span>];</span><br><span class="line">    __cpuidex(regs, leaf, <span class="number">0</span>);</span><br><span class="line">    *eax = regs[<span class="number">0</span>];</span><br><span class="line">    *ebx = regs[<span class="number">1</span>];</span><br><span class="line">    *ecx = regs[<span class="number">2</span>];</span><br><span class="line">    *edx = regs[<span class="number">3</span>];</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">    __cpuid_count(leaf, <span class="number">0</span>, *eax, *ebx, *ecx, *edx);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">cpuidex</span><span class="params">(<span class="type">uint32_t</span> leaf, <span class="type">uint32_t</span> subleaf, <span class="type">uint32_t</span> *eax, <span class="type">uint32_t</span> *ebx, <span class="type">uint32_t</span> *ecx, <span class="type">uint32_t</span> *edx)</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(_MSC_VER)</span></span><br><span class="line">    <span class="type">int</span> regs[<span class="number">4</span>];</span><br><span class="line">    __cpuidex(regs, leaf, subleaf);</span><br><span class="line">    *eax = regs[<span class="number">0</span>];</span><br><span class="line">    *ebx = regs[<span class="number">1</span>];</span><br><span class="line">    *ecx = regs[<span class="number">2</span>];</span><br><span class="line">    *edx = regs[<span class="number">3</span>];</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">    __cpuid_count(leaf, subleaf, *eax, *ebx, *ecx, *edx);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">uint32_t</span> eax, ebx, ecx, edx;</span><br><span class="line">    <span class="type">uint32_t</span> max_basic;</span><br><span class="line">    <span class="type">uint32_t</span> max_extended;</span><br><span class="line"></span><br><span class="line">    cpuid(<span class="number">0</span>, &amp;max_basic, &amp;ebx, &amp;ecx, &amp;edx);</span><br><span class="line">    cpuid(<span class="number">0x80000000</span>, &amp;max_extended, &amp;ebx, &amp;ecx, &amp;edx);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Max supported cpuid leaf: 0x%X\n&quot;</span>, max_basic);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Max extended cpuid leaf: 0x%X\n&quot;</span>, max_extended);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Feature leaf</span></span><br><span class="line">    cpuid(<span class="number">1</span>, &amp;eax, &amp;ebx, &amp;ecx, &amp;edx);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// EDX</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;MMX..............: %s\n&quot;</span>,    (edx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">23</span>)) ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;SSE..............: %s\n&quot;</span>,    (edx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">25</span>)) ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;SSE2.............: %s\n&quot;</span>,    (edx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">26</span>)) ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;CMOV.............: %s\n&quot;</span>,    (edx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">15</span>)) ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;CMPXCHG8B........: %s\n&quot;</span>,    (edx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">8</span>))  ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;RDTSC............: %s\n&quot;</span>,    (edx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">4</span>))  ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ECX</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;SSE3.............: %s\n&quot;</span>,    (ecx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">0</span>))  ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;SSSE3............: %s\n&quot;</span>,    (ecx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">9</span>))  ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;SSE4.1...........: %s\n&quot;</span>,    (ecx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">19</span>)) ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;SSE4.2...........: %s\n&quot;</span>,    (ecx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">20</span>)) ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;POPCNT...........: %s\n&quot;</span>,    (ecx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">23</span>)) ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;AES-NI...........: %s\n&quot;</span>,    (ecx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">25</span>)) ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;AVX..............: %s\n&quot;</span>,    (ecx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">28</span>)) ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// AVX2, BMI1, BMI2: CPUID function 7</span></span><br><span class="line">    <span class="keyword">if</span> (max_basic &gt;= <span class="number">7</span>) &#123;</span><br><span class="line">        cpuidex(<span class="number">7</span>, <span class="number">0</span>, &amp;eax, &amp;ebx, &amp;ecx, &amp;edx);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;AVX2.............: %s\n&quot;</span>,  (ebx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">5</span>)) ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;BMI1.............: %s\n&quot;</span>,  (ebx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">3</span>)) ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;BMI2.............: %s\n&quot;</span>,  (ebx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">8</span>)) ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// LZCNT: Extended leaves</span></span><br><span class="line">    <span class="keyword">if</span> (max_extended &gt;= <span class="number">0x80000001</span>) &#123;</span><br><span class="line">        cpuid(<span class="number">0x80000001</span>, &amp;eax, &amp;ebx, &amp;ecx, &amp;edx);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;LZCNT............: %s\n&quot;</span>, (ecx &amp; (<span class="number">1</span> &lt;&lt; <span class="number">5</span>)) ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Example-Output-What-It-Means"><a href="#Example-Output-What-It-Means" class="headerlink" title="Example Output &amp; What It Means"></a>Example Output &amp; What It Means</h2><p>Here’s output from an ancient x86 CPU:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Max supported cpuid leaf: 0x1</span><br><span class="line">Max extended cpuid leaf: 0x0</span><br><span class="line">MMX..............: YES</span><br><span class="line">SSE..............: NO</span><br><span class="line">SSE2.............: NO</span><br><span class="line">CMOV.............: YES</span><br><span class="line">CMPXCHG8B........: NO</span><br><span class="line">RDTSC............: NO</span><br><span class="line">SSE3.............: NO</span><br><span class="line">SSSE3............: NO</span><br><span class="line">SSE4.1...........: NO</span><br><span class="line">SSE4.2...........: NO</span><br><span class="line">POPCNT...........: NO</span><br><span class="line">AES-NI...........: NO</span><br><span class="line">AVX..............: NO</span><br></pre></td></tr></table></figure>
+
+<p>Let’s break down the important bits:</p>
+<ul>
+<li><strong>MMX: YES</strong> - Your CPU supports the earliest SIMD x86 instructions (late 1990s).</li>
+<li><strong>SSE, SSE2: NO</strong> - Many modern Linux distros&#x2F;apps require these, you don’t have them.</li>
+<li><strong>CMOV: YES</strong> - Essential for some security features and compilers.</li>
+<li><strong>CMPXCHG8B: NO</strong> - Most 32-bit OSes (Win98&#x2F;XP, modern Linux 32-bit) will <em>not</em> boot on this CPU.</li>
+<li><strong>RDTSC: NO</strong> - Performance counters and some benchmarks will fail.</li>
+<li><strong>No modern SIMD (SSE2&#x2F;AVX&#x2F;etc):</strong> Any modern multimedia code (audio, video, graphics) will be <em>extremely</em> slow.</li>
+<li><strong>No POPCNT, AES-NI, AVX:</strong> No acceleration for cryptography, bit-counting, or modern scientific code.</li>
+</ul>
+<h2 id="Safe-Compiler-Flags-for-Your-CPU"><a href="#Safe-Compiler-Flags-for-Your-CPU" class="headerlink" title="Safe Compiler Flags for Your CPU"></a>Safe Compiler Flags for Your CPU</h2><p>When building C&#x2F;C++ code, choosing the right <code>CFLAGS</code> for your hardware prevents illegal instruction crashes. Here’s a guide:</p>
+<h3 id="1-Minimal-Safe-CFLAGS"><a href="#1-Minimal-Safe-CFLAGS" class="headerlink" title="1. Minimal Safe CFLAGS"></a>1. <strong>Minimal Safe CFLAGS</strong></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CFLAGS=<span class="string">&quot;-march=pentium2&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>Targets CPUs with <strong>MMX</strong> and <strong>CMOV</strong>, but NOT SSE or SSE2.</li>
+</ul>
+<h3 id="2-Common-Alternative-Flags"><a href="#2-Common-Alternative-Flags" class="headerlink" title="2. Common Alternative Flags"></a>2. <strong>Common Alternative Flags</strong></h3><ul>
+<li><code>-march=i686</code> - Implies <strong>CMOV</strong>, but not MMX, SSE or SSE2.</li>
+<li><code>-march=pentium2</code> - Safest for your old CPU: Only MMX and CMOV.</li>
+<li><code>-march=pentium3</code> - Adds SSE (<strong>not supported on your CPU!</strong>)</li>
+<li><code>-march=pentium4</code> - Requires SSE2 and SSE (<strong>not supported on your CPU!</strong>)</li>
+</ul>
+<p><strong>Important:</strong><br>If you mistakenly use <code>-march=pentium3</code> or newer, your binaries may crash with <code>illegal instruction</code> errors.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Environments/" class="category-chain-item">Environments</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Understanding What Instructions Your Old x86 CPU Supports</div>
+      <div>https://jifengwu2k.github.io/2025/11/29/Understanding-What-Instructions-Your-Old-x86-CPU-Supports/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>November 29, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/12/06/Building-C-C-Open-Source-Applications-in-a-Conda-Environment/" title="Building C/C++ Open Source Applications in a Conda Environment">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Building C/C++ Open Source Applications in a Conda Environment</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/11/26/2025-11-Financial-Statement/" title="2025-11 Financial Statement">
+                        <span class="hidden-mobile">2025-11 Financial Statement</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

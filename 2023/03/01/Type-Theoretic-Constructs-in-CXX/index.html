@@ -1,0 +1,801 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Fixed-point Combinators, Tying the Recursive Knot, and Recursive Lambda ExpressionsIn Lambda Calculus, we cannot refer to the Lambda Abstraction itself within a Lambda Abstraction. Similarly, C++ does">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Type-Theoretic Constructs in C++">
+<meta property="og:url" content="https://jifengwu2k.github.io/2023/03/01/Type-Theoretic-Constructs-in-CXX/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="Fixed-point Combinators, Tying the Recursive Knot, and Recursive Lambda ExpressionsIn Lambda Calculus, we cannot refer to the Lambda Abstraction itself within a Lambda Abstraction. Similarly, C++ does">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-03-01T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:07:17.609Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Type-Theoretic Constructs in C++ - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Type-Theoretic Constructs in C++</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-01 00:00" pubdate>
+          March 1, 2023
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          16k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          132 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Type-Theoretic Constructs in C++</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Fixed-point-Combinators-Tying-the-Recursive-Knot-and-Recursive-Lambda-Expressions"><a href="#Fixed-point-Combinators-Tying-the-Recursive-Knot-and-Recursive-Lambda-Expressions" class="headerlink" title="Fixed-point Combinators, Tying the Recursive Knot, and Recursive Lambda Expressions"></a>Fixed-point Combinators, Tying the Recursive Knot, and Recursive Lambda Expressions</h1><p>In Lambda Calculus, we cannot refer to the Lambda Abstraction <em>itself</em> within a Lambda Abstraction. Similarly, C++ does not allow defining a recursive lambda expression. Thus, we cannot straightforwardly implement recursion.</p>
+<p>A workaround for this is to define a lambda expression that:</p>
+<ul>
+<li>Add an <em>additional first parameter</em> to the lambda expression.</li>
+<li>Call that <em>additional first parameter</em> inside the lambda expression at each recursive call site.</li>
+</ul>
+<p>Such an additional first parameter should have the value of a yet-unknown hypothetical recursive function. Thus, we should use <code>auto</code> to represent its type. Using <code>auto</code> in a lambda expression’s parameter list requires C++14 or above.</p>
+<p>For example, we can define the following lambda expression to calculate the <code>n</code>th Fibonacci Number recursively:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> fib = [](</span><br><span class="line">    <span class="keyword">auto</span> recursive_fib,</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> n</span><br><span class="line">) -&gt; <span class="type">unsigned</span> <span class="type">long</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0UL</span>;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1UL</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">return</span> <span class="built_in">recursive_fib</span>(n - <span class="number">1</span>) + <span class="built_in">recursive_fib</span>(n - <span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>After defining such a lambda expression, we can use a <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Fixed-point_combinator#Fixed-point_combinators_in_lambda_calculus">Fixed-point Combinator</a> to <a target="_blank" rel="noopener" href="https://courses.cs.cornell.edu/cs3110/2021sp/textbook/mut/ex_recursion_without_rec.html">tie the recursive knot</a> and return a new recursive function without the additional first parameter.</p>
+<p>What is a Fixed-Point Combinator?</p>
+<p>In mathematics, a <em>fixed-point</em> for function $f$ refers to an element $x$ that is mapped to itself by the function, i.e., $x &#x3D; f(x)$. For example, given $f(x)&#x3D;x^{2}-3x+4$, then $2$ is a fixed point of $f$, because $f(2) &#x3D; 2$.</p>
+<p>A <em>combinator</em> is a function that operates on a function (i.e., a <em>higher-order function</em>).</p>
+<p>A <em>fixed-point combinator</em> <code>g</code> for function <code>f</code> satisfies <code>g(f)(...) = f(g(f), ...)</code>. This is reminiscent of the form $x &#x3D; f(x)$ for fixed points in mathematics, and <code>g(f)</code> can be seen as a <em>fixed-point</em> of function <code>f</code>.</p>
+<p>This implies that <em>a fixed-point combinator <code>g</code>, when called on <code>f</code>, returns a new function (the <code>g(f)</code> above), that, when called with parameters <code>...</code>, is equivalent to directly calling <code>f</code> with both <code>g(f)</code> and <code>...</code></em>. This means that a fixed-point combinator <em>returns a new recursive function without the additional first parameter of <code>f</code></em>. </p>
+<p>This is done by <em>tying the recursive knot of <code>f</code></em>. <em>Tying the recursive knot</em> refers to, for such a previously defined lambda expression <code>f</code>, passing a function that represents the hypothetical recursive function, which in this case is <code>g(f)</code>, to its first parameter.</p>
+<p>We can implement fixed-point combinators in C++ using the following struct, whose instance represents <code>g(f)</code> and contains an <code>operator()</code> method, in which can use <code>this</code> to self-reference to <code>g(f)</code>, allowing us to support <code>f(g(f), ...)</code>:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt; <span class="keyword">struct</span> <span class="title class_">FixedPointCombinator</span> &#123;</span><br><span class="line">    F f;</span><br><span class="line"></span><br><span class="line">    <span class="function">R <span class="title">operator</span><span class="params">()</span><span class="params">(Args... args)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">f</span>(*<span class="keyword">this</span>, args...);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>C++ supports compiler optimizations for this pattern. For example, the following code:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt; <span class="keyword">struct</span> <span class="title class_">FixedPointCombinator</span> &#123;</span><br><span class="line">    F f;</span><br><span class="line"></span><br><span class="line">    <span class="function">R <span class="title">operator</span><span class="params">()</span><span class="params">(Args... args)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">f</span>(*<span class="keyword">this</span>, args...);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> fib = [](</span><br><span class="line">    <span class="keyword">auto</span> recursive_fib,</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> n</span><br><span class="line">) -&gt; <span class="type">unsigned</span> <span class="type">long</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0UL</span>;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1UL</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">return</span> <span class="built_in">recursive_fib</span>(n - <span class="number">1</span>) + <span class="built_in">recursive_fib</span>(n - <span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> fib_ = FixedPointCombinator&lt;<span class="keyword">decltype</span>(fib), <span class="type">unsigned</span> <span class="type">long</span>, <span class="type">unsigned</span> <span class="type">int</span>&gt; &#123;fib&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> input;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%u&quot;</span>, &amp;input);</span><br><span class="line"></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> result = <span class="built_in">fib_</span>(input);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%lu\n&quot;</span>, result);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>compiles to the following LLVM IR under <code>clang++ -std=c++14 -O2 -S -emit-llvm</code>, in which <code>FixedPointCombinator&lt;decltype(fib), unsigned long, unsigned int&gt; &#123;fib&#125;</code> has been optimized to the recursive function <code>@_ZNK3$_0clI20FixedPointCombinatorIS_mJjEEEEmT_j</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">; ModuleID = &#x27;fib_recursive.cpp&#x27;</span><br><span class="line">source_filename = &quot;fib_recursive.cpp&quot;</span><br><span class="line">target datalayout = &quot;e-m:e-i64:64-f80:128-n8:16:32:64-S128&quot;</span><br><span class="line">target triple = &quot;x86_64-unknown-linux-gnu&quot;</span><br><span class="line"></span><br><span class="line">@.str = private unnamed_addr constant [3 x i8] c&quot;%u\00&quot;, align 1</span><br><span class="line">@.str.1 = private unnamed_addr constant [5 x i8] c&quot;%lu\0A\00&quot;, align 1</span><br><span class="line"></span><br><span class="line">; Function Attrs: norecurse nounwind uwtable</span><br><span class="line">define dso_local i32 @main() local_unnamed_addr #0 &#123;</span><br><span class="line">  %1 = alloca i32, align 4</span><br><span class="line">  %2 = bitcast i32* %1 to i8*</span><br><span class="line">  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %2) #4</span><br><span class="line">  %3 = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32* nonnull %1)</span><br><span class="line">  %4 = load i32, i32* %1, align 4, !tbaa !2</span><br><span class="line">  %5 = call fastcc i64 @&quot;_ZNK3$_0clI20FixedPointCombinatorIS_mJjEEEEmT_j&quot;(i32 %4) #4</span><br><span class="line">  %6 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([5 x i8], [5 x i8]* @.str.1, i64 0, i64 0), i64 %5)</span><br><span class="line">  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %2) #4</span><br><span class="line">  ret i32 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">; Function Attrs: argmemonly nounwind</span><br><span class="line">declare void @llvm.lifetime.start.p0i8(i64 immarg, i8* nocapture) #1</span><br><span class="line"></span><br><span class="line">; Function Attrs: nofree nounwind</span><br><span class="line">declare dso_local i32 @scanf(i8* nocapture readonly, ...) local_unnamed_addr #2</span><br><span class="line"></span><br><span class="line">; Function Attrs: nofree nounwind</span><br><span class="line">declare dso_local i32 @printf(i8* nocapture readonly, ...) local_unnamed_addr #2</span><br><span class="line"></span><br><span class="line">; Function Attrs: argmemonly nounwind</span><br><span class="line">declare void @llvm.lifetime.end.p0i8(i64 immarg, i8* nocapture) #1</span><br><span class="line"></span><br><span class="line">; Function Attrs: inlinehint nounwind readnone uwtable</span><br><span class="line">define internal fastcc i64 @&quot;_ZNK3$_0clI20FixedPointCombinatorIS_mJjEEEEmT_j&quot;(i32) unnamed_addr #3 align 2 &#123;</span><br><span class="line">  switch i32 %0, label %3 [</span><br><span class="line">    i32 0, label %9</span><br><span class="line">    i32 1, label %2</span><br><span class="line">  ]</span><br><span class="line"></span><br><span class="line">2:                                                ; preds = %1</span><br><span class="line">  br label %9</span><br><span class="line"></span><br><span class="line">3:                                                ; preds = %1</span><br><span class="line">  %4 = add i32 %0, -1</span><br><span class="line">  %5 = tail call fastcc i64 @&quot;_ZNK3$_0clI20FixedPointCombinatorIS_mJjEEEEmT_j&quot;(i32 %4) #4</span><br><span class="line">  %6 = add i32 %0, -2</span><br><span class="line">  %7 = tail call fastcc i64 @&quot;_ZNK3$_0clI20FixedPointCombinatorIS_mJjEEEEmT_j&quot;(i32 %6) #4</span><br><span class="line">  %8 = add i64 %7, %5</span><br><span class="line">  ret i64 %8</span><br><span class="line"></span><br><span class="line">9:                                                ; preds = %1, %2</span><br><span class="line">  %10 = phi i64 [ 1, %2 ], [ 0, %1 ]</span><br><span class="line">  ret i64 %10</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">attributes #0 = &#123; norecurse nounwind uwtable &quot;correctly-rounded-divide-sqrt-fp-math&quot;=&quot;false&quot; &quot;disable-tail-calls&quot;=&quot;false&quot; &quot;less-precise-fpmad&quot;=&quot;false&quot; &quot;min-legal-vector-width&quot;=&quot;0&quot; &quot;no-frame-pointer-elim&quot;=&quot;false&quot; &quot;no-infs-fp-math&quot;=&quot;false&quot; &quot;no-jump-tables&quot;=&quot;false&quot; &quot;no-nans-fp-math&quot;=&quot;false&quot; &quot;no-signed-zeros-fp-math&quot;=&quot;false&quot; &quot;no-trapping-math&quot;=&quot;false&quot; &quot;stack-protector-buffer-size&quot;=&quot;8&quot; &quot;target-cpu&quot;=&quot;x86-64&quot; &quot;target-features&quot;=&quot;+cx8,+fxsr,+mmx,+sse,+sse2,+x87&quot; &quot;unsafe-fp-math&quot;=&quot;false&quot; &quot;use-soft-float&quot;=&quot;false&quot; &#125;</span><br><span class="line">attributes #1 = &#123; argmemonly nounwind &#125;</span><br><span class="line">attributes #2 = &#123; nofree nounwind &quot;correctly-rounded-divide-sqrt-fp-math&quot;=&quot;false&quot; &quot;disable-tail-calls&quot;=&quot;false&quot; &quot;less-precise-fpmad&quot;=&quot;false&quot; &quot;no-frame-pointer-elim&quot;=&quot;false&quot; &quot;no-infs-fp-math&quot;=&quot;false&quot; &quot;no-nans-fp-math&quot;=&quot;false&quot; &quot;no-signed-zeros-fp-math&quot;=&quot;false&quot; &quot;no-trapping-math&quot;=&quot;false&quot; &quot;stack-protector-buffer-size&quot;=&quot;8&quot; &quot;target-cpu&quot;=&quot;x86-64&quot; &quot;target-features&quot;=&quot;+cx8,+fxsr,+mmx,+sse,+sse2,+x87&quot; &quot;unsafe-fp-math&quot;=&quot;false&quot; &quot;use-soft-float&quot;=&quot;false&quot; &#125;</span><br><span class="line">attributes #3 = &#123; inlinehint nounwind readnone uwtable &quot;correctly-rounded-divide-sqrt-fp-math&quot;=&quot;false&quot; &quot;disable-tail-calls&quot;=&quot;false&quot; &quot;less-precise-fpmad&quot;=&quot;false&quot; &quot;min-legal-vector-width&quot;=&quot;0&quot; &quot;no-frame-pointer-elim&quot;=&quot;false&quot; &quot;no-infs-fp-math&quot;=&quot;false&quot; &quot;no-jump-tables&quot;=&quot;false&quot; &quot;no-nans-fp-math&quot;=&quot;false&quot; &quot;no-signed-zeros-fp-math&quot;=&quot;false&quot; &quot;no-trapping-math&quot;=&quot;false&quot; &quot;stack-protector-buffer-size&quot;=&quot;8&quot; &quot;target-cpu&quot;=&quot;x86-64&quot; &quot;target-features&quot;=&quot;+cx8,+fxsr,+mmx,+sse,+sse2,+x87&quot; &quot;unsafe-fp-math&quot;=&quot;false&quot; &quot;use-soft-float&quot;=&quot;false&quot; &#125;</span><br><span class="line">attributes #4 = &#123; nounwind &#125;</span><br><span class="line"></span><br><span class="line">!llvm.module.flags = !&#123;!0&#125;</span><br><span class="line">!llvm.ident = !&#123;!1&#125;</span><br><span class="line"></span><br><span class="line">!0 = !&#123;i32 1, !&quot;wchar_size&quot;, i32 4&#125;</span><br><span class="line">!1 = !&#123;!&quot;clang version 9.0.1 (https://github.com/conda-forge/clangdev-feedstock 2ea3b72da24769de0dfc6dac99251a5d7a46144d)&quot;&#125;</span><br><span class="line">!2 = !&#123;!3, !3, i64 0&#125;</span><br><span class="line">!3 = !&#123;!&quot;int&quot;, !4, i64 0&#125;</span><br><span class="line">!4 = !&#123;!&quot;omnipotent char&quot;, !5, i64 0&#125;</span><br><span class="line">!5 = !&#123;!&quot;Simple C++ TBAA&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>We can slightly modify the code above to support a fixed-point combinator that also provides <em>memoization</em>. Note that <strong>the instance of the fixed-point combinator is now stateful, and we should pass it by reference to <code>fib</code> (i.e., change the first parameter of <code>fib</code> to reference type)</strong>:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;map&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;tuple&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt; <span class="keyword">struct</span> <span class="title class_">FixedPointCombinatorWithMemoization</span> &#123;</span><br><span class="line">    F f;</span><br><span class="line">    std::map&lt;std::tuple&lt;Args...&gt;, R&gt; memo;</span><br><span class="line"></span><br><span class="line">    <span class="function">R <span class="title">operator</span><span class="params">()</span><span class="params">(Args... args)</span> </span>&#123;</span><br><span class="line">        <span class="function">std::tuple&lt;Args...&gt; <span class="title">args_tuple</span><span class="params">(args...)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Check if result is in the memoization map</span></span><br><span class="line">        <span class="keyword">auto</span> found = memo.<span class="built_in">find</span>(args_tuple);</span><br><span class="line">        <span class="keyword">if</span> (found != memo.<span class="built_in">end</span>()) &#123;</span><br><span class="line">            <span class="keyword">return</span> found-&gt;second; <span class="comment">// Return the cached result</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Otherwise, compute and store the result</span></span><br><span class="line">        R result = <span class="built_in">f</span>(*<span class="keyword">this</span>, args...);</span><br><span class="line">        memo[args_tuple] = result;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> fib = [](</span><br><span class="line">    <span class="keyword">auto</span>&amp; recursive_fib,</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> n</span><br><span class="line">) -&gt; <span class="type">unsigned</span> <span class="type">long</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0UL</span>;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1UL</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">return</span> <span class="built_in">recursive_fib</span>(n - <span class="number">1</span>) + <span class="built_in">recursive_fib</span>(n - <span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> fib_ = FixedPointCombinatorWithMemoization&lt;<span class="keyword">decltype</span>(fib), <span class="type">unsigned</span> <span class="type">long</span>, <span class="type">unsigned</span> <span class="type">int</span>&gt; &#123;fib&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> input;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%u&quot;</span>, &amp;input);</span><br><span class="line"></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> result = <span class="built_in">fib_</span>(input);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%lu\n&quot;</span>, result);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="Type-Abstractions-and-Template-Functions"><a href="#Type-Abstractions-and-Template-Functions" class="headerlink" title="Type Abstractions and Template Functions"></a>Type Abstractions and Template Functions</h1><p>Polymorphic Lambda Calculus (also known as Second Order Lambda Calculus or System F) introduces Type Abstractions and Type Applications.</p>
+<ul>
+<li>A Type Abstraction, written as <code>λ X . t</code>, represents a Term (often a Lambda Abstraction) <code>t</code> containing a Type Variable <code>X</code>.</li>
+<li>A Type Application, written as <code>t [T]</code>, uses a Concrete Type <code>T</code> to replace all instances of the Type Variable in the Term of the Type Abstraction.</li>
+</ul>
+<p>This can be used to implement Polymorphic Lambda Abstractions.</p>
+<p>For example, the following Type Abstraction representing a Polymorphic Identity Function:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id = λ X . λ x: X . x</span><br></pre></td></tr></table></figure>
+
+<p>can be instantiated to yield any concrete identity function that may be required, such as <code>id [Nat]: Nat -&gt; Nat</code>.</p>
+<p>Such Type Abstractions can be implemented in C++ using template functions:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> X&gt; <span class="function"><span class="keyword">auto</span> <span class="title">id</span><span class="params">(X x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>while Type Applications correspond to template instantiations:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id&lt;<span class="type">int</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Should the template function be passed a callable, we usually want to use a template typename to support functions, function pointers, functors, and lambda expressions. Alternatively, we can also use <code>auto</code> to represent its type in the template function’s parameter list. Note that using <code>auto</code> in a (non-lambda expression) function’s parameter list requires C++20 or above.</p>
+<p>For example, the following Type Abstraction:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">double = λ X . λ f: X -&gt; X . λ a: X . f(f a)</span><br></pre></td></tr></table></figure>
+
+<p>can be represented using the following template function:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> X, <span class="keyword">typename</span> F&gt; <span class="function"><span class="keyword">auto</span> <span class="title">double_</span><span class="params">(<span class="type">const</span> F f)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [f](X a) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">f</span>(<span class="built_in">f</span>(a));</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>or in C++20 or above:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> X&gt; <span class="function"><span class="keyword">auto</span> <span class="title">double_</span><span class="params">(<span class="type">const</span> <span class="keyword">auto</span> f)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [f](X a) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">f</span>(<span class="built_in">f</span>(a));</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>C++ compilers support aggressive inlining optimizations when lambda expressions are used. For example, the call to <code>const auto g = double_&lt;int&gt;([](int x) &#123; return 2 * x; &#125;);</code> in the following source code:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> X&gt; <span class="function"><span class="keyword">auto</span> <span class="title">double_</span><span class="params">(<span class="type">const</span> <span class="keyword">auto</span> f)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [f](X a) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">f</span>(<span class="built_in">f</span>(a));</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> g = <span class="built_in">double_</span>&lt;<span class="type">int</span>&gt;([](<span class="type">int</span> x) &#123; <span class="keyword">return</span> <span class="number">2</span> * x; &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> input;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;input);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, <span class="built_in">g</span>(input));</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>has been completely inlined to <code>%5 = shl i32 %4, 2</code> in the LLVM IR generated with <code>clang++ -std=c++20 -O2 -S -emit-llvm</code>:</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">@.str</span> <span class="operator">=</span> <span class="keyword">private</span> <span class="keyword">unnamed_addr</span> <span class="keyword">constant</span> [<span class="number">3</span> <span class="keyword">x</span> <span class="type">i8</span>] <span class="keyword">c</span><span class="string">&quot;%d<span class="char escape_">\00</span>&quot;</span><span class="punctuation">,</span> <span class="keyword">align</span> <span class="number">1</span></span><br><span class="line"><span class="title">@.str.1</span> <span class="operator">=</span> <span class="keyword">private</span> <span class="keyword">unnamed_addr</span> <span class="keyword">constant</span> [<span class="number">4</span> <span class="keyword">x</span> <span class="type">i8</span>] <span class="keyword">c</span><span class="string">&quot;%d\0A<span class="char escape_">\00</span>&quot;</span><span class="punctuation">,</span> <span class="keyword">align</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">; Function Attrs: norecurse nounwind uwtable</span></span><br><span class="line"><span class="keyword">define</span> dso_local <span class="type">i32</span> <span class="title">@main</span>() local_unnamed_addr <span class="variable">#0</span> &#123;</span><br><span class="line">  <span class="variable">%1</span> <span class="operator">=</span> <span class="keyword">alloca</span> <span class="type">i32</span><span class="punctuation">,</span> <span class="keyword">align</span> <span class="number">4</span></span><br><span class="line">  <span class="variable">%2</span> <span class="operator">=</span> <span class="keyword">bitcast</span> <span class="type">i32</span>* <span class="variable">%1</span> <span class="keyword">to</span> <span class="type">i8</span>*</span><br><span class="line">  <span class="keyword">call</span> <span class="type">void</span> <span class="title">@llvm.lifetime.start.p0i8</span>(<span class="type">i64</span> <span class="number">4</span><span class="punctuation">,</span> <span class="type">i8</span>* nonnull <span class="variable">%2</span>) <span class="variable">#3</span></span><br><span class="line">  <span class="variable">%3</span> <span class="operator">=</span> <span class="keyword">call</span> <span class="type">i32</span> (<span class="type">i8</span>*<span class="punctuation">,</span> ...) <span class="title">@__isoc99_scanf</span>(<span class="type">i8</span>* <span class="keyword">getelementptr</span> <span class="keyword">inbounds</span> ([<span class="number">3</span> <span class="keyword">x</span> <span class="type">i8</span>]<span class="punctuation">,</span> [<span class="number">3</span> <span class="keyword">x</span> <span class="type">i8</span>]* <span class="title">@.str</span><span class="punctuation">,</span> <span class="type">i64</span> <span class="number">0</span><span class="punctuation">,</span> <span class="type">i64</span> <span class="number">0</span>)<span class="punctuation">,</span> <span class="type">i32</span>* nonnull <span class="variable">%1</span>)</span><br><span class="line">  <span class="variable">%4</span> <span class="operator">=</span> <span class="keyword">load</span> <span class="type">i32</span><span class="punctuation">,</span> <span class="type">i32</span>* <span class="variable">%1</span><span class="punctuation">,</span> <span class="keyword">align</span> <span class="number">4</span><span class="punctuation">,</span> <span class="title">!tbaa</span> <span class="title">!2</span></span><br><span class="line">  <span class="variable">%5</span> <span class="operator">=</span> <span class="keyword">shl</span> <span class="type">i32</span> <span class="variable">%4</span><span class="punctuation">,</span> <span class="number">2</span></span><br><span class="line">  <span class="variable">%6</span> <span class="operator">=</span> <span class="keyword">call</span> <span class="type">i32</span> (<span class="type">i8</span>*<span class="punctuation">,</span> ...) <span class="title">@printf</span>(<span class="type">i8</span>* nonnull dereferenceable(<span class="number">1</span>) <span class="keyword">getelementptr</span> <span class="keyword">inbounds</span> ([<span class="number">4</span> <span class="keyword">x</span> <span class="type">i8</span>]<span class="punctuation">,</span> [<span class="number">4</span> <span class="keyword">x</span> <span class="type">i8</span>]* <span class="title">@.str.1</span><span class="punctuation">,</span> <span class="type">i64</span> <span class="number">0</span><span class="punctuation">,</span> <span class="type">i64</span> <span class="number">0</span>)<span class="punctuation">,</span> <span class="type">i32</span> <span class="variable">%5</span>)</span><br><span class="line">  <span class="keyword">call</span> <span class="type">void</span> <span class="title">@llvm.lifetime.end.p0i8</span>(<span class="type">i64</span> <span class="number">4</span><span class="punctuation">,</span> <span class="type">i8</span>* nonnull <span class="variable">%2</span>) <span class="variable">#3</span></span><br><span class="line">  <span class="keyword">ret</span> <span class="type">i32</span> <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">; Function Attrs: argmemonly nounwind willreturn</span></span><br><span class="line"><span class="keyword">declare</span> <span class="type">void</span> <span class="title">@llvm.lifetime.start.p0i8</span>(<span class="type">i64</span> immarg<span class="punctuation">,</span> <span class="type">i8</span>* <span class="keyword">nocapture</span>) <span class="variable">#1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">; Function Attrs: nofree nounwind</span></span><br><span class="line"><span class="keyword">declare</span> dso_local <span class="type">i32</span> <span class="title">@__isoc99_scanf</span>(<span class="type">i8</span>* <span class="keyword">nocapture</span> <span class="keyword">readonly</span><span class="punctuation">,</span> ...) local_unnamed_addr <span class="variable">#2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">; Function Attrs: nofree nounwind</span></span><br><span class="line"><span class="keyword">declare</span> dso_local <span class="type">i32</span> <span class="title">@printf</span>(<span class="type">i8</span>* <span class="keyword">nocapture</span> <span class="keyword">readonly</span><span class="punctuation">,</span> ...) local_unnamed_addr <span class="variable">#2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">; Function Attrs: argmemonly nounwind willreturn</span></span><br><span class="line"><span class="keyword">declare</span> <span class="type">void</span> <span class="title">@llvm.lifetime.end.p0i8</span>(<span class="type">i64</span> immarg<span class="punctuation">,</span> <span class="type">i8</span>* <span class="keyword">nocapture</span>) <span class="variable">#1</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Type-Classes-and-Concepts-in-C"><a href="#Type-Classes-and-Concepts-in-C" class="headerlink" title="Type Classes and Concepts in C++"></a>Type Classes and Concepts in C++</h1><p>Template Metaprogramming in C++ had been untyped, with template parameters being generic type variables substituted at template instantiation.</p>
+<p>In C++20, a type system has been added to this untyped template language through concepts. They are Boolean predicates on template parameters evaluated at the point of, not after, template instantiation. The compiler will produce a clear error immediately if a programmer tries to use a template parameter that doesn’t meet the requirements of a concept.</p>
+<p>This starkly contrasts the challenging-to-grasp errors reported after an invalid type substitutes a generic type variable emanating from the implementation context rather than the template instantiation itself.</p>
+<p>For instance, the first two arguments to <code>std::sort</code> must be random-access iterators. If an argument is not a random-access iterator, an error will occur when <code>std::sort</code> attempts to use it as a bidirectional iterator.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::list&lt;<span class="type">int</span>&gt; l = &#123;<span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>&#125;;</span><br><span class="line">std::<span class="built_in">sort</span>(l.<span class="built_in">begin</span>(), l.<span class="built_in">end</span>());</span><br></pre></td></tr></table></figure>
+
+<p>Without concepts, compilers may produce large amounts of error information, starting with an equation that failed to compile when it tried to subtract two non-random-access iterators:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">In instantiation of &#x27;void std::__sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = std::_List_iterator&lt;int&gt;; _Compare = __gnu_cxx::__ops::_Iter_less_iter]&#x27;:</span><br><span class="line"> error: no match for &#x27;operator-&#x27; (operand types are &#x27;std::_List_iterator&lt;int&gt;&#x27; and &#x27;std::_List_iterator&lt;int&gt;&#x27;)</span><br><span class="line"> std::__lg(__last - __first) * 2,</span><br></pre></td></tr></table></figure>
+
+<p>However, if concepts are used, the problem can be found and reported at template instantiation:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">error: cannot call function &#x27;void std::sort(_RAIter, _RAIter) [with _RAIter = std::_List_iterator&lt;int&gt;]&#x27;</span><br><span class="line">note:   concept &#x27;RandomAccessIterator()&#x27; was not satisfied</span><br></pre></td></tr></table></figure>
+
+<p>It is straightforward to implement Type Classes with concepts. For instance, the Type Class below specifies the equal (&#x3D;&#x3D;) operations for Type Constructors that are its instances: </p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="type">Eq</span> a <span class="keyword">where</span></span></span><br><span class="line">  (==) :: a -&gt; a -&gt; <span class="type">Bool</span></span><br></pre></td></tr></table></figure>
+
+<p>This can be implemented using the following C++ concept:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;concepts&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// Declaration of the concept &quot;Eq&quot;,</span></span><br><span class="line"><span class="comment">// which is satisfied by any type &#x27;T&#x27; such that for values &#x27;t&#x27; of type &#x27;T&#x27;, the expression t == t compiles and its type satisfies the concept std::same_as&lt;bool&gt;</span></span><br><span class="line"><span class="comment">// This is represented using a &quot;requires expression&quot; which returns a bool</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <span class="keyword">concept</span> Eq = <span class="built_in">requires</span> (T t) &#123;</span><br><span class="line">    &#123; t == t &#125; -&gt; std::same_as&lt;<span class="type">bool</span>&gt;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Afterwards, such a concept can be specified when template parameters are being introduced in a template definition, to indicate that the corresponding template parameter must satisfy the concept.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;Eq T&gt; <span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; t)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>or (using a “requires clause”):</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">requires</span> Eq&lt;T&gt; <span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; t)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/6948166/javas-interface-and-haskells-type-class-differences-and-similarities">https://stackoverflow.com/questions/6948166/javas-interface-and-haskells-type-class-differences-and-similarities</a></li>
+<li><a target="_blank" rel="noopener" href="https://cs.gmu.edu/~sean/stuff/java-objc.html">https://cs.gmu.edu/~sean/stuff/java-objc.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://functionalcpp.wordpress.com/2013/08/16/type-classes/">https://functionalcpp.wordpress.com/2013/08/16/type-classes/</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/32124627/how-are-c-concepts-different-to-haskell-typeclasses">https://stackoverflow.com/questions/32124627/how-are-c-concepts-different-to-haskell-typeclasses</a></li>
+<li><a target="_blank" rel="noopener" href="https://wiki.haskell.org/OOP_vs_type_classes">https://wiki.haskell.org/OOP_vs_type_classes</a></li>
+<li><a target="_blank" rel="noopener" href="https://doi.org/10.1145/1411318.1411324">https://doi.org/10.1145/1411318.1411324</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.foonathan.net/2021/07/concepts-structural-nominal/">https://www.foonathan.net/2021/07/concepts-structural-nominal/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.reddit.com/r/haskell/comments/1e9f49/concepts_in_c_template_programming_and_type/">https://www.reddit.com/r/haskell/comments/1e9f49/concepts_in_c_template_programming_and_type/</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Design-Patterns/" class="category-chain-item">Design Patterns</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Type-Theoretic Constructs in C++</div>
+      <div>https://jifengwu2k.github.io/2023/03/01/Type-Theoretic-Constructs-in-CXX/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>March 1, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/06/Paper-Reading-How-to-make-ad-hoc-polymorphism-less-ad-hoc/" title="Paper Reading: How to make ad-hoc polymorphism less ad-hoc">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Paper Reading: How to make ad-hoc polymorphism less ad-hoc</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/02/26/Paper-Reading-Types-and-Programming-Languages-Chapter-22/" title="Paper Reading: &#34;Types and Programming Languages&#34; Chapter 22">
+                        <span class="hidden-mobile">Paper Reading: &#34;Types and Programming Languages&#34; Chapter 22</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

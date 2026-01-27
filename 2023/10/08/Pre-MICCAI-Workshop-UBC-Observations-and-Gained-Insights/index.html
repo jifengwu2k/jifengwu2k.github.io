@@ -1,0 +1,837 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="From the Pre-MICCAI Workshop@UBC website:  The Pre-MICCAI Workshop is a dynamic and innovative platform that unites machine learning and medical computer vision. As a prelude to the prestigious MICCAI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pre-MICCAI Workshop@UBC Observations and Gained Insights">
+<meta property="og:url" content="https://jifengwu2k.github.io/2023/10/08/Pre-MICCAI-Workshop-UBC-Observations-and-Gained-Insights/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="From the Pre-MICCAI Workshop@UBC website:  The Pre-MICCAI Workshop is a dynamic and innovative platform that unites machine learning and medical computer vision. As a prelude to the prestigious MICCAI">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-10-08T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:07:13.305Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Pre-MICCAI Workshop@UBC Observations and Gained Insights - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Pre-MICCAI Workshop@UBC Observations and Gained Insights</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-10-08 00:00" pubdate>
+          October 8, 2023
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.9k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          58 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Pre-MICCAI Workshop@UBC Observations and Gained Insights</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>From the <a target="_blank" rel="noopener" href="https://sites.google.com/view/pre-miccai-ubc/home">Pre-MICCAI Workshop@UBC</a> website:</p>
+<blockquote>
+<p>The Pre-MICCAI Workshop is a dynamic and innovative platform that unites machine learning and medical computer vision. As a prelude to the prestigious MICCAI (Medical Image Computing and Computer-Assisted Intervention) conference, this workshop serves as a vital nexus where experts, researchers, and enthusiasts converge to explore cutting-edge advancements, exchange knowledge, and foster collaborative partnerships in the field of medical image analysis.</p>
+</blockquote>
+<h1 id="Shaoting-Zhang-Shanghai-AI-Lab-Keynote-Talk-2-Foundation-Models-in-Medicine-Generalist-vs-Specialist"><a href="#Shaoting-Zhang-Shanghai-AI-Lab-Keynote-Talk-2-Foundation-Models-in-Medicine-Generalist-vs-Specialist" class="headerlink" title="Shaoting Zhang (Shanghai AI Lab) - Keynote Talk 2 - Foundation Models in Medicine: Generalist vs Specialist"></a>Shaoting Zhang (Shanghai AI Lab) - Keynote Talk 2 - Foundation Models in Medicine: Generalist vs Specialist</h1><ul>
+<li>Advantages of Large Models:<ul>
+<li>Emergent abilities.</li>
+<li>Long-tail problems (only a small amount of fine-tuning is required for downstream tasks and does not require a tremendous amount of data collection and labeling).</li>
+<li>Model sharing strengthens data security.</li>
+</ul>
+</li>
+<li>Shanghai AI Lab presents <a target="_blank" rel="noopener" href="https://github.com/openmedlab">OpenMEDLab (open-source medical image and language foundation models)</a>.</li>
+<li>Utilizing a single model with varied prompts for diverse tasks.</li>
+<li>Large language model training encompasses:<ul>
+<li>Self-supervised pre-training.</li>
+<li>Instruction tuning.</li>
+<li>RLHF.</li>
+<li>Plugins for accessing updated information without retraining.</li>
+</ul>
+</li>
+<li>Computer vision researchers lean towards generalist models due to the technical challenges.</li>
+<li>Clinicians prefer specialist models to solve day-to-day work.</li>
+</ul>
+<p>Question: Will medical foundation models support more modalities in the future besides vision and language?</p>
+<p>Answer:</p>
+<ul>
+<li>People will still focus on one modality for one model with high accuracy to address practical business demands.</li>
+<li>Multiple models can be used on demand to handle multimodal data.</li>
+</ul>
+<h1 id="Briefings"><a href="#Briefings" class="headerlink" title="Briefings"></a>Briefings</h1><h2 id="Sana-Ayromlou-Continual-Class-Specific-Impression-for-Data-free-Class-Incremental-Learning"><a href="#Sana-Ayromlou-Continual-Class-Specific-Impression-for-Data-free-Class-Incremental-Learning" class="headerlink" title="Sana Ayromlou - Continual Class-Specific Impression for Data-free Class Incremental Learning"></a>Sana Ayromlou - Continual Class-Specific Impression for Data-free Class Incremental Learning</h2><ul>
+<li>Focuses on training models over newly introduced classes, termed <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Incremental_learning">incremental learning</a>.</li>
+<li>Challenges include the loss of old data, resulting in catastrophic forgetting.</li>
+<li>Proposed Solution: Generate synthetic medical data from prior classes using <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2201.10787">model inversion</a> (extracting training data from the model) and employing <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2102.09517">cosine-normalized cross-entropy loss</a>.</li>
+</ul>
+<h2 id="Hooman-Vaseli-ProtoASNet"><a href="#Hooman-Vaseli-ProtoASNet" class="headerlink" title="Hooman Vaseli - ProtoASNet"></a>Hooman Vaseli - ProtoASNet</h2><ul>
+<li>Emphasizes the importance of interpretability in AI solutions, especially in healthcare.</li>
+<li>Core Technology: <a target="_blank" rel="noopener" href="https://proceedings.neurips.cc/paper_files/paper/2017/hash/cb8da6767461f2812ae4290eac7cbc42-Abstract.html">Prototypical neural networks</a>, which “learn a metric space in which classification can be performed by computing distances to prototype representations of each class.”</li>
+</ul>
+<h1 id="Ruogu-Fang-University-of-Florida-Keynote-Talk-4-A-Tale-of-Two-Frontiers-When-Brain-Meets-AI"><a href="#Ruogu-Fang-University-of-Florida-Keynote-Talk-4-A-Tale-of-Two-Frontiers-When-Brain-Meets-AI" class="headerlink" title="Ruogu Fang (University of Florida) - Keynote Talk 4 - A Tale of Two Frontiers: When Brain Meets AI"></a>Ruogu Fang (University of Florida) - Keynote Talk 4 - A Tale of Two Frontiers: When Brain Meets AI</h1><p>Research Vision:</p>
+<ul>
+<li>Integrate domain knowledge over mere data-driven approaches.</li>
+<li>Harness neuroscience principles for next-gen AI designs.</li>
+<li>Leverage AI in testing neural science hypotheses and promoting brain health.</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/pii/S1361841518307734">Deep Evolutionary Networks with Expedited Genetic Algorithms for Medical Image Denoising</a></p>
+<ul>
+<li>Auto feature extraction and hyperparameter search are major pain points in deep learning research (compared with traditional machine learning research) faced by deep learning researchers.</li>
+<li>Fine gene transfer learning to optimize on a larger dataset - c.f. <a target="_blank" rel="noopener" href="https://www.investopedia.com/financial-edge/0412/the-best-portfolio-balance.aspx">portfolio balance</a> in finance</li>
+<li>Question: Is it possible to combine the genetic algorithm that maintains a gene pool of neural networks with ensemble learning?<ul>
+<li>Answer: Different objective.</li>
+</ul>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://www.biorxiv.org/content/10.1101/2023.04.16.537079v2.abstract">Emergence of Emotion Selectivity in A Deep Neural Network Trained to Recognize Visual Objects</a></p>
+<ul>
+<li>Simple, interpretable neural network architecture based on biology.</li>
+<li>Representation similarity between the DNN model and brain amygdala.</li>
+<li>$1M NSF funding.</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41598-020-80312-2">Modular machine learning for Alzheimer’s disease classification from retinal vasculature</a></p>
+<ul>
+<li>Retina data is easy to collect.</li>
+<li>A lot of information (gender, body mass index) can be seen from the retina.</li>
+<li>The results are interpretable.</li>
+</ul>
+<h1 id="Herve-Lombaert-ETS-Montreal-Keynote-Talk-3-Geometric-Deep-Learning-Examples-on-Brain-Surfaces"><a href="#Herve-Lombaert-ETS-Montreal-Keynote-Talk-3-Geometric-Deep-Learning-Examples-on-Brain-Surfaces" class="headerlink" title="Hervé Lombaert (ETS Montreal) - Keynote Talk 3 - Geometric Deep Learning - Examples on Brain Surfaces"></a>Hervé Lombaert (ETS Montreal) - Keynote Talk 3 - Geometric Deep Learning - Examples on Brain Surfaces</h1><p>Research directions:</p>
+<ul>
+<li>Geometry and Machine Learning.</li>
+<li>Correspondences and variability existent in the brain.</li>
+</ul>
+<p>Motivation:</p>
+<ul>
+<li>Traditional algorithms frequently rely on an image grid (pixels). However, in neuroimaging, data is often on 3D surfaces. Two neighboring points may be neighbors but may lie very far away on such a surface.</li>
+<li>How to learn on such surfaces? How do we transfer convolution and pooling on images to such surfaces?</li>
+</ul>
+<p>Solution:</p>
+<ul>
+<li>Represent surfaces as graphs.</li>
+<li>Project problem into spectral space (<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Spectral_shape_analysis">spectral shape analysis</a>).<ul>
+<li>An object’s vibration pattern is governed by shape - spectral space captures a unique intrinsic shape signature.</li>
+<li>Extract spectral signature via spectral decomposition and exploit to find correspondences.</li>
+<li>Enables transforming convolutions on surfaces to convolutions on spectral embeddings, enabling classical architectures on brain surfaces.</li>
+</ul>
+</li>
+</ul>
+<p>Ongoing work:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Active_learning_(machine_learning)">Active learning</a> to reduce annotation effort - focus on sample-level uncertainty and find the most uncertain images.<ul>
+<li>Goals: Informative and diverse samples.</li>
+<li>Works:<ul>
+<li><a target="_blank" rel="noopener" href="https://link.springer.com/chapter/10.1007/978-3-031-17027-0_5">TAAL: Test-time augmentation for active learning in medical image segmentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2301.07670">Active learning for medical image segmentation with stochastic batches</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="Ali-Bashashati-Ruogu-Fang-Shaoting-Zhang-Herve-Lombaer-Jun-Ma-Panel-Discussion"><a href="#Ali-Bashashati-Ruogu-Fang-Shaoting-Zhang-Herve-Lombaer-Jun-Ma-Panel-Discussion" class="headerlink" title="Ali Bashashati&#x2F;Ruogu Fang&#x2F;Shaoting Zhang&#x2F;Hervé Lombaer&#x2F;Jun Ma - Panel Discussion"></a>Ali Bashashati&#x2F;Ruogu Fang&#x2F;Shaoting Zhang&#x2F;Hervé Lombaer&#x2F;Jun Ma - Panel Discussion</h1><h2 id="The-influence-of-Large-Language-Models-is-growing-significantly-What-changes-do-you-think-LLMs-will-bring-about-in-medical-imaging-from-both-positive-and-negative-sides"><a href="#The-influence-of-Large-Language-Models-is-growing-significantly-What-changes-do-you-think-LLMs-will-bring-about-in-medical-imaging-from-both-positive-and-negative-sides" class="headerlink" title="The influence of Large Language Models is growing significantly. What changes do you think LLMs will bring about in medical imaging (from both positive and negative sides)?"></a>The influence of Large Language Models is growing significantly. What changes do you think LLMs will bring about in medical imaging (from both positive and negative sides)?</h2><ul>
+<li>Language contributes to improved performance.</li>
+<li>Still need a diversity of models to investigate different modalities and tasks.</li>
+<li>Large language models help in day-to-day routine tasks. They are a copilot which facilitates the processing of huge amounts of information in pathology and brain research.</li>
+<li>Reduces cost and boosts accessibility for patients.</li>
+<li>Multimodal data integration.</li>
+<li>LLMs face data privacy and trustworthiness.</li>
+<li>When to use LLMs and when to use human abilities requires careful thinking.</li>
+</ul>
+<h2 id="What-other-recent-medical-image-analysis-advancements-excite-you-the-most"><a href="#What-other-recent-medical-image-analysis-advancements-excite-you-the-most" class="headerlink" title="What other recent medical image analysis advancements excite you the most?"></a>What other recent medical image analysis advancements excite you the most?</h2><ul>
+<li>Classic problems like segmentations and how to capture geometry remain unsolved.</li>
+<li>More comprehensive and dynamic brain-inspired, biologically-inspired AI.</li>
+<li>Understanding the biology behind the data will help you design more applicable models. Those models can better make a difference</li>
+<li>Prior knowledge is important in addition to big data. Foundational models will explore all non-synthetic data in the next few years; no new data will exist.</li>
+<li>Montreal is a major hub for neuroscience and AI.</li>
+</ul>
+<h2 id="For-the-many-students-here-what-technical-skills-and-knowledge-should-the-next-generation-of-medical-image-analysis-researchers-prepare-for"><a href="#For-the-many-students-here-what-technical-skills-and-knowledge-should-the-next-generation-of-medical-image-analysis-researchers-prepare-for" class="headerlink" title="For the many students here, what technical skills and knowledge should the next generation of medical image analysis researchers prepare for?"></a>For the many students here, what technical skills and knowledge should the next generation of medical image analysis researchers prepare for?</h2><ul>
+<li>Know the neglected basics, e.g., solid mathematical background and proficiency in programming</li>
+<li>Understand the data</li>
+<li>Ability to explain the results and ask the question of why and how</li>
+<li>Visualization is very important for both exploratory data analysis and publishing</li>
+<li>Learning from mistakes - find out why a model doesn’t work instead of throwing in different models</li>
+<li>Ask yourself: Who will care about an increase in accuracy? Is it significant? Will it have tradeoffs in robustness, explainability, etc.?</li>
+<li>Quickly take up new skills (mathematics, programming, etc.)</li>
+<li>Research paradigms have changed in the foundation model era - how to leverage foundation models for your field to stand on the shoulders of giants?</li>
+<li>Low-level implementation details such as preprocessing, multiprocessing in coding for large-scale data, model development, multi-node distributed training, efficient fine-tuning, and model deployment on constrained environments are also critical skills.</li>
+<li>Work and have fun at the same time.</li>
+<li>Perseverance in the face of failure is one of the most essential qualities for Ph.D. students.</li>
+</ul>
+<h2 id="Question-The-future-of-models-for-specific-tasks-e-g-segmentation-vs-end-to-end-models"><a href="#Question-The-future-of-models-for-specific-tasks-e-g-segmentation-vs-end-to-end-models" class="headerlink" title="Question: The future of models for specific tasks (e.g., segmentation) vs end-to-end models."></a>Question: The future of models for specific tasks (e.g., segmentation) vs end-to-end models.</h2><ul>
+<li>New models for specific tasks make lovely reads.</li>
+<li>Methodology will change, but specific tasks will stay there. However, improving specific tasks will gradually shift towards industry. Universities will focus on publishing the first paper in a domain, while industry will focus on publishing the last paper in a domain.</li>
+<li>In the end, we care about helping patients.</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Research-Inspiration/" class="category-chain-item">Research Inspiration</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Pre-MICCAI Workshop@UBC Observations and Gained Insights</div>
+      <div>https://jifengwu2k.github.io/2023/10/08/Pre-MICCAI-Workshop-UBC-Observations-and-Gained-Insights/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 8, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/10/10/Conversation-with-Prof-Margo-Seltzer/" title="Conversation with Prof. Margo Seltzer">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Conversation with Prof. Margo Seltzer</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/09/30/Understanding-the-Name-Structure-and-Loss-Function-of-the-Variational-Autoencoder/" title="Understanding the Name, Structure, and Loss Function of the Variational Autoencoder">
+                        <span class="hidden-mobile">Understanding the Name, Structure, and Loss Function of the Variational Autoencoder</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

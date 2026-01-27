@@ -1,0 +1,894 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Philosophy: We have exceptionally strict coding standards. But we explicitly use them in tandem with LLMs. No brittle linters. The LLM is the living compliance checker, code reviewer, and first-pass">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python Coding Guidelines">
+<meta property="og:url" content="https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="Philosophy: We have exceptionally strict coding standards. But we explicitly use them in tandem with LLMs. No brittle linters. The LLM is the living compliance checker, code reviewer, and first-pass">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-08-29T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:06:28.361Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Python Coding Guidelines - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Python Coding Guidelines</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-08-29 00:00" pubdate>
+          August 29, 2025
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          67 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python Coding Guidelines</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>Philosophy:</p>
+<p>We have exceptionally strict coding standards.</p>
+<p>But we explicitly use them in tandem with LLMs.</p>
+<p>No brittle linters. The LLM <em>is</em> the living compliance checker, code reviewer, and first-pass automator.</p>
+<p>We achieve uncompromising quality control, reliability, and portability - <em>while moving faster than ever before</em>.</p>
+</blockquote>
+<h1 id="Guidelines"><a href="#Guidelines" class="headerlink" title="Guidelines"></a>Guidelines</h1><h2 id="General-Principles"><a href="#General-Principles" class="headerlink" title="General Principles"></a>General Principles</h2><ul>
+<li><strong>One file &#x3D; one module &#x3D; one purpose</strong>: Each file must be explicitly importable as a module and serve exactly one main purpose.</li>
+<li><strong>Portability to C++</strong>: Code must be directly portable to C++ (avoid dynamic, Python-specific idioms).</li>
+</ul>
+<h2 id="Python-Version-Policy"><a href="#Python-Version-Policy" class="headerlink" title="Python Version Policy"></a>Python Version Policy</h2><ul>
+<li><strong>All code must run and be tested on both Python 2 and Python 3.</strong></li>
+<li><strong>Version-conditional logic</strong>: Only use <code>sys.version_info</code> for version checks. Do <em>not</em> use <code>except ImportError</code>, <code>sys.version</code>, or similar.</li>
+</ul>
+<h3 id="String-Types"><a href="#String-Types" class="headerlink" title="String Types"></a>String Types</h3><ul>
+<li>Encoding&#x2F;decoding UTF-8, URI, stdin&#x2F;out, file names etc. can use our <a target="_blank" rel="noopener" href="https://github.com/jifengwu2k/textcompat"><code>textcompat</code></a> package.</li>
+<li>Only use the legacy <code>%</code> formatting syntax. No <code>.format()</code> or f-strings.</li>
+</ul>
+<h3 id="Input-Handling"><a href="#Input-Handling" class="headerlink" title="Input Handling"></a>Input Handling</h3><ul>
+<li>For interactive input, use our <a target="_blank" rel="noopener" href="https://github.com/jifengwu2k/unicode-raw-input"><code>unicode-raw-input</code></a> package.</li>
+<li>Use <code>open(...)</code> for binary files; <code>codecs.open(...)</code> for Unicode text files.</li>
+</ul>
+<h3 id="Print"><a href="#Print" class="headerlink" title="Print"></a>Print</h3><ul>
+<li>Use <code>from __future__ import print_function</code> if using <code>print()</code>.</li>
+</ul>
+<h3 id="Typing"><a href="#Typing" class="headerlink" title="Typing"></a>Typing</h3><ul>
+<li>All APIs fully typed with type <strong>comments only</strong> (<code># type: ...</code>)<ul>
+<li>No inline type annotations, no <code>AnnAssign</code>.</li>
+</ul>
+</li>
+<li>Use only typing features as in Python 3.5 &#x2F; PEP 484.</li>
+<li>Absolutely no dependent typing. The return type of a function must not vary with different parameter types and&#x2F;or values.</li>
+<li>No use of <code>@overload</code> permitted.</li>
+</ul>
+<h3 id="Classes"><a href="#Classes" class="headerlink" title="Classes"></a>Classes</h3><ul>
+<li>No <code>attrs</code>, <code>dataclasses</code>, or <code>namedtuple</code>.</li>
+<li>All classes must have:<ul>
+<li>Declared <code>__slots__</code></li>
+<li>Explicit <code>object</code> base class </li>
+<li>Use <code>six.with_metaclass(meta, *bases)</code> for metaclasses</li>
+<li>Mutable: <code>__init__</code>; Immutable: <code>__new__</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="Enums"><a href="#Enums" class="headerlink" title="Enums"></a>Enums</h3><ul>
+<li>Only manual&#x2F;explicit values; do not use <code>auto()</code> even with <code>enum34</code>.</li>
+</ul>
+<h3 id="Restricted-Language-Features"><a href="#Restricted-Language-Features" class="headerlink" title="Restricted Language Features"></a>Restricted Language Features</h3><ul>
+<li>Never use: <code>async</code>, <code>await</code>, <code>yield from</code>, walrus (<code>:=</code>), structural pattern matching (<code>match/case</code>).</li>
+</ul>
+<h2 id="Platform-Policy"><a href="#Platform-Policy" class="headerlink" title="Platform Policy"></a>Platform Policy</h2><ul>
+<li><strong>All code must run and be tested on both NT and POSIX.</strong></li>
+<li><strong>Determine platform with <a target="_blank" rel="noopener" href="https://github.com/jifengwu2k/posix-or-nt"><code>posix-or-nt</code></a></strong> (returns <code>&#39;nt&#39;</code> or <code>&#39;posix&#39;</code>).</li>
+<li><strong>Never use</strong> the <code>os</code>, <code>os.path</code>, <code>subprocess</code>, or <code>platform</code> modules. Overly complicated and convoluted codebases, and large parts are not available or behave differently on NT, Android, and iOS, etc.<ul>
+<li><em>Path manipulations</em>: Conditionally import <code>ntpath</code> or <code>posixpath</code> as needed.</li>
+<li><em>Process launching</em>: Use our <a target="_blank" rel="noopener" href="https://github.com/jifengwu2k/ctypes-unicode-proclaunch"><code>ctypes-unicode-proclaunch</code></a>.</li>
+<li><em>Env vars</em>: Use our <a target="_blank" rel="noopener" href="https://github.com/jifengwu2k/read-unicode-environment-variables-dictionary"><code>read-unicode-environment-variables-dictionary</code></a>.</li>
+</ul>
+</li>
+<li>Use <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/sys.html#sys.platform"><code>sys.platform</code></a> if you absolutely need an OS name.</li>
+</ul>
+<h3 id="System-API-Access"><a href="#System-API-Access" class="headerlink" title="System API Access"></a>System API Access</h3><ul>
+<li>The <code>threading</code> and <code>multiprocessing</code> modules are <strong>not allowed</strong>.</li>
+<li>Direct system calls via <code>ctypes</code> are strictly limited as follows:<ul>
+<li>On NT:<ul>
+<li>Only functions in <strong>MSVCRT</strong> (Microsoft C Runtime) and the standard <strong>Win32 API</strong> may be called.</li>
+</ul>
+</li>
+<li>On POSIX:<ul>
+<li>Only standardized POSIX functions (from libc or standard headers) may be called.</li>
+</ul>
+</li>
+<li>Should be factored as a standalone, well-tested PyPI package similar to our other infra tools.</li>
+</ul>
+</li>
+<li>If code needs capabilities beyond these, use <strong>PyQt&#x2F;PySide</strong> and the Qt API as your system abstraction layer.<ul>
+<li>Examples: advanced file I&#x2F;O, process control, IPC, networking, device enumeration, drag-and-drop, clipboard, graphics, etc.</li>
+<li>Use our <a target="_blank" rel="noopener" href="https://github.com/jifengwu2k/detect-qt-binding"><code>detect-qt-binding</code></a> to automatically detect which Qt binding is available in your environment.</li>
+</ul>
+</li>
+</ul>
+<h2 id="File-and-Folder-Structure"><a href="#File-and-Folder-Structure" class="headerlink" title="File and Folder Structure"></a>File and Folder Structure</h2><ul>
+<li>Import all files (modules) via absolute import. No relative import, no <code>sys.path</code> manipulation.</li>
+<li>All files (modules) must only have public functions and classes - no private&#x2F;internal APIs.</li>
+<li>All directories must include an explicit <code>__init__.py</code> within them.</li>
+</ul>
+<h3 id="Utility-Code-No-“utils-py”-Publish-Generalized-Tools"><a href="#Utility-Code-No-“utils-py”-Publish-Generalized-Tools" class="headerlink" title="Utility Code: No “utils.py” - Publish Generalized Tools"></a>Utility Code: No “utils.py” - Publish Generalized Tools</h3><ul>
+<li>No local “utils.py” files: Do not keep grab-bag or miscellaneous utility functions&#x2F;classes in a project-private <code>utils.py</code> file.</li>
+<li><strong>General-purpose tools must be published as standalone packages to PyPI</strong>, each focusing on one well-defined function, class, or concept.<ul>
+<li>Move helpers that would otherwise go into “utils.py” into their own properly documented, versioned packages.</li>
+<li>These utility packages should be:<ul>
+<li>Named after their actual purpose;</li>
+<li>Well-tested and actively maintained;</li>
+<li>Equipped with a README, proper docstrings, testable usage examples, semantic versioning, and a clear license.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>All projects share utilities via explicit dependencies rather than duplicating or copying helpers.<ul>
+<li>When a utility is improved or a bug is fixed, updating the package ensures all dependent projects benefit automatically - “write once, run everywhere.”</li>
+<li>This approach avoids hidden technical debt and promotes code quality, documentation, reuse, and maintainability across your entire codebase.</li>
+<li>It also contributes to the wider Python ecosystem.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Regular-Expressions"><a href="#Regular-Expressions" class="headerlink" title="Regular Expressions"></a>Regular Expressions</h2><ul>
+<li>Regular expressions <strong>only for simple parsing</strong>.</li>
+<li>Use <strong>Unix-style&#x2F;basic</strong> regex features:<ul>
+<li><code>.</code>: any single character</li>
+<li><code>[ ]</code>: character set&#x2F;class</li>
+<li><code>[^ ]</code>: negated class</li>
+<li><code>^, $</code>: line start&#x2F;end</li>
+<li><code>( )</code>: grouping&#x2F;subexpression</li>
+<li><code>*</code>: zero or more</li>
+</ul>
+</li>
+<li>For <strong>complicated input</strong>:  <ul>
+<li>Use a context-free grammar parser (e.g. <a target="_blank" rel="noopener" href="https://github.com/lark-parser/lark">Lark</a>), hand-written parser, or an LLM.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Argument-Parsing"><a href="#Argument-Parsing" class="headerlink" title="Argument Parsing"></a>Argument Parsing</h2><ul>
+<li>Use <code>argparse</code>.</li>
+<li>Use ambiguous <code>str</code> for all argument values (default API behavior).</li>
+<li>All arguments should have a <code>help=...</code> string.</li>
+</ul>
+<h3 id="Flag-Arguments"><a href="#Flag-Arguments" class="headerlink" title="Flag Arguments"></a>Flag Arguments</h3><ul>
+<li><strong>Presence only:</strong> <code>action=&#39;store_true&#39;</code> -&gt; <code>bool</code></li>
+<li><strong>Counted:</strong> <code>action=&#39;count&#39;</code> -&gt; <code>int</code></li>
+<li><strong>Single value:</strong> <code>type=str</code>, <code>required=True/False</code>, explicit <code>default=...</code></li>
+<li><strong>Multiple occurrences:</strong> <code>action=&#39;append&#39;</code> -&gt; <code>Optional[List[str]]</code></li>
+</ul>
+<h3 id="Positional-Arguments"><a href="#Positional-Arguments" class="headerlink" title="Positional Arguments"></a>Positional Arguments</h3><ul>
+<li><strong>Exactly one:</strong> simple positional</li>
+<li><strong>0&#x2F;1 (optional):</strong> <code>nargs=&#39;?&#39;</code>, must be last positional argument</li>
+<li><strong>0 or more&#x2F;1 or more:</strong> <code>nargs=&#39;*&#39;</code>&#x2F;<code>nargs=&#39;+&#39;</code>, with plural argument name and singular <code>metavar</code>, must be last positional argument</li>
+</ul>
+<h2 id="Testing-Documentation"><a href="#Testing-Documentation" class="headerlink" title="Testing &amp; Documentation"></a>Testing &amp; Documentation</h2><ul>
+<li>Tests must:<ul>
+<li>Run successfully on both Python 2 and 3, POSIX and NT.</li>
+<li>Be suitable for inclusion in <code>README.md</code> under “Usage” or “Quickstart”.<ul>
+<li>Simultaneously serve as usage documentation (idiomatic examples).</li>
+<li>Self-contained and runnable as a script or documentation block.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Python-Packaging-Distribution"><a href="#Python-Packaging-Distribution" class="headerlink" title="Python Packaging &amp; Distribution"></a>Python Packaging &amp; Distribution</h2><h3 id="File-Layout"><a href="#File-Layout" class="headerlink" title="File Layout"></a>File Layout</h3><ul>
+<li>All files start with a copyright and license block:<ul>
+<li>Boilerplate: <code># Copyright (c) 2025 Jifeng Wu\n# Licensed under the &lt;license&gt; License. See LICENSE file in the project root for full license information.</code><ul>
+<li>simple infrastructure: MIT&#x2F;BSD</li>
+<li>complex infra: Apache-2.0</li>
+<li>applications: AGPL-3.0</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Required-Files-Metadata"><a href="#Required-Files-Metadata" class="headerlink" title="Required Files &amp; Metadata"></a>Required Files &amp; Metadata</h3><ul>
+<li><code>README.md</code> with standard boilerplate (see below)</li>
+<li><code>LICENSE</code></li>
+<li><code>requirements.txt</code> (see example)</li>
+<li><code>pyproject.toml</code> (see template)</li>
+<li><code>setup.cfg</code> (see template)</li>
+</ul>
+<h3 id="README-md-Boilerplate"><a href="#README-md-Boilerplate" class="headerlink" title="README.md Boilerplate"></a><code>README.md</code> Boilerplate</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;Project Description&gt;</span><br><span class="line"></span><br><span class="line">## Installation</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">## Usage</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">## Contributing</span><br><span class="line"></span><br><span class="line">Contributions are welcome! Please submit pull requests or open issues on the GitHub repository.</span><br><span class="line"></span><br><span class="line">## License</span><br><span class="line"></span><br><span class="line">This project is licensed under the [&lt;license&gt; License](LICENSE).</span><br></pre></td></tr></table></figure>
+
+<h3 id="Example-requirements-txt"><a href="#Example-requirements-txt" class="headerlink" title="Example requirements.txt"></a>Example <code>requirements.txt</code></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">enum34; python_version &lt; &#x27;3.4&#x27;</span><br><span class="line">pyreadline</span><br><span class="line">six</span><br><span class="line">typing; python_version &lt; &#x27;3.5&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="pyproject-toml-Template"><a href="#pyproject-toml-Template" class="headerlink" title="pyproject.toml Template"></a><code>pyproject.toml</code> Template</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[build-system]</span><br><span class="line">requires = [&quot;setuptools&quot;]</span><br><span class="line">build-backend = &quot;setuptools.build_meta&quot;</span><br><span class="line"></span><br><span class="line">[project]</span><br><span class="line">name = &quot;&lt;project-name&gt;&quot;</span><br><span class="line">version = &quot;&lt;version&gt;&quot;</span><br><span class="line">description = &quot;&lt;Project Description&gt;&quot;</span><br><span class="line">readme = &quot;README.md&quot;</span><br><span class="line">requires-python = &quot;&gt;=2&quot;</span><br><span class="line">license = &quot;&lt;license&gt;&quot;</span><br><span class="line">authors = [</span><br><span class="line">  &#123; name=&quot;Jifeng Wu&quot;, email=&quot;jifengwu2k@gmail.com&quot; &#125;</span><br><span class="line">]</span><br><span class="line">classifiers = [</span><br><span class="line">    &quot;Programming Language :: Python :: 2&quot;,</span><br><span class="line">    &quot;Programming Language :: Python :: 3&quot;,</span><br><span class="line">    &quot;Operating System :: OS Independent&quot;,</span><br><span class="line">]</span><br><span class="line">dependencies = [</span><br><span class="line">    &quot;&lt;requirements.txt line 1&gt;&quot;,</span><br><span class="line">    &quot;&lt;requirements.txt line 2&gt;&quot;,</span><br><span class="line">    &quot;&lt;requirements.txt line 3&gt;&quot;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">[project.urls]</span><br><span class="line">&quot;Homepage&quot; = &quot;https://github.com/jifengwu2k/&lt;project-name&gt;&quot;</span><br><span class="line">&quot;Bug Tracker&quot; = &quot;https://github.com/jifengwu2k/&lt;project-name&gt;/issues&quot;</span><br></pre></td></tr></table></figure>
+
+<p>Replace <code>&lt;project-name&gt;</code>, <code>&lt;version&gt;</code>, <code>&lt;license&gt;</code>, and requirements as appropriate.</p>
+<h3 id="setup-cfg-Template"><a href="#setup-cfg-Template" class="headerlink" title="setup.cfg Template"></a><code>setup.cfg</code> Template</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[bdist_wheel]</span><br><span class="line">universal = 1</span><br></pre></td></tr></table></figure>
+
+<h1 id="Checking"><a href="#Checking" class="headerlink" title="Checking"></a>Checking</h1><p>Ensure you meet the following prerequisites:</p>
+<ul>
+<li>Your Python project is a Git repository.</li>
+<li>You have <code>pbpaste</code> properly set up.</li>
+</ul>
+<p>Execute the following to generate an LLM prompt:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">LLM_PROMPT_FILE=<span class="string">&#x27;llm_prompt.txt&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;This is my Python project:&quot;</span> &gt; <span class="string">&quot;<span class="variable">$&#123;LLM_PROMPT_FILE&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> &gt;&gt; <span class="string">&quot;<span class="variable">$&#123;LLM_PROMPT_FILE&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">git ls-files --others --exclude-standard --cached | grep -v <span class="string">&#x27;.gitignore&#x27;</span> | grep -v <span class="string">&quot;<span class="variable">$&#123;LLM_PROMPT_FILE&#125;</span>&quot;</span> | <span class="keyword">while</span> <span class="built_in">read</span> file</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;\`<span class="variable">$&#123;file&#125;</span>\`:&quot;</span></span><br><span class="line">    <span class="built_in">echo</span></span><br><span class="line">    <span class="built_in">cat</span> <span class="string">&quot;<span class="variable">$&#123;file&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">echo</span></span><br><span class="line"><span class="keyword">done</span> &gt;&gt; <span class="string">&quot;<span class="variable">$&#123;LLM_PROMPT_FILE&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Please do a code review and assess whether the code complies with these guidelines:&quot;</span> &gt;&gt; <span class="string">&quot;<span class="variable">$&#123;LLM_PROMPT_FILE&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> &gt;&gt; <span class="string">&quot;<span class="variable">$&#123;LLM_PROMPT_FILE&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Copy some or all of the above guidelines.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pbpaste &gt;&gt; <span class="string">&quot;<span class="variable">$&#123;LLM_PROMPT_FILE&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Feed that LLM prompt into your LLM of choice. Then <code>rm $&#123;LLM_PROMPT_FILE&#125;</code>.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Reference/" class="category-chain-item">Reference</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python Coding Guidelines</div>
+      <div>https://jifengwu2k.github.io/2025/08/29/Python-Coding-Guidelines/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>August 29, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/08/31/%E5%BA%A7%E5%8F%B3%E9%93%AD/" title="座右铭">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">座右铭</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/08/29/%E7%AE%80%E6%98%93%E8%BF%90%E5%8A%A8/" title="简易运动">
+                        <span class="hidden-mobile">简易运动</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

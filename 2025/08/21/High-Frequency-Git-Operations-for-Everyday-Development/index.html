@@ -1,0 +1,938 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Here are some of the most frequent Git operations you may need in day-to-day development. Basic Git OperationsConnect Your Local Folder to a GitHub RepositoryYou have an existing local folder with fil">
+<meta property="og:type" content="article">
+<meta property="og:title" content="High-Frequency Git Operations for Everyday Development">
+<meta property="og:url" content="https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="Here are some of the most frequent Git operations you may need in day-to-day development. Basic Git OperationsConnect Your Local Folder to a GitHub RepositoryYou have an existing local folder with fil">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-08-21T20:43:36.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:06:54.681Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>High-Frequency Git Operations for Everyday Development - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">High-Frequency Git Operations for Everyday Development</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-08-21 20:43" pubdate>
+          August 21, 2025
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          76 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">High-Frequency Git Operations for Everyday Development</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Here are some of the most frequent Git operations you may need in day-to-day development.</p>
+<h2 id="Basic-Git-Operations"><a href="#Basic-Git-Operations" class="headerlink" title="Basic Git Operations"></a>Basic Git Operations</h2><h3 id="Connect-Your-Local-Folder-to-a-GitHub-Repository"><a href="#Connect-Your-Local-Folder-to-a-GitHub-Repository" class="headerlink" title="Connect Your Local Folder to a GitHub Repository"></a>Connect Your Local Folder to a GitHub Repository</h3><p>You have an existing local folder with files and want to connect it to an already existing GitHub repository.</p>
+<p>Initialize Git in your folder:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+
+<p>Add your GitHub repository (replace URL with your repo):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin https://github.com/username/repo.git</span><br></pre></td></tr></table></figure>
+
+<p>Fetch remote history:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch origin</span><br></pre></td></tr></table></figure>
+
+<p>Merge remote and local files, allowing unrelated histories <em>(change <code>main</code> to your repo’s default branch if necessary)</em>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull origin main --allow-unrelated-histories</span><br></pre></td></tr></table></figure>
+
+<p>If you see an error like:</p>
+<blockquote>
+<p>The following untracked working tree files would be overwritten by merge…</p>
+</blockquote>
+<p>We recommend:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. Move local conflicting files to a temporary directory</span></span><br><span class="line"><span class="comment"># For example, back them up to a non-conflicting `backup` folder in the current directory</span></span><br><span class="line"><span class="built_in">mkdir</span> backup</span><br><span class="line"><span class="built_in">mv</span> conflicting-file-1 conflicting-file-2 backup/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Try pulling the remote repository content again</span></span><br><span class="line">git pull origin main --allow-unrelated-histories</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Manually merge the backed up files into the pulled files</span></span><br></pre></td></tr></table></figure>
+
+<p>Commit after resolving all conflicts:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Merge local files with remote repository&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Push to the remote repository (if needed):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push --set-upstream origin main</span><br></pre></td></tr></table></figure>
+
+<p><strong>The <code>--set-upstream origin main</code> option is only needed for the first push; you don’t need it afterward.</strong></p>
+<h3 id="List-Remotes"><a href="#List-Remotes" class="headerlink" title="List Remotes"></a>List Remotes</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
+
+<p>This will display a list of remotes with their URLs, e.g.:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">origin  https://github.com/example/repo.git (fetch)</span><br><span class="line">origin  https://github.com/example/repo.git (push)</span><br></pre></td></tr></table></figure>
+
+<h3 id="List-Branches"><a href="#List-Branches" class="headerlink" title="List Branches"></a>List Branches</h3><p>List local branches:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch</span><br></pre></td></tr></table></figure>
+
+<p>List remote branches:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -r</span><br></pre></td></tr></table></figure>
+
+<p>List local and remote branches:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -a</span><br></pre></td></tr></table></figure>
+
+<h3 id="List-Commits-in-Branches"><a href="#List-Commits-in-Branches" class="headerlink" title="List Commits in Branches"></a>List Commits in Branches</h3><p>To list commits in the branch <code>feature</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span> feature</span><br></pre></td></tr></table></figure>
+
+<h3 id="List-What-Files-git-add-Would-Stage"><a href="#List-What-Files-git-add-Would-Stage" class="headerlink" title="List What Files git add . Would Stage"></a>List What Files <code>git add .</code> Would Stage</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git status --short</span><br></pre></td></tr></table></figure>
+
+<p>Example Output:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">M file1.txt       # modified file</span><br><span class="line">?? newfile.txt     # untracked file</span><br></pre></td></tr></table></figure>
+
+<p>Breakdown:</p>
+<ul>
+<li><code>M</code> &#x3D; Modified (but not staged)</li>
+<li><code>??</code> &#x3D; Untracked (new files)</li>
+</ul>
+<h2 id="Keeping-Your-Repository-in-Sync"><a href="#Keeping-Your-Repository-in-Sync" class="headerlink" title="Keeping Your Repository in Sync"></a>Keeping Your Repository in Sync</h2><h3 id="Keep-a-Fork-Updated-with-an-Original-Repository"><a href="#Keep-a-Fork-Updated-with-an-Original-Repository" class="headerlink" title="Keep a Fork Updated with an Original Repository"></a>Keep a Fork Updated with an Original Repository</h3><p>If you’ve forked a repository on GitHub, your fork won’t automatically stay up to date as the original repository changes. By default, your fork links only to itself (as <code>origin</code>), and <strong>not</strong> to the original repository. To pull in updates from the source, you’ll want to add the original repository as a new remote, commonly named <code>upstream</code>.</p>
+<p>Here’s a quick guide to achieve this:</p>
+<p>First, go to the original repository (not your fork) on GitHub. Copy the repository’s clone URL (use either HTTPS or SSH, depending on your setup).</p>
+<p>Open your terminal and navigate to your local copy of the forked repository. Then add the original as a new remote called <code>upstream</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add upstream https://github.com/original-owner/original-repo.git</span><br></pre></td></tr></table></figure>
+<p><em>(Replace the URL above with the actual URL of the original repository.)</em></p>
+<p>To make sure everything is set up correctly, run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
+
+<p>You should see output similar to:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">origin    https://github.com/your-username/your-fork.git (fetch)</span><br><span class="line">origin    https://github.com/your-username/your-fork.git (push)</span><br><span class="line">upstream  https://github.com/original-owner/original-repo.git (fetch)</span><br><span class="line">upstream  https://github.com/original-owner/original-repo.git (push)</span><br></pre></td></tr></table></figure>
+
+<p>You can now fetch all the latest branches and updates from the original repository using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch upstream</span><br></pre></td></tr></table></figure>
+
+<h3 id="Make-Your-Current-Branch-Match-the-Latest-State-of-the-Same-Branch-on-a-Remote"><a href="#Make-Your-Current-Branch-Match-the-Latest-State-of-the-Same-Branch-on-a-Remote" class="headerlink" title="Make Your Current Branch Match the Latest State of the Same Branch on a Remote"></a>Make Your Current Branch Match the Latest State of the Same Branch on a Remote</h3><p>First, fetch the latest objects from the remote:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch &lt;remote-name&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Check the current stage of your repository (what changes you have):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br></pre></td></tr></table></figure>
+
+<p>Make sure you are happy to lose these changes before performing the following destructive operations.</p>
+<p>Hard reset your branch:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard &lt;remote-name&gt;/&lt;branch-name&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Removed all untracked files and folders:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clean -fd</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-f</code> &#x3D; force</li>
+<li><code>-d</code> &#x3D; include directories</li>
+</ul>
+<h2 id="File-Tracking-and-Management"><a href="#File-Tracking-and-Management" class="headerlink" title="File Tracking and Management"></a>File Tracking and Management</h2><h3 id="Remove-Previously-Committed-Files-Now-in-gitignore"><a href="#Remove-Previously-Committed-Files-Now-in-gitignore" class="headerlink" title="Remove Previously Committed Files Now in .gitignore"></a>Remove Previously Committed Files Now in <code>.gitignore</code></h3><p>You added rules to <code>.gitignore</code> but some files were already committed.</p>
+<p>Stage removal of all currently tracked files (but not delete locally):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">rm</span> -r --cached .</span><br></pre></td></tr></table></figure>
+
+<p>Add everything back to the repo (“add” skips <code>gitignore</code>d files):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br></pre></td></tr></table></figure>
+
+<p>Commit the change:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">&quot;Remove ignored files from the repository&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>At this point, the files are only removed from the repository <strong>from this commit onward (they’ll still exist in older commits&#x2F;history)</strong>. If you want them <strong>removed from previous commits as well</strong>, consider <strong>squashing multiple commits into a single commit</strong>, as explained below.</p>
+<h3 id="List-Files-Added-Removed-or-Changed-Relative-to-Another-Commit"><a href="#List-Files-Added-Removed-or-Changed-Relative-to-Another-Commit" class="headerlink" title="List Files Added, Removed, or Changed Relative to Another Commit"></a>List Files Added, Removed, or Changed Relative to Another Commit</h3><p>Run <code>git status</code> and ensure you have no unstaged changes or staged but uncommitted changes.</p>
+<p>Then, to compare the current state (HEAD) against commit <code>abcdef1</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git diff --name-status --no-renames abcdef1</span><br></pre></td></tr></table></figure>
+
+<p>Output looks like:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A  src/new_file.py</span><br><span class="line">D  src/old_file.py</span><br><span class="line">M  src/changed_file.py</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Added (A): File is present in <code>HEAD</code> but not in <code>abcdef1</code>.</li>
+<li>Deleted (D): File is present in <code>abcdef1</code>, but not in <code>HEAD</code>.</li>
+<li>Modified (M): File exists in both, but contents changed.</li>
+</ul>
+<h3 id="Get-Files-and-Folders-from-Another-Branch-or-Commit"><a href="#Get-Files-and-Folders-from-Another-Branch-or-Commit" class="headerlink" title="Get Files and Folders from Another Branch or Commit"></a>Get Files and Folders from Another Branch or Commit</h3><p>Copy files and folders from the tip of branch <code>feature</code> <strong>into your current working directory</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout feature -- path/to/file path/to/folder</span><br></pre></td></tr></table></figure>
+
+<p>Copy files and folders from commit <code>abcdef1</code> <strong>into your current working directory</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout abcdef1 -- path/to/file path/to/folder</span><br></pre></td></tr></table></figure>
+
+<p>Print a file from the tip of branch <code>feature</code> to STDOUT:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git show feature:path/to/file</span><br></pre></td></tr></table></figure>
+
+<p>Print a file from commit <code>abcdef1</code> to STDOUT:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git show abcdef1:path/to/file</span><br></pre></td></tr></table></figure>
+
+<h2 id="Branch-and-History-Management"><a href="#Branch-and-History-Management" class="headerlink" title="Branch and History Management"></a>Branch and History Management</h2><h3 id="Push-to-a-Specific-Remote"><a href="#Push-to-a-Specific-Remote" class="headerlink" title="Push to a Specific Remote"></a>Push to a Specific Remote</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push &lt;remote-name&gt; &lt;branch-name&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>&lt;remote-name&gt;</code> is the name of the remote you want to push to (e.g., <code>origin</code>, <code>upstream</code>, etc).</li>
+<li><code>&lt;branch-name&gt;</code> is the branch you want to push (e.g., <code>main</code>, <code>master</code>, etc).</li>
+</ul>
+<h3 id="Delete-Local-and-Remote-Branches"><a href="#Delete-Local-and-Remote-Branches" class="headerlink" title="Delete Local and Remote Branches"></a>Delete Local and Remote Branches</h3><p>To delete a local branch:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -d &lt;branch-name&gt;</span><br></pre></td></tr></table></figure>
+
+<p>To delete a remote branch:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push &lt;remote&gt; --delete &lt;branch-name&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Squash-Multiple-Commits-into-a-Single-Commit"><a href="#Squash-Multiple-Commits-into-a-Single-Commit" class="headerlink" title="Squash Multiple Commits into a Single Commit"></a>Squash Multiple Commits into a Single Commit</h3><p>You have made several small commits <em>(some of which may be faulty or embarassing)</em> and want to clean up history by squashing them into one.</p>
+<p>Review commit history:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+
+<p>Decide how many previous commits you want to squash. </p>
+<p>Start an interactive rebase, e.g. with the last 3 commits:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rebase -i HEAD~3</span><br></pre></td></tr></table></figure>
+
+<p>In the opened editor:</p>
+<ul>
+<li>Leave <code>pick</code> for the first commit.</li>
+<li>For the others, change <code>pick</code> to <code>squash</code> (or just <code>s</code>).</li>
+<li>Save and close.</li>
+</ul>
+<p>You will then enter a second editor session. Edit the combined commit message. Save and close.</p>
+<p>Force-push the branch to rewrite history on GitHub:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push --force</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Use squashing carefully if collaborating, as force push overwrites history.</p>
+</blockquote>
+<h3 id="Move-a-Branch-to-an-Earlier-Commit-Deleting-All-Later-Commits"><a href="#Move-a-Branch-to-an-Earlier-Commit-Deleting-All-Later-Commits" class="headerlink" title="Move a Branch to an Earlier Commit, Deleting All Later Commits"></a>Move a Branch to an Earlier Commit, Deleting All Later Commits</h3><p>Suppose you have a branch, e.g. <code>my-branch</code>, with a commit history like this:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A -- B -- C -- D  (my-branch, HEAD)</span><br></pre></td></tr></table></figure>
+
+<p>You want to move to <code>B</code> and delete <code>C</code>, <code>D</code>.</p>
+<p>Use <code>git log</code> to find the hash of the commit you want to reset to:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span></span><br><span class="line"><span class="comment"># This shows the history. Copy the hash of the desired commit.</span></span><br></pre></td></tr></table></figure>
+
+<p>Use <code>git reset --hard &lt;commit-hash&gt;</code> to move HEAD and the branch:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard &lt;commit-hash&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>This moves <code>HEAD</code> and <code>my-branch</code> to commit B</li>
+<li>Commits <code>C</code> and <code>D</code> are removed from the tip of your branch (but still exist in the reflog until garbage collection).</li>
+</ul>
+<h3 id="Create-a-New-Commit-Merging-with-Another-Commit-on-Another-Branch"><a href="#Create-a-New-Commit-Merging-with-Another-Commit-on-Another-Branch" class="headerlink" title="Create a New Commit Merging with Another Commit on Another Branch"></a>Create a New Commit Merging with Another Commit on Another Branch</h3><p>Assumptions:</p>
+<ul>
+<li>You are on the latest commit <code>C</code> on branch <code>B</code>.</li>
+<li>You want to merge in the content from commit <code>C&#39;</code> on branch <code>B&#39;</code> and create a new commit <code>CC</code> on <code>B</code>.</li>
+</ul>
+<p>Fetch the latest info:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch --all</span><br></pre></td></tr></table></figure>
+
+<p>Ensure you’re on branch <code>B</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout B  </span><br></pre></td></tr></table></figure>
+
+<p>Manually assess the differences between <code>C</code> and <code>C&#39;</code> by <a href="#list-files-added-removed-or-changed-relative-to-another-commit">listing files added, removed, or changed relative to <code>C&#39;</code></a>. </p>
+<h4 id="Scenario-1-CC-should-be-a-complete-clone-of-C"><a href="#Scenario-1-CC-should-be-a-complete-clone-of-C" class="headerlink" title="Scenario 1: CC should be a complete clone of C"></a>Scenario 1: CC should be a complete clone of C</h4><p>Here, you want to do a merge, but content stays as in C; only history merges. <code>CC</code> is a merge commit, with parents <code>C</code> and <code>C&#39;</code>, tree is identical to <code>C</code>.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge -s ours &lt;<span class="built_in">hash</span> of C<span class="string">&#x27;&gt; -m &quot;Merge C&#x27;</span>, keep only B<span class="string">&#x27;s content&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Scenario-2-CC-should-be-a-complete-clone-of-C’"><a href="#Scenario-2-CC-should-be-a-complete-clone-of-C’" class="headerlink" title="Scenario 2: CC should be a complete clone of C’"></a>Scenario 2: CC should be a complete clone of C’</h4><p>You want a merge commit on branch <code>B</code> (so <code>CC</code> has parents <code>C</code> and <code>C&#39;</code>), but <strong>override all files so they match C’</strong> (even if that discards local changes).</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Start the merge, do not commit yet</span></span><br><span class="line">git merge --no-commit &lt;<span class="built_in">hash</span> of C<span class="string">&#x27;&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># Overwrite working tree with C&#x27;</span>s tree</span><br><span class="line">git checkout &lt;<span class="built_in">hash</span> of C<span class="string">&#x27;&gt; -- .</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># Add everything</span></span><br><span class="line"><span class="string">git add -A</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># Commit</span></span><br><span class="line"><span class="string">git commit -m &quot;Merge C&#x27;</span> into B, taking all content from C<span class="string">&#x27;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Scenario-3-CC-mixes-content-from-C-and-C’"><a href="#Scenario-3-CC-mixes-content-from-C-and-C’" class="headerlink" title="Scenario 3: CC mixes content from C and C’"></a>Scenario 3: CC mixes content from C and C’</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">git merge --no-commit &lt;<span class="built_in">hash</span> of C<span class="string">&#x27;&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># Overwrite or merge specific files manually</span></span><br><span class="line"><span class="string">git checkout &lt;hash of C&#x27;</span>&gt; -- path/to/file1 path/to/file2</span><br><span class="line"></span><br><span class="line"><span class="comment"># Add everything</span></span><br><span class="line">git add -A</span><br><span class="line"></span><br><span class="line"><span class="comment"># Commit</span></span><br><span class="line">git commit -m <span class="string">&quot;Manually merge selected files from C&#x27;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Recover-Commit-from-Detached-HEAD"><a href="#Recover-Commit-from-Detached-HEAD" class="headerlink" title="Recover Commit from Detached HEAD"></a>Recover Commit from Detached HEAD</h3><p>Suppose you accidentally checked out a commit and made a new commit in detached HEAD state, but you want that commit on <code>dev</code> (tracked from <code>upstream/dev</code>):</p>
+<p>[While on the detached HEAD commit] Create a local temporary branch:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b temp-recovery</span><br></pre></td></tr></table></figure>
+
+<p>This ensures your commit won’t be lost and gives it a branch reference.</p>
+<p>Switch to your target branch. Fetch latest changes to be sure:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch upstream</span><br></pre></td></tr></table></figure>
+
+<p>Then, switch to your local <code>dev</code> branch, or create it if missing:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout dev   <span class="comment"># if it already exists locally and is tracking upstream/dev</span></span><br><span class="line"><span class="comment"># or, if not:</span></span><br><span class="line">git checkout -b dev upstream/dev</span><br></pre></td></tr></table></figure>
+
+<p>Copy files from your temp commit to your target branch. See:</p>
+<ul>
+<li><a href="#list-files-added-removed-or-changed-relative-to-another-commit">List Files Added, Removed, or Changed Relative to Another Commit</a></li>
+<li><a href="#get-files-and-folders-from-another-branch-or-commit">Get Files and Folders from Another Branch or Commit</a></li>
+</ul>
+<p>Commit the changes (on your target branch):</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Recovered changes from detached HEAD&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Push the changes up (if allowed):</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push upstream dev</span><br></pre></td></tr></table></figure>
+
+<p>Delete your local temp branch:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -D temp-recovery</span><br></pre></td></tr></table></figure>
+
+<h2 id="Repository-Management"><a href="#Repository-Management" class="headerlink" title="Repository Management"></a>Repository Management</h2><h3 id="Duplicate-a-Repository-on-GitHub-Without-Forking"><a href="#Duplicate-a-Repository-on-GitHub-Without-Forking" class="headerlink" title="Duplicate a Repository on GitHub Without Forking"></a>Duplicate a Repository on GitHub Without Forking</h3><p>First, clone the repo you’d like to duplicate:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> --bare https://github.com/username/original-repo.git</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>--bare</code> makes a bare repository, useful for duplicating all branches and history.</p>
+</blockquote>
+<p>Create a New Repository on GitHub:</p>
+<ul>
+<li>Go to GitHub.</li>
+<li>Click <strong>+</strong> (top right) &gt; <strong>New repository</strong>.</li>
+<li>Choose the owner, <strong>set a new name</strong>, <strong>don’t initialize</strong> with README, .gitignore, or license.</li>
+</ul>
+<p>Push the Bare Clone to the New Repository:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> original-repo.git</span><br><span class="line">git push --mirror https://github.com/yourusername/my-new-repo.git</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>--mirror</code> copies everything (all refs, branches, tags, etc.)</p>
+</blockquote>
+<p>Remove the local bare clone:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line"><span class="built_in">rm</span> -rf original-repo.git</span><br></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/DevOps/" class="category-chain-item">DevOps</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>High-Frequency Git Operations for Everyday Development</div>
+      <div>https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>August 21, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/08/22/%E7%AE%80%E6%98%93%E9%A3%9F%E8%B0%B1/" title="简易食谱">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">简易食谱</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/08/21/Eating-in-the-Americas-Down-to-earth-Foodstuffs/" title="Eating in the Americas - Down-to-earth Foodstuffs">
+                        <span class="hidden-mobile">Eating in the Americas - Down-to-earth Foodstuffs</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

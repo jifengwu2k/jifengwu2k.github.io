@@ -1,0 +1,810 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Linear Regression Linear regression is a fundamental statistical model used in statistics and supervised machine learning. It establishes a linear relationship between a scalar response and one or mor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linear Regression, Ridge Regression, Lasso Regression, and Kernel Ridge Regression">
+<meta property="og:url" content="https://jifengwu2k.github.io/2023/12/24/Linear-Regression-Ridge-Regression-Lasso-Regression-and-Kernel-Ridge-Regression/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="Linear Regression Linear regression is a fundamental statistical model used in statistics and supervised machine learning. It establishes a linear relationship between a scalar response and one or mor">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://miro.medium.com/v2/resize:fit:766/0*qq0yaecNRQiugnif.png">
+<meta property="og:image" content="https://i.stack.imgur.com/YNwf5.png">
+<meta property="og:image" content="https://miro.medium.com/v2/resize:fit:720/format:webp/1*Jd03Hyt2bpEv1r7UijLlpg.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/abbaswu/abbaswu.github.io-images/main/Motivation-Finding-Gold.png">
+<meta property="og:image" content="https://desktop.arcgis.com/es/arcmap/latest/extensions/geostatistical-analyst/GUID-49DA5B53-6E2F-4A29-BA01-2BF4F0259594-web.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/abbaswu/abbaswu.github.io-images/main/Kernel-Trick-for-Non-Vector-Data-1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/abbaswu/abbaswu.github.io-images/main/Kernel-Trick-for-Non-Vector-Data-2.png">
+<meta property="article:published_time" content="2023-12-24T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:07:41.921Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://miro.medium.com/v2/resize:fit:766/0*qq0yaecNRQiugnif.png">
+  
+  
+  
+  <title>Linear Regression, Ridge Regression, Lasso Regression, and Kernel Ridge Regression - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Linear Regression, Ridge Regression, Lasso Regression, and Kernel Ridge Regression</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-12-24 00:00" pubdate>
+          December 24, 2023
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          14k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          120 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linear Regression, Ridge Regression, Lasso Regression, and Kernel Ridge Regression</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Linear-Regression"><a href="#Linear-Regression" class="headerlink" title="Linear Regression"></a>Linear Regression</h1><p><img src="https://miro.medium.com/v2/resize:fit:766/0*qq0yaecNRQiugnif.png" srcset="/img/loading.gif" lazyload alt="Linear Regression"></p>
+<p>Linear regression is a fundamental statistical model used in statistics and supervised machine learning. It establishes a linear relationship between a scalar <em>response</em> and one or more <em>explanatory variables</em>. The simplicity and well-established properties of linear regression make it a cornerstone algorithm in machine learning.</p>
+<p>Historically, linear regression was developed by Legendre (1805) and Gauss (1809) for astronomical predictions and later popularized in the social sciences by Quetelet.</p>
+<p>Linear regression is widely used for two primary purposes:</p>
+<ul>
+<li>For predictive modeling, it fits a model to observed data sets, allowing for future predictions when new explanatory variables are available without their corresponding response values.</li>
+<li>For analysis, it helps quantify the relationship between response and explanatory variables, assessing the strength of this relationship and identifying variables with no linear relationship or redundant information.</li>
+</ul>
+<p>In its most general case, a linear regression model can be written in matrix notation as</p>
+<p>$$\mathbf{y} &#x3D; \mathbf{X} \boldsymbol{\beta} + \boldsymbol{\varepsilon}$$</p>
+<p>where</p>
+<ul>
+<li>$\mathbf{y} &#x3D; {\begin{bmatrix} y_{1} \ y_{2} \ \vdots \ y_{n} \end{bmatrix}}$ is a vector of $n$ observed values of the response variable.</li>
+<li>$\mathbf{X} &#x3D; {\begin{bmatrix} \mathbf{x}<em>{1}^{\mathsf{T}} \ \mathbf{x}</em>{2}^{\mathsf{T}} \ \vdots \ \mathbf{x}<em>{n}^{\mathsf{T}} \end{bmatrix}} &#x3D; {\begin{bmatrix} 1 &amp; x</em>{1, 1} &amp; \cdots &amp; x_{1, p} \ 1 &amp; x_{2, 1} &amp; \cdots &amp; x_{2, p}\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \ 1 &amp; x_{n, 1} &amp; \cdots &amp; x_{n, p} \end{bmatrix}}$ is a matrix of $n$ observed $(p + 1)$-dimensional row-vectors of the explanatory variables.</li>
+<li>$\boldsymbol{\beta} &#x3D; {\begin{bmatrix} \beta_{0} \ \beta_{1} \ \beta_{2} \ \vdots \ \beta_{p} \end{bmatrix}}$ is a $(p + 1)$-dimensional parameter vector, whose elements, multiplied with each dimension of the explanatory variables, are known as effects or regression coefficients.</li>
+<li>$\boldsymbol{\varepsilon}&#x3D;{\begin{bmatrix}\varepsilon_{1} \ \varepsilon_{2} \ \vdots \ \varepsilon _{n} \end{bmatrix}}$ is a vector of $n$ error terms. It captures all other factors that influence $\mathbf{y}$ other than $\mathbf{X}$.</li>
+</ul>
+<p>Note that the first dimension of the explanatory variables is the constant 1. This is designed such that the corresponding first element of $\boldsymbol{\beta}$, $\beta_{0}$, would be the intercept after matrix multiplication. Many statistical inference procedures for linear models require an intercept to be present, so it is often included even if theoretical considerations suggest that its value should be zero.</p>
+<p>Fitting a linear model to a given data set usually requires estimating $\boldsymbol{\beta}$ such that $\boldsymbol{\varepsilon} &#x3D; \mathbf{y} - \mathbf{X} \boldsymbol{\beta}$ is minimized.</p>
+<p>For example, it is common to use the sum of squared errors (known as <strong>ordinary least squares</strong>) $|{\boldsymbol {\varepsilon }}|<em>{2}^{2} &#x3D; |\mathbf{y} -\mathbf{X}{\boldsymbol{\beta}}|</em>{2}^{2}$ as a loss function for minimization. This minimization problem has a unique solution, ${\hat{\boldsymbol{\beta}}} &#x3D; (\mathbf{X}^{\operatorname{T}} \mathbf{X})^{-1}\mathbf{X}^{\operatorname{T}} \mathbf{y}$.</p>
+<p>References:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Linear_regression">https://en.wikipedia.org/wiki/Linear_regression</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Ordinary_least_squares">https://en.wikipedia.org/wiki/Ordinary_least_squares</a></li>
+</ul>
+<p>References:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Linear_regression">https://en.wikipedia.org/wiki/Linear_regression</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Ordinary_least_squares">https://en.wikipedia.org/wiki/Ordinary_least_squares</a></li>
+</ul>
+<h1 id="Ridge-Regression"><a href="#Ridge-Regression" class="headerlink" title="Ridge Regression"></a>Ridge Regression</h1><p>However, when linear regression models have some multicollinear (highly correlated) dimensions of the explanatory variables, which commonly occurs in models with high-dimensional explanatory variables, $\mathbf{X}^{\operatorname{T}} \mathbf{X}$ approaches a singular matrix and calculating $\left(\mathbf{X}^{\operatorname{T}} \mathbf{X} \right)^{-1}$ becomes numerically unstable (note how the magnitude of <code>np.linalg.inv(X.T @ X)</code> changes as the columns of <code>X</code> become more and more correlated below):</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> x_21 <span class="keyword">in</span> [<span class="number">2.1</span>, <span class="number">2.01</span>, <span class="number">2.001</span>, <span class="number">2.0001</span>, <span class="number">2.00001</span>]:</span><br><span class="line"><span class="meta">... </span>    X = np.array([</span><br><span class="line"><span class="meta">... </span>        [<span class="number">1.</span>, <span class="number">2.</span>],</span><br><span class="line"><span class="meta">... </span>        [<span class="number">1.</span>, x_21]</span><br><span class="line"><span class="meta">... </span>    ])</span><br><span class="line"><span class="meta">... </span>    </span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span>(<span class="string">&#x27;X:&#x27;</span>)</span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span>(X)</span><br><span class="line"><span class="meta">... </span>    </span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span>(<span class="string">&#x27;X.T @ X:&#x27;</span>)</span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span>(X.T @ X)</span><br><span class="line"><span class="meta">... </span>    </span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span>(<span class="string">&#x27;np.linalg.inv(X.T @ X):&#x27;</span>)</span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span>(np.linalg.inv(X.T @ X))</span><br><span class="line"><span class="meta">... </span></span><br><span class="line">X:</span><br><span class="line">[[<span class="number">1.</span>  <span class="number">2.</span> ]</span><br><span class="line"> [<span class="number">1.</span>  <span class="number">2.1</span>]]</span><br><span class="line">X.T @ X:</span><br><span class="line">[[<span class="number">2.</span>   <span class="number">4.1</span> ]</span><br><span class="line"> [<span class="number">4.1</span>  <span class="number">8.41</span>]]</span><br><span class="line">np.linalg.inv(X.T @ X):</span><br><span class="line">[[ <span class="number">841.</span> -<span class="number">410.</span>]</span><br><span class="line"> [-<span class="number">410.</span>  <span class="number">200.</span>]]</span><br><span class="line">X:</span><br><span class="line">[[<span class="number">1.</span>   <span class="number">2.</span>  ]</span><br><span class="line"> [<span class="number">1.</span>   <span class="number">2.01</span>]]</span><br><span class="line">X.T @ X:</span><br><span class="line">[[<span class="number">2.</span>     <span class="number">4.01</span>  ]</span><br><span class="line"> [<span class="number">4.01</span>   <span class="number">8.0401</span>]]</span><br><span class="line">np.linalg.inv(X.T @ X):</span><br><span class="line">[[ <span class="number">80401.00000048</span> -<span class="number">40100.00000024</span>]</span><br><span class="line"> [-<span class="number">40100.00000024</span>  <span class="number">20000.00000012</span>]]</span><br><span class="line">X:</span><br><span class="line">[[<span class="number">1.</span>    <span class="number">2.</span>   ]</span><br><span class="line"> [<span class="number">1.</span>    <span class="number">2.001</span>]]</span><br><span class="line">X.T @ X:</span><br><span class="line">[[<span class="number">2.</span>       <span class="number">4.001</span>   ]</span><br><span class="line"> [<span class="number">4.001</span>    <span class="number">8.004001</span>]]</span><br><span class="line">np.linalg.inv(X.T @ X):</span><br><span class="line">[[ <span class="number">8004000.98507102</span> -<span class="number">4000999.99253738</span>]</span><br><span class="line"> [-<span class="number">4000999.99253738</span>  <span class="number">1999999.99626962</span>]]</span><br><span class="line">X:</span><br><span class="line">[[<span class="number">1.</span>     <span class="number">2.</span>    ]</span><br><span class="line"> [<span class="number">1.</span>     <span class="number">2.0001</span>]]</span><br><span class="line">X.T @ X:</span><br><span class="line">[[<span class="number">2.</span>         <span class="number">4.0001</span>    ]</span><br><span class="line"> [<span class="number">4.0001</span>     <span class="number">8.00040001</span>]]</span><br><span class="line">np.linalg.inv(X.T @ X):</span><br><span class="line">[[ <span class="number">8.00039556e+08</span> -<span class="number">4.00009777e+08</span>]</span><br><span class="line"> [-<span class="number">4.00009777e+08</span>  <span class="number">1.99999889e+08</span>]]</span><br><span class="line">X:</span><br><span class="line">[[<span class="number">1.</span>      <span class="number">2.</span>     ]</span><br><span class="line"> [<span class="number">1.</span>      <span class="number">2.00001</span>]]</span><br><span class="line">X.T @ X:</span><br><span class="line">[[<span class="number">2.</span>      <span class="number">4.00001</span>]</span><br><span class="line"> [<span class="number">4.00001</span> <span class="number">8.00004</span>]]</span><br><span class="line">np.linalg.inv(X.T @ X):</span><br><span class="line">[[ <span class="number">7.99973381e+10</span> -<span class="number">3.99985690e+10</span>]</span><br><span class="line"> [-<span class="number">3.99985690e+10</span>  <span class="number">1.99992345e+10</span>]]</span><br></pre></td></tr></table></figure>
+
+<p>This problem can be alleviated by adding positive elements to the diagonals.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>X = np.array([</span><br><span class="line"><span class="meta">... </span>    [<span class="number">1.</span>, <span class="number">2.</span>],</span><br><span class="line"><span class="meta">... </span>    [<span class="number">1.</span>, <span class="number">2.00001</span>]</span><br><span class="line"><span class="meta">... </span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> _<span class="keyword">lambda</span> <span class="keyword">in</span> [<span class="number">1</span>, <span class="number">0.1</span>, <span class="number">0.01</span>, <span class="number">0.001</span>, <span class="number">0.0001</span>]:</span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span>(<span class="string">f&#x27;np.linalg.inv(X.T @ X + <span class="subst">&#123;_<span class="keyword">lambda</span>&#125;</span> * np.eye(len(X))):&#x27;</span>)</span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span>(np.linalg.inv(X.T @ X + _<span class="keyword">lambda</span> * np.eye(<span class="built_in">len</span>(X))))</span><br><span class="line"><span class="meta">... </span></span><br><span class="line">np.linalg.inv(X.T @ X + <span class="number">1</span> * np.eye(<span class="built_in">len</span>(X))):</span><br><span class="line">[[ <span class="number">0.81818248</span> -<span class="number">0.36363595</span>]</span><br><span class="line"> [-<span class="number">0.36363595</span>  <span class="number">0.27272628</span>]]</span><br><span class="line">np.linalg.inv(X.T @ X + <span class="number">0.1</span> * np.eye(<span class="built_in">len</span>(X))):</span><br><span class="line">[[ <span class="number">8.01980982</span> -<span class="number">3.96039026</span>]</span><br><span class="line"> [-<span class="number">3.96039026</span>  <span class="number">2.07919969</span>]]</span><br><span class="line">np.linalg.inv(X.T @ X + <span class="number">0.01</span> * np.eye(<span class="built_in">len</span>(X))):</span><br><span class="line">[[ <span class="number">80.02005978</span> -<span class="number">39.95998014</span>]</span><br><span class="line"> [-<span class="number">39.95998014</span>  <span class="number">20.07983982</span>]]</span><br><span class="line">np.linalg.inv(X.T @ X + <span class="number">0.001</span> * np.eye(<span class="built_in">len</span>(X))):</span><br><span class="line">[[ <span class="number">800.02078984</span> -<span class="number">399.95940022</span>]</span><br><span class="line"> [-<span class="number">399.95940022</span>  <span class="number">200.07918976</span>]]</span><br><span class="line">np.linalg.inv(X.T @ X + <span class="number">0.0001</span> * np.eye(<span class="built_in">len</span>(X))):</span><br><span class="line">[[ <span class="number">8000.02719959</span> -<span class="number">3999.95360059</span>]</span><br><span class="line"> [-<span class="number">3999.95360059</span>  <span class="number">2000.07179896</span>]]</span><br></pre></td></tr></table></figure>
+
+<p>By replacing $(\mathbf{X}^{\operatorname{T}} \mathbf{X})^{-1}$ with $(\mathbf{X} ^{\mathsf{T}} \mathbf{X} +\lambda \mathbf{I} )^{-1}$ in ${\hat{\boldsymbol{\beta}}} &#x3D; (\mathbf{X}^{\operatorname{T}} \mathbf{X})^{-1}\mathbf{X}^{\operatorname{T}} \mathbf{y}$, we derive the solution to <strong>ridge regression</strong>, ${\hat {\beta }}_{R}&#x3D;(\mathbf{X} ^{\mathsf{T}} \mathbf{X} +\lambda \mathbf{I} )^{-1}\mathbf{X} ^{\mathsf{T}}\mathbf{y}$.</p>
+<p>Ridge regression (linear regression with L2 regularization), is linear regression using ${\mathcal{L}}(\boldsymbol{\beta}, \lambda) &#x3D; |\mathbf{y} -\mathbf{X}{\boldsymbol{\beta}}|<em>{2}^{2} + \lambda (|{\boldsymbol{\beta}}|</em>{2}^{2} - C)$ as the loss function to minimize.</p>
+<p>This is a Lagrangian function expressing the original ordinary least squares loss function $|{\boldsymbol {\varepsilon }}|<em>{2}^{2} &#x3D; |\mathbf{y} -\mathbf{X}{\boldsymbol{\beta}}|</em>{2}^{2}$ subject to the constraint $|{\boldsymbol{\beta}}|_{2}^{2} \le C$ for some $C &gt; 0$.</p>
+<p>Note that <strong>by calculating ${\hat {\beta }}<em>{R}&#x3D;(\mathbf{X} ^{\mathsf{T}} \mathbf{X} +\lambda \mathbf{I} )^{-1}\mathbf{X} ^{\mathsf{T}}\mathbf{y}$ with a given $\lambda$ value, instead of simultaneously solving for $\boldsymbol{\beta}$ and lambda through $\nabla{\mathcal{L}}(\boldsymbol{\beta}, \lambda) &#x3D; 0$ (the usual practice of using Lagrangian functions for constrained optimization), we do not necessary obtain a $\boldsymbol{\beta}$ that satisfies for a given value of C. However, increasing the given $\lambda$ value monotonically decreases the value of $|{\boldsymbol{\beta}}|</em>{2}^{2}$, thus making the constraint $|{\boldsymbol{\beta}}|_{2}^{2} \le C$ be satisfied for smaller values of $C$</strong>.</p>
+<p><img src="https://i.stack.imgur.com/YNwf5.png" srcset="/img/loading.gif" lazyload alt="Image from https://math.stackexchange.com/questions/1723201/solution-for-arg-min-xt-x-1-xt-a-x-ct-x-quadratic"></p>
+<p>We can also demonstrate this with an example:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">def</span> <span class="title function_">beta_squared</span>(<span class="params">l, X, y</span>):</span><br><span class="line"><span class="meta">... </span>    beta = np.linalg.inv(X.T @ X + l * np.eye(<span class="built_in">len</span>(X))) @ X.T @ y</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">return</span> beta.T @ beta</span><br><span class="line"><span class="meta">... </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>np.random.seed(<span class="number">0</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>X = np.random.rand(<span class="number">2</span>, <span class="number">2</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>y = np.random.rand(<span class="number">2</span>, <span class="number">1</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>beta_squared(<span class="number">0.01</span>, X, y)</span><br><span class="line">array([[<span class="number">1.33717503</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>beta_squared(<span class="number">0.1</span>, X, y)</span><br><span class="line">array([[<span class="number">0.37141735</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>beta_squared(<span class="number">1.0</span>, X, y)</span><br><span class="line">array([[<span class="number">0.13504294</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>beta_squared(<span class="number">10.0</span>, X, y)</span><br><span class="line">array([[<span class="number">0.0062103</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>beta_squared(<span class="number">100.0</span>, X, y)</span><br><span class="line">array([[<span class="number">7.92298438e-05</span>]])</span><br></pre></td></tr></table></figure>
+
+<p>Furthermore, as $|{\boldsymbol{\beta}}|<em>{2}^{2} &#x3D; \beta</em>{0}^{2} + \beta_{1}^{2} + \cdots + \beta_{p}^{2}$, increasing the given $\lambda$ value helps to constrain the magnitude of the effects or regression coefficients corresponding to dimensions which are redundant in high-dimensional explanatory variables.</p>
+<p>This is visualized in the right diagram, where the constraint $|{\boldsymbol{\beta}}|<em>{2}^{2} \le C$ in the Lagrangian function (the green circle) tangentially touches a contour of the original ordinary least squares loss function $|{\boldsymbol {\varepsilon }}|</em>{2}^{2} &#x3D; |\mathbf{y} -\mathbf{X}{\boldsymbol{\beta}}|_{2}^{2}$ at a point where one of the effects (or regression coefficients) is close to 0.</p>
+<p><img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*Jd03Hyt2bpEv1r7UijLlpg.png" srcset="/img/loading.gif" lazyload alt="Modified from the plot used in &quot;The Elements of Statistical Learning&quot; by Saptashwa Bhattacharyya"></p>
+<p>To further strengthen this effect and completely “zero out” certain effects or regression coefficients, <strong>lasso regression (linear regression with L1 regularization)</strong> can be used in lieu of ridge recursion.</p>
+<p>In this case, the original ordinary least squares loss function $|{\boldsymbol {\varepsilon }}|<em>{2}^{2} &#x3D; |\mathbf{y} -\mathbf{X}{\boldsymbol{\beta}}|</em>{2}^{2}$ subject to the constraint $|{\boldsymbol{\beta}}|<em>{1} &#x3D; |\beta</em>{0}| + |\beta_{1}| + \cdots + |\beta_{p}| \le C$ for some $C &gt; 0$, as depicted in the left diagram, where the constraint $|{\boldsymbol{\beta}}|<em>{1} \le C$ in the Lagrangian function (the cyan square) tangentially touches a contour of the original ordinary least squares loss function $|{\boldsymbol {\varepsilon }}|</em>{2}^{2} &#x3D; |\mathbf{y} -\mathbf{X}{\boldsymbol{\beta}}|_{2}^{2}$ at a point where one of the effects (or regression coefficients) is 0.</p>
+<p>However, we cannot derive an analytical solution for $\boldsymbol{\beta}$ given the Lagrangian function for lasso regression (a.k.a. the loss function to minimize), ${\mathcal{L}}(\boldsymbol{\beta}, \lambda) &#x3D; |\mathbf{y} -\mathbf{X}{\boldsymbol{\beta}}|<em>{2}^{2} + \lambda (|{\boldsymbol{\beta}}|</em>{1} - C)$. We can only iteratively solve for $\boldsymbol{\beta}$ in this case.</p>
+<p>References:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Lagrange_multiplier">https://en.wikipedia.org/wiki/Lagrange_multiplier</a></li>
+<li><a target="_blank" rel="noopener" href="https://stats.stackexchange.com/questions/401212/showing-the-equivalence-between-the-l-2-norm-regularized-regression-and">https://stats.stackexchange.com/questions/401212/showing-the-equivalence-between-the-l-2-norm-regularized-regression-and</a></li>
+<li><a target="_blank" rel="noopener" href="https://math.stackexchange.com/questions/1723201/solution-for-arg-min-xt-x-1-xt-a-x-ct-x-quadratic">https://math.stackexchange.com/questions/1723201/solution-for-arg-min-xt-x-1-xt-a-x-ct-x-quadratic</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1509.09169.pdf">https://arxiv.org/pdf/1509.09169.pdf</a></li>
+<li><a target="_blank" rel="noopener" href="https://towardsdatascience.com/ridge-and-lasso-regression-a-complete-guide-with-python-scikit-learn-e20e34bcbf0b">https://towardsdatascience.com/ridge-and-lasso-regression-a-complete-guide-with-python-scikit-learn-e20e34bcbf0b</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Ridge_regression">https://en.wikipedia.org/wiki/Ridge_regression</a></li>
+<li><a target="_blank" rel="noopener" href="https://online.stat.psu.edu/stat857/node/155/">https://online.stat.psu.edu/stat857/node/155/</a></li>
+<li><a target="_blank" rel="noopener" href="https://allmodelsarewrong.github.io/ridge.html">https://allmodelsarewrong.github.io/ridge.html</a></li>
+</ul>
+<h1 id="Kernel-Ridge-Regression"><a href="#Kernel-Ridge-Regression" class="headerlink" title="Kernel Ridge Regression"></a>Kernel Ridge Regression</h1><p>Given the solution to ridge recursion above, ${\hat {\beta }}<em>{R}&#x3D;(\mathbf{X} ^{\mathsf{T}} \mathbf{X} +\lambda \mathbf{I} )^{-1}\mathbf{X} ^{\mathsf{T}}\mathbf{y}$, we can predict the value of the response variable $y</em>{n + 1}(\mathbf{x}<em>{n + 1})$, given an out-of-dataset vector of explanatory variables $\mathbf{x}</em>{n + 1} &#x3D; {\begin{bmatrix} 1 \ x_{n + 1, 1} \ \vdots \ x_{n + 1, p} \end{bmatrix}}$:</p>
+<p>$$y_{n + 1}(\mathbf{x}<em>{n + 1}) &#x3D; \mathbf{x}</em>{n + 1}^{\mathsf{T}} {\hat {\beta }}<em>{R} &#x3D; \mathbf{x}</em>{n + 1}^{\mathsf{T}} (\mathbf{X} ^{\mathsf{T}} \mathbf{X} +\lambda \mathbf{I} )^{-1}\mathbf{X} ^{\mathsf{T}}\mathbf{y}$$</p>
+<p>We can make some changes to $\mathbf{x}_{n + 1}^{\mathsf{T}} (\mathbf{X} ^{\mathsf{T}} \mathbf{X} +\lambda \mathbf{I} )^{-1}\mathbf{X} ^{\mathsf{T}}\mathbf{y}$.</p>
+<h2 id="Push-Through-Identity"><a href="#Push-Through-Identity" class="headerlink" title="Push-Through Identity"></a>Push-Through Identity</h2><p>Given two matrices $\mathbf{P}, \mathbf{Q}$, based on $\mathbf{P} (I + \mathbf{Q} \mathbf{P}) &#x3D; (I + \mathbf{P} \mathbf{Q}) \mathbf{P}$, we can derive ${(I + \mathbf{P} \mathbf{Q})}^{-1} \mathbf{P} &#x3D; \mathbf{P} {(I + \mathbf{Q} \mathbf{P})}^{-1}$. This is known as the push-through identity, one of the matrix inversion identities used to derive the Woodbury matrix identity, which allows cheap computation of inverses and solutions to linear equations.</p>
+<p>References:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://www0.cs.ucl.ac.uk/staff/g.ridgway/mil/mil.pdf">http://www0.cs.ucl.ac.uk/staff/g.ridgway/mil/mil.pdf</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Woodbury_bmatrix_identity">https://en.wikipedia.org/wiki/Woodbury_bmatrix_identity</a></li>
+</ul>
+<p>Based on the push through identity, $\mathbf{x}<em>{n + 1}^{\mathsf{T}} (\mathbf{X} ^{\mathsf{T}} \mathbf{X} + \lambda \mathbf{I} )^{-1} \mathbf{X}^{\mathsf{T}} \mathbf{y} &#x3D; \mathbf{x}</em>{n + 1}^{\mathsf{T}} \mathbf{X}^{\mathsf{T}} {(\mathbf{X} \mathbf{X}^{\mathsf{T}} + \lambda \mathbf{I})}^{-1} \mathbf{y}$.</p>
+<p>As $\mathbf{X} &#x3D; {\begin{bmatrix} \mathbf{x}<em>{1}^{\mathsf{T}} \ \vdots \ \mathbf{x}</em>{n}^{\mathsf{T}} \end{bmatrix}}$, $\mathbf{X}^{\mathsf{T}} &#x3D; {\begin{bmatrix} \mathbf{x}<em>{1} &amp; \cdots &amp; \mathbf{x}</em>{n} \end{bmatrix}}$, we have:</p>
+<ul>
+<li>$\mathbf{x}<em>{n + 1}^{\mathsf{T}} \mathbf{X}^{\mathsf{T}} &#x3D; {\begin{bmatrix} \mathbf{x}</em>{n + 1}^{\mathsf{T}} \mathbf{x}<em>{1} &amp; \cdots &amp; \mathbf{x}</em>{n + 1}^{\mathsf{T}} \mathbf{x}_{n} \end{bmatrix}}$</li>
+<li>$\mathbf{X} \mathbf{X}^{\mathsf{T}} &#x3D; {\begin{bmatrix} \mathbf{x}<em>{1}^{\mathsf{T}} \mathbf{x}</em>{1} &amp; \cdots &amp; \mathbf{x}<em>{1}^{\mathsf{T}} \mathbf{x}</em>{n} \ \vdots &amp; \ddots &amp; \vdots \ \mathbf{x}<em>{n}^{\mathsf{T}} \mathbf{x}</em>{1} &amp; \cdots &amp; \mathbf{x}<em>{n}^{\mathsf{T}} \mathbf{x}</em>{n} \end{bmatrix}}$</li>
+</ul>
+<p>Thus:</p>
+<p>$$y_{n + 1}(\mathbf{x}<em>{n + 1}) &#x3D; {\begin{bmatrix} \mathbf{x}</em>{n + 1}^{\mathsf{T}} \mathbf{x}<em>{1} &amp; \cdots &amp; \mathbf{x}</em>{n + 1}^{\mathsf{T}} \mathbf{x}<em>{n} \end{bmatrix}} {({\begin{bmatrix} \mathbf{x}</em>{1}^{\mathsf{T}} \mathbf{x}<em>{1} &amp; \cdots &amp; \mathbf{x}</em>{1}^{\mathsf{T}} \mathbf{x}<em>{n} \ \vdots &amp; \ddots &amp; \vdots \ \mathbf{x}</em>{n}^{\mathsf{T}} \mathbf{x}<em>{1} &amp; \cdots &amp; \mathbf{x}</em>{n}^{\mathsf{T}} \mathbf{x}_{n} \end{bmatrix}} + \lambda \mathbf{I})}^{-1} \mathbf{y}$$</p>
+<p>This means that we can calculate $y_{n + 1}(\mathbf{x}<em>{n + 1})$ directly from the dot products among $\mathbf{x}</em>{1}, \cdots, \mathbf{x}<em>{n}$ and the dot products between $\mathbf{x}</em>{n + 1}$ and $\mathbf{x}<em>{1}, \cdots, \mathbf{x}</em>{n}$, <strong>without having to explicitly know the values of $\mathbf{x}<em>{1}, \cdots, \mathbf{x}</em>{n}$ and $\mathbf{x}_{n + 1}$</strong>.</p>
+<p>Moreover, the dot product between two vectors of explanatory variables here can be generalized to <strong>any symmetric similarity function between two vectors of explanatory variables known as kernel functions</strong>.</p>
+<p>Using $k(\mathbf{x}<em>{i}, \mathbf{x}</em>{j})$ to denote the similarity between $\mathbf{x}<em>{i}, \mathbf{x}</em>{j}$ under the kernel function $k$, let:</p>
+<ul>
+<li>$\mathbf{K} &#x3D; \mathbf{X} \mathbf{X}^{\mathsf{T}} &#x3D; {\begin{bmatrix} k(\mathbf{x}<em>{1}, \mathbf{x}</em>{1}) &amp; \cdots &amp; k(\mathbf{x}<em>{1}, \mathbf{x}</em>{n}) \ \vdots &amp; \ddots &amp; \vdots \ k(\mathbf{x}<em>{n}, \mathbf{x}</em>{1}) &amp; \cdots &amp; k(\mathbf{x}<em>{n}, \mathbf{x}</em>{n}) \end{bmatrix}}$</li>
+<li>$\mathbf{k}(\mathbf{x}<em>{n + 1}) &#x3D; \mathbf{x}</em>{n + 1}^{\mathsf{T}} \mathbf{X}^{\mathsf{T}} &#x3D; {\begin{bmatrix} k(\mathbf{x}<em>{n + 1}, \mathbf{x}</em>{1}) &amp; \cdots &amp; k(\mathbf{x}<em>{n + 1}, \mathbf{x}</em>{n}) \end{bmatrix}}$</li>
+</ul>
+<p>We have:</p>
+<p>$$y_{n + 1}(\mathbf{x}<em>{n + 1}) &#x3D; \mathbf{k}(\mathbf{x}</em>{n + 1}) {(\mathbf{K} + \lambda \mathbf{I})}^{-1} \mathbf{y}$$</p>
+<p>There are two benefits of kernel ridge regression.</p>
+<ul>
+<li>It allows implicitly performing nonlinear transformations on the vector representations of explanatory variables within similarity calculation, allowing nonlinearity to be introduced. A prominent example is the widespread <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Radial_basis_function_kernel">radial basis function kernel</a>, first used in mining engineering (“kriging”).</li>
+<li>It allows regressions on explanatory variables that do not have explicit vector representations but have similarity functions. There are “string kernels,” “image kernels,” “graph kernels,” and so on.</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/abbaswu/abbaswu.github.io-images/main/Motivation-Finding-Gold.png" srcset="/img/loading.gif" lazyload alt="Kriging (from UBC CPSC 340 slides)"></p>
+<p><img src="https://desktop.arcgis.com/es/arcmap/latest/extensions/geostatistical-analyst/GUID-49DA5B53-6E2F-4A29-BA01-2BF4F0259594-web.png" srcset="/img/loading.gif" lazyload alt="Kriging"></p>
+<p><img src="https://raw.githubusercontent.com/abbaswu/abbaswu.github.io-images/main/Kernel-Trick-for-Non-Vector-Data-1.png" srcset="/img/loading.gif" lazyload alt="Kernel Trick for Non-Vector Data (from UBC CPSC 340 slides)"></p>
+<p><img src="https://raw.githubusercontent.com/abbaswu/abbaswu.github.io-images/main/Kernel-Trick-for-Non-Vector-Data-2.png" srcset="/img/loading.gif" lazyload alt="Kernel Trick for Non-Vector Data (from UBC CPSC 340 slides)"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Mathematics/" class="category-chain-item">Mathematics</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Linear Regression, Ridge Regression, Lasso Regression, and Kernel Ridge Regression</div>
+      <div>https://jifengwu2k.github.io/2023/12/24/Linear-Regression-Ridge-Regression-Lasso-Regression-and-Kernel-Ridge-Regression/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>December 24, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/12/31/Strategies-Tactics-and-Mindset-Learned-from-The-Ph-D-Grind/" title="Strategies, Tactics, and Mindset Learned from &#34;The Ph.D. Grind&#34;">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Strategies, Tactics, and Mindset Learned from &#34;The Ph.D. Grind&#34;</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/05/Sarah-Chasins-Works-on-PL-and-HCI/" title="Sarah Chasins&#39; Works on PL and HCI">
+                        <span class="hidden-mobile">Sarah Chasins&#39; Works on PL and HCI</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

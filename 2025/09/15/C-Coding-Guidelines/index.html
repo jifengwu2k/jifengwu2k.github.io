@@ -1,0 +1,1138 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Guiding Philosophy Prioritize modularity, clarity, and maintainability over premature optimization or legacy patterns. Code should be readable, easily understood, and safe by default.   Favor Python-s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ Coding Guidelines">
+<meta property="og:url" content="https://jifengwu2k.github.io/2025/09/15/C-Coding-Guidelines/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="Guiding Philosophy Prioritize modularity, clarity, and maintainability over premature optimization or legacy patterns. Code should be readable, easily understood, and safe by default.   Favor Python-s">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-09-15T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:06:42.905Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>C++ Coding Guidelines - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">C++ Coding Guidelines</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-09-15 00:00" pubdate>
+          September 15, 2025
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.1k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          76 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">C++ Coding Guidelines</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Guiding-Philosophy"><a href="#Guiding-Philosophy" class="headerlink" title="Guiding Philosophy"></a>Guiding Philosophy</h2><ul>
+<li>Prioritize modularity, clarity, and maintainability over premature optimization or legacy patterns.<ul>
+<li>Code should be readable, easily understood, and safe by default.</li>
+</ul>
+</li>
+<li>Favor Python-style expressiveness with modern C++ strengths:<ul>
+<li>Use strong type systems, STL containers, concepts, range-based and higher-order functions.</li>
+<li>Avoid C-style loops, macros, and pointer tricks that hide intent.</li>
+</ul>
+</li>
+<li>Make the compiler’s job as easy as possible:<ul>
+<li>Clear ownership, resource lifetime, and data flow allow compilers to optimize code aggressively.</li>
+<li>By avoiding hidden dependencies and using STL idioms, enable the compiler to perform superior vectorization, inlining, and memory&#x2F;layout optimizations.</li>
+</ul>
+</li>
+<li>Design for trivial portability to GPU, FPGA, and other accelerators:<ul>
+<li>Functional, range-based, and stateless&#x2F;RAII idioms map directly to bulk-parallel and dataflow hardware.</li>
+<li>State machines using <code>std::variant</code> or explicit types, instead of enums and scattered flags, make auto-parallelization and offloading straightforward.</li>
+<li>Consistent type size&#x2F;platform rules yield code predictable for high-level synthesis and cross-ISA portability.</li>
+<li>By steering clear of manual low-level hacks, code lifts cleanly to modern frameworks like CUDA, SYCL, or high-level FPGA toolchains.</li>
+</ul>
+</li>
+<li>C++ is treated as a platform-level language like Python. The guidelines do not merely govern surface syntax and C++ standard features, but unambiguously specify expectations for the <em>entire execution environment</em>:<ul>
+<li>ABI (Application Binary Interface)</li>
+<li>OS and system libraries (e.g. POSIX semantics, thread&#x2F;process&#x2F;signaling behavior)</li>
+<li>Consistency of type sizes, object layout, exception handling, RTTI, and dynamic loading</li>
+<li>Deterministic handling and semantics for all STL and language&#x2F;library features</li>
+</ul>
+</li>
+</ul>
+<h2 id="Lexical-Filing-Conventions"><a href="#Lexical-Filing-Conventions" class="headerlink" title="Lexical &amp; Filing Conventions"></a>Lexical &amp; Filing Conventions</h2><h3 id="Indentation"><a href="#Indentation" class="headerlink" title="Indentation"></a>Indentation</h3><ul>
+<li>Always use 4 spaces per indentation level (Python style).</li>
+<li>Tabs, 2-space or 8-space indents are forbidden.</li>
+</ul>
+<h3 id="Functions-Variables"><a href="#Functions-Variables" class="headerlink" title="Functions &amp; Variables"></a>Functions &amp; Variables</h3><ul>
+<li>All function and variable names (including members): <code>snake_case</code>, all lowercase.<ul>
+<li><code>int max_value;</code>, <code>double amount_sum;</code></li>
+</ul>
+</li>
+<li>No CamelCase, PascalCase, or mixing.</li>
+</ul>
+<h3 id="Types-Classes-Structs"><a href="#Types-Classes-Structs" class="headerlink" title="Types&#x2F;Classes&#x2F;Structs"></a>Types&#x2F;Classes&#x2F;Structs</h3><ul>
+<li>Class, struct, and enum names: <code>CamelCase</code> (first letter of each word capitalized), <strong>no underscores.</strong><ul>
+<li><code>class FileReader &#123; ... &#125;;</code>, <code>struct UserInfo &#123; ... &#125;;</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="File-Extensions"><a href="#File-Extensions" class="headerlink" title="File Extensions"></a>File Extensions</h3><ul>
+<li><code>.c</code>: C-style source code.</li>
+<li><code>.m</code>, <code>.mm</code>: Objective-C style source code.<ul>
+<li>We explicitly allow and encourage the usage of POSIX-compliant Objective-C OUTSIDE the Cocoa framework, whenever Python-style “look up by name” is required.</li>
+</ul>
+</li>
+<li><code>.cpp</code>: C++-style source code.</li>
+<li><code>.h</code>: Only interface declarations, never function&#x2F;template bodies.</li>
+<li><code>.hpp</code>: Can include full implementations, templates, inline functions.</li>
+</ul>
+<p>No other file extensions.</p>
+<h3 id="Include-Guards"><a href="#Include-Guards" class="headerlink" title="Include Guards"></a>Include Guards</h3><ul>
+<li>Every header (<code>.h</code>, <code>.hpp</code>) must use an include guard named as the file name in all caps, dots replaced with underscores, with no added prefix or suffix, e.g., <ul>
+<li><code>foo_bar.h</code> - <code>#ifndef FOO_BAR_H</code></li>
+<li><code>my_class.hpp</code> - <code>#ifndef MY_CLASS_HPP</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="File-Naming"><a href="#File-Naming" class="headerlink" title="File Naming"></a>File Naming</h3><ul>
+<li>All source&#x2F;header files: <code>snake_case</code>, all lowercase, use underscores, e.g.:<ul>
+<li><code>network_manager.h</code>, <code>data_loader.cpp</code></li>
+</ul>
+</li>
+<li>No CamelCase, hyphens, or uppercase.</li>
+</ul>
+<h2 id="Type-System-and-Data-Model"><a href="#Type-System-and-Data-Model" class="headerlink" title="Type System and Data Model"></a>Type System and Data Model</h2><h3 id="Type-Size-Assumptions"><a href="#Type-Size-Assumptions" class="headerlink" title="Type Size Assumptions"></a>Type Size Assumptions</h3><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Bytes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>char</code></td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>short</code></td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>wchar_t</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>float</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>long</code></td>
+<td>8</td>
+</tr>
+<tr>
+<td><code>double</code></td>
+<td>8</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Any violation makes the platform “unsupported”.</li>
+</ul>
+<h3 id="Struct-vs-Class-Semantics"><a href="#Struct-vs-Class-Semantics" class="headerlink" title="Struct vs Class Semantics"></a>Struct vs Class Semantics</h3><ul>
+<li>Struct: For plain data (POD).<ul>
+<li>Structs NEVER own resources, nor clean up.</li>
+<li>Always default-initializable to valid state.</li>
+<li>No custom Big Five (destructor, copy constructor, etc.)</li>
+<li>Never allocate struct on the heap (no <code>new StructType</code>). They must live on stack or inside containers&#x2F;smart pointers.</li>
+<li>Do not store pointers&#x2F;references to struct instance for long-term use.</li>
+</ul>
+</li>
+<li>Class: For resource management.<ul>
+<li>Must define explicit constructor(s) and Big Five.</li>
+<li>No raw pointers escape outside internal implementation; prefer smart pointers&#x2F;containers.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Function-Parameters"><a href="#Function-Parameters" class="headerlink" title="Function Parameters"></a>Function Parameters</h3><ul>
+<li>If struct&#x2F;class is 16 bytes: always pass by reference (<code>const T&amp;</code>&#x2F;<code>T&amp;</code>&#x2F;<code>T&amp;&amp;</code> and <code>std::move</code>).</li>
+<li>Value passing only for simple types and small STL types.</li>
+</ul>
+<h3 id="Strings-Unicode"><a href="#Strings-Unicode" class="headerlink" title="Strings &amp; Unicode"></a>Strings &amp; Unicode</h3><ul>
+<li><code>std::string</code>: Always UTF-8 encoded.</li>
+<li><code>std::wstring</code> (POSIX): Each <code>wchar_t</code> holds a decoded unicode codepoint; use for character-based logic.<ul>
+<li>Serialize or send as UTF-8 (<code>std::wstring</code> -&gt; <code>std::string</code>) for output&#x2F;network.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Subtyping"><a href="#Subtyping" class="headerlink" title="Subtyping"></a>Subtyping</h3><ul>
+<li>Use C++20 concepts and duck typing with templates, NOT class inheritance, whenever possible.<ul>
+<li>Prioritize using the standard library’s concepts, and use them according to Python conventions.<ul>
+<li>See Appendix for details.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Functors"><a href="#Functors" class="headerlink" title="Functors"></a>Functors</h3><ul>
+<li>Always use functors (including lambdas) for generalization&#x2F;high-order logic.</li>
+<li>C-style function pointers are only allowed for low-level ABI&#x2F;C-interfacing.</li>
+</ul>
+<h3 id="Container-Data-Structure-Policy"><a href="#Container-Data-Structure-Policy" class="headerlink" title="Container &amp; Data Structure Policy"></a>Container &amp; Data Structure Policy</h3><ul>
+<li>Always prefer STL: <code>vector</code>, <code>map</code>, <code>set</code>, <code>optional</code>, <code>variant</code>, etc.</li>
+<li>Only use third-party containers (boost, absl, folly) with full documentation and technical review.</li>
+<li>Never hand-write data structures for “preemptive optimization”.</li>
+</ul>
+<h2 id="Operational-Semantics"><a href="#Operational-Semantics" class="headerlink" title="Operational Semantics"></a>Operational Semantics</h2><h3 id="Control-Flow"><a href="#Control-Flow" class="headerlink" title="Control Flow"></a>Control Flow</h3><ul>
+<li>Strongly discourage the use of counting-based for-loops. Hard to read, hard to optimize.</li>
+<li>Only allow <code>goto</code> for control flow in plain-POD non-owner code, never with objects needing destruction.</li>
+<li>Use modern functional idioms (map&#x2F;reduce&#x2F;filter&#x2F;apply_if) whenever possible.</li>
+<li>Use explicit patterns like State Machine whenever possible.<ul>
+<li>Important program states must use concrete types and variants, never enums+switches+separate local variables, e.g.,<ul>
+<li><code>struct IdleState &#123; /* ... */ &#125;;</code></li>
+<li><code>struct RunningState &#123; /* ... */ &#125;;</code></li>
+<li><code>using State = std::variant&lt;IdleState, RunningState&gt;;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Use C++20 coroutines for complex control flow.<ul>
+<li>Follow Python generator conventions (<code>co_yield</code> &#x3D; <code>yield</code>, “delegating” &#x3D; <code>yield from</code>).</li>
+<li>Document coroutines in Pythonic style for zero cognitive gap.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Exceptions-Error-Handling"><a href="#Exceptions-Error-Handling" class="headerlink" title="Exceptions &amp; Error Handling"></a>Exceptions &amp; Error Handling</h3><h4 id="Exception-Policy"><a href="#Exception-Policy" class="headerlink" title="Exception Policy"></a>Exception Policy</h4><ul>
+<li>Use exceptions as standard; do not rewrite everything to error codes or forbid exceptions.</li>
+<li>Only exclude exceptions in hard-constrained “special” cases (must be fully justified &amp; documented).</li>
+</ul>
+<h4 id="Fail-Fast-Fail-Loudly"><a href="#Fail-Fast-Fail-Loudly" class="headerlink" title="Fail Fast, Fail Loudly"></a>Fail Fast, Fail Loudly</h4><ul>
+<li>On detection of error&#x2F;inconsistency, immediately abort&#x2F;throw&#x2F;assert with full context.<ul>
+<li>Never clip, silence, or tolerate errors unless in controlled, reviewed, and documented edge cases.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Platform-Build-System"><a href="#Platform-Build-System" class="headerlink" title="Platform &amp; Build System"></a>Platform &amp; Build System</h2><h3 id="Platform-ABI"><a href="#Platform-ABI" class="headerlink" title="Platform, ABI"></a>Platform, ABI</h3><ul>
+<li>Only POSIX-conformant platforms with full POSIX C API for file&#x2F;IO, threads, sockets, signals, etc. are supported.</li>
+<li>Only Itanium C++ ABI is supported.</li>
+</ul>
+<h3 id="Build-Toolchain"><a href="#Build-Toolchain" class="headerlink" title="Build Toolchain"></a>Build Toolchain</h3><ul>
+<li>All build&#x2F;link flows use GCC-style CLI tools, preferably LLVM&#x2F;Clang.<ul>
+<li>Assume availability of all GCC extensions.</li>
+</ul>
+</li>
+<li>Always specify all needed options&#x2F;libraries, e.g.:  <ul>
+<li><code>-pthread</code> (threads)</li>
+<li><code>-lc++</code> (clang libc++)</li>
+<li><code>-ldl</code> (dlopen)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Intermediate-Representation"><a href="#Intermediate-Representation" class="headerlink" title="Intermediate Representation"></a>Intermediate Representation</h3><ul>
+<li>Always use LLVM IR (<code>.ll</code>, <code>.bc</code>) as the intermediate layer for cross-platform, analysis, optimization.</li>
+<li>Never use native assembly.</li>
+</ul>
+<h2 id="Appendix-C-Concepts-vs-Python-Typing-Constructs"><a href="#Appendix-C-Concepts-vs-Python-Typing-Constructs" class="headerlink" title="Appendix: C++ Concepts vs Python Typing Constructs"></a>Appendix: C++ Concepts vs Python Typing Constructs</h2><h3 id="Equality-Ordering"><a href="#Equality-Ordering" class="headerlink" title="Equality, Ordering"></a>Equality, Ordering</h3><table>
+<thead>
+<tr>
+<th>C++ Concept</th>
+<th>Example</th>
+<th>Meaning</th>
+<th>Python Typing Equivalent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>std::equality_comparable&lt;T&gt;</code></td>
+<td><code>equality_comparable&lt;MyType&gt;</code></td>
+<td>Can test equality (<code>==</code>, <code>!=</code>)</td>
+<td><code>typing.SupportsRichComparison</code></td>
+</tr>
+<tr>
+<td><code>std::totally_ordered&lt;T&gt;</code></td>
+<td><code>totally_ordered&lt;MyType&gt;</code></td>
+<td>All <code>&lt;, &lt;=, &gt;, &gt;=</code> comparisons</td>
+<td><code>typing.SupportsRichComparison</code></td>
+</tr>
+</tbody></table>
+<h3 id="Numeric-and-Mathematical-Types"><a href="#Numeric-and-Mathematical-Types" class="headerlink" title="Numeric and Mathematical Types"></a>Numeric and Mathematical Types</h3><table>
+<thead>
+<tr>
+<th>C++ Concept</th>
+<th>Example</th>
+<th>Meaning</th>
+<th>Python Typing Equivalent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>std::integral&lt;T&gt;</code></td>
+<td><code>integral&lt;int&gt;</code></td>
+<td>Is an integral (integer) type</td>
+<td><code>numbers.Integer</code></td>
+</tr>
+<tr>
+<td><code>std::signed_integral&lt;T&gt;</code></td>
+<td><code>signed_integral&lt;int&gt;</code></td>
+<td>Is a signed integer type</td>
+<td></td>
+</tr>
+<tr>
+<td><code>std::unsigned_integral&lt;T&gt;</code></td>
+<td><code>unsigned_integral&lt;uint32_t&gt;</code></td>
+<td>Is an unsigned integer type</td>
+<td></td>
+</tr>
+<tr>
+<td><code>std::floating_point&lt;T&gt;</code></td>
+<td><code>floating_point&lt;double&gt;</code></td>
+<td>Is a floating point type</td>
+<td><code>numbers.Real</code></td>
+</tr>
+</tbody></table>
+<h3 id="Containers"><a href="#Containers" class="headerlink" title="Containers"></a>Containers</h3><table>
+<thead>
+<tr>
+<th>C++ Concept</th>
+<th>Example</th>
+<th>Meaning</th>
+<th>Python Typing Equivalent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>std::ranges::range&lt;T&gt;</code></td>
+<td><code>range&lt;std::vector&lt;int&gt;&gt;</code></td>
+<td>Iterable range concept</td>
+<td><code>typing.Iterable[T]</code></td>
+</tr>
+<tr>
+<td><code>std::ranges::input_range&lt;T&gt;</code></td>
+<td><code>input_range&lt;std::istream&gt;</code></td>
+<td>Readable, single pass</td>
+<td><code>typing.Iterator[T]</code></td>
+</tr>
+<tr>
+<td><code>std::ranges::sized_range&lt;T&gt;</code></td>
+<td><code>sized_range&lt;std::array&lt;int, 3&gt;&gt;</code></td>
+<td>Has a known size (<code>.size()</code>)</td>
+<td><code>typing.Sized</code></td>
+</tr>
+<tr>
+<td><code>std::ranges::output_range&lt;T, V&gt;</code></td>
+<td></td>
+<td>Writable range (output iterators)</td>
+<td><code>typing.MutableSequence[T]</code></td>
+</tr>
+<tr>
+<td><code>std::ranges::view&lt;T&gt;</code></td>
+<td></td>
+<td>Lightweight, non-owning range</td>
+<td></td>
+</tr>
+<tr>
+<td><code>std::input_iterator&lt;T&gt;</code></td>
+<td><code>input_iterator&lt;Iter&gt;</code></td>
+<td>Supports <code>++</code>, deref, read</td>
+<td><code>typing.Iterator[T]</code></td>
+</tr>
+<tr>
+<td><code>std::forward_iterator&lt;T&gt;</code></td>
+<td><code>forward_iterator&lt;Iter&gt;</code></td>
+<td>Multi-pass input iterator</td>
+<td><code>typing.Iterator[T]</code></td>
+</tr>
+<tr>
+<td><code>std::bidirectional_iterator&lt;T&gt;</code></td>
+<td><code>bidirectional_iterator&lt;Iter&gt;</code></td>
+<td>Forward&#x2F;backward iteration</td>
+<td><code>typing.Sequence[T]</code></td>
+</tr>
+<tr>
+<td><code>std::random_access_iterator&lt;T&gt;</code></td>
+<td><code>random_access_iterator&lt;Iter&gt;</code></td>
+<td>Supports <code>it[n]</code> indexing, etc.</td>
+<td><code>typing.Sequence[T]</code></td>
+</tr>
+<tr>
+<td><code>std::contiguous_iterator&lt;T&gt;</code></td>
+<td><code>contiguous_iterator&lt;Iter&gt;</code></td>
+<td>Underlying data is contiguous in memory</td>
+<td><code>typing.Sequence[T]</code></td>
+</tr>
+</tbody></table>
+<h3 id="Callables"><a href="#Callables" class="headerlink" title="Callables"></a>Callables</h3><table>
+<thead>
+<tr>
+<th>C++ Concept</th>
+<th>Example</th>
+<th>Meaning</th>
+<th>Python Typing Equivalent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>std::invocable&lt;F, Args...&gt;</code></td>
+<td><code>invocable&lt;Fn, int&gt;</code></td>
+<td>Callable object (function, lambda, etc.)</td>
+<td><code>typing.Callable[..., T]</code></td>
+</tr>
+<tr>
+<td><code>std::predicate&lt;F, Args...&gt;</code></td>
+<td><code>predicate&lt;Fn, int&gt;</code></td>
+<td>Callable returns <code>bool</code></td>
+<td><code>typing.Callable[..., bool]</code></td>
+</tr>
+</tbody></table>
+<h3 id="Type-Identity-and-Conversion"><a href="#Type-Identity-and-Conversion" class="headerlink" title="Type Identity and Conversion"></a>Type Identity and Conversion</h3><table>
+<thead>
+<tr>
+<th>C++ Concept</th>
+<th>Example (C++)</th>
+<th>Meaning</th>
+<th>Python <code>typing</code> Equivalent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>std::same_as&lt;T, U&gt;</code></td>
+<td><code>same_as&lt;int, int&gt;</code></td>
+<td>Types are exactly the same</td>
+<td></td>
+</tr>
+<tr>
+<td><code>std::convertible_to&lt;From, To&gt;</code></td>
+<td><code>convertible_to&lt;int, float&gt;</code></td>
+<td>Can be converted (<code>static_cast&lt;To&gt;(from)</code>)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>std::derived_from&lt;D, B&gt;</code></td>
+<td><code>derived_from&lt;class A, class Base&gt;</code></td>
+<td>D inherits from B</td>
+<td></td>
+</tr>
+<tr>
+<td><code>std::constructible_from&lt;T, Args...&gt;</code></td>
+<td><code>constructible_from&lt;std::string, const char*&gt;</code></td>
+<td>Constructible from given args</td>
+<td><code>typing.Callable</code> for constructors</td>
+</tr>
+<tr>
+<td><code>std::default_initializable&lt;T&gt;</code></td>
+<td></td>
+<td>Default (no-arg) constructable</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="Copying-Moving-Assignment-Swap"><a href="#Copying-Moving-Assignment-Swap" class="headerlink" title="Copying, Moving, Assignment &amp; Swap"></a>Copying, Moving, Assignment &amp; Swap</h3><table>
+<thead>
+<tr>
+<th>C++ Concept</th>
+<th>Example</th>
+<th>Meaning</th>
+<th>Python Typing Equivalent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>std::move_constructible&lt;T&gt;</code></td>
+<td><code>move_constructible&lt;MyType&gt;</code></td>
+<td>Supports move semantics</td>
+<td></td>
+</tr>
+<tr>
+<td><code>std::copy_constructible&lt;T&gt;</code></td>
+<td><code>copy_constructible&lt;MyType&gt;</code></td>
+<td>Can be copy-constructed</td>
+<td></td>
+</tr>
+<tr>
+<td><code>std::assignable_from&lt;T, U&gt;</code></td>
+<td><code>assignable_from&lt;MyType&amp;, int&gt;</code></td>
+<td>lhs can be assigned rhs</td>
+<td></td>
+</tr>
+<tr>
+<td><code>std::swappable&lt;T&gt;</code></td>
+<td><code>swappable&lt;MyType&gt;</code></td>
+<td>Can exchange values (swap)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>std::swappable_with&lt;T, U&gt;</code></td>
+<td><code>swappable_with&lt;A, B&gt;</code></td>
+<td>Can swap values with another type</td>
+<td></td>
+</tr>
+</tbody></table>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Reference/" class="category-chain-item">Reference</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>C++ Coding Guidelines</div>
+      <div>https://jifengwu2k.github.io/2025/09/15/C-Coding-Guidelines/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>September 15, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/09/28/Shell-Coding-Guidelines/" title="Shell Coding Guidelines">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Shell Coding Guidelines</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/09/12/%E5%8F%A4%E8%AF%97%E8%AF%8D%E7%8E%B0%E4%BB%A3%E8%A7%A3%E8%AF%BB/" title="古诗词现代解读">
+                        <span class="hidden-mobile">古诗词现代解读</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

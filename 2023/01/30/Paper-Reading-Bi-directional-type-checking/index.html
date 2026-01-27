@@ -1,0 +1,760 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="NOTE: This is a Paper Reading for Topics in Programming Languages: Type Systems. The original paper can be found here. SummaryThe paper first explains that except Syntax Directed Systems, Typing Rules">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Paper Reading: Bi-directional type checking">
+<meta property="og:url" content="https://jifengwu2k.github.io/2023/01/30/Paper-Reading-Bi-directional-type-checking/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="NOTE: This is a Paper Reading for Topics in Programming Languages: Type Systems. The original paper can be found here. SummaryThe paper first explains that except Syntax Directed Systems, Typing Rules">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-01-30T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:06:51.101Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Paper Reading: Bi-directional type checking - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Paper Reading: Bi-directional type checking</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-01-30 00:00" pubdate>
+          January 30, 2023
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          42 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Paper Reading: Bi-directional type checking</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>NOTE: This is a Paper Reading for <a target="_blank" rel="noopener" href="https://williamjbowman.com/teaching/2022/w2/cpsc539b/">Topics in Programming Languages: Type Systems</a>. The original paper can be found <a target="_blank" rel="noopener" href="http://www.davidchristiansen.dk/tutorials/bidirectional.pdf">here</a>.</p>
+<h1 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h1><p>The paper first explains that except Syntax Directed Systems, Typing Rules cannot be directly translated into Algorithms for Type Checking and Type Inference. It presents a motivating example of this using a Simply Typed Lambda Calculus having Bool and Function as Types and Bool Constants, Variables, Function Abstractions, Function Applications, and Conditional Expressions as Terms, in which the Typing Rule for Function Abstractions cannot be directly translated into a Function for Type Inference.</p>
+<p>It then presents Bidirectional Typing as a remedy to this problem. It explains what Bidirectional Typing is, discusses its advantage, and adds Bidirectional Typing into the previously presented Simply Typed Lambda Calculus, presenting how Bidirectional Typing works during the process.</p>
+<p>Finally, it discusses the limitations of Bidirectional Typing and presents academic literature for further reading.</p>
+<h1 id="Critique"><a href="#Critique" class="headerlink" title="Critique"></a>Critique</h1><p>Overall, I believe this paper is written very well, as I can grasp most of it after reading it. I will summarize my takeaways from this paper before presenting some questions and comments.</p>
+<h2 id="My-Takeaways-From-This-Paper"><a href="#My-Takeaways-From-This-Paper" class="headerlink" title="My Takeaways From This Paper"></a>My Takeaways From This Paper</h2><h3 id="What-Bidirectional-Typing-Is"><a href="#What-Bidirectional-Typing-Is" class="headerlink" title="What Bidirectional Typing Is"></a>What Bidirectional Typing Is</h3><p>Bidirectional Typing splits each Typing Rule $\Gamma \vdash t: T$ into:</p>
+<ul>
+<li>An Inference Rule $\Gamma \vdash t \Rightarrow T$, which <em>infers</em> $t$’s type to be $T$ in Context $\Gamma$.</li>
+<li>A Type Checking Rule $\Gamma \vdash t \Leftarrow T$, which <em>checks</em> $t$’s type to be $T$ in Context $\Gamma$.</li>
+</ul>
+<p>The Inference Rules and Type Checking Rules would work together and call each other.</p>
+<h3 id="Advantages-of-Bidirectional-Typing"><a href="#Advantages-of-Bidirectional-Typing" class="headerlink" title="Advantages of Bidirectional Typing"></a>Advantages of Bidirectional Typing</h3><ul>
+<li>Makes general Typing Rules more Syntax Directed, thus, simplifying implementing Algorithms for Type Checking and Type Inference.</li>
+<li>Requires relatively few additional Type Annotations.</li>
+<li>Produces good error messages that report where the error occurs.</li>
+</ul>
+<h3 id="Limitations-of-Bidirectional-Typing"><a href="#Limitations-of-Bidirectional-Typing" class="headerlink" title="Limitations of Bidirectional Typing"></a>Limitations of Bidirectional Typing</h3><ul>
+<li>Variables in a Derivation can no longer be replaced by the Derivation for a Term of the same Type. This is because Bidirectional Typing uses Inference Mode to check Variables but uses Checking Mode to check many other Terms.</li>
+<li>In some situations, explicit Type Annotations may need to be written within complex Terms, such as a direct Application of a Function Abstraction, like <code>(λ b . if b then false else true) true: Bool</code></li>
+</ul>
+<h2 id="Questions-and-Comments"><a href="#Questions-and-Comments" class="headerlink" title="Questions and Comments"></a>Questions and Comments</h2><ul>
+<li>Page 8 mentions, “remember that the derivation, like the bidirectional typing rules, should be read bottom-to-top and left-to-right.” However, Inference Rules have the form of $\frac{Premise}{Conclusion}$. So, why should the derivation be read from Conclusion to Premise?</li>
+<li>What are the meanings of the small-step rule $\frac{}{t : T 	\rightarrow t}$ and the large-step rule $\frac{t \Downarrow t’}{t : T \Downarrow t’}$ on Page 8?</li>
+<li>I believe explicit Type Annotations should be enforced for the Parameters within Function Abstractions, such as <code>(λ b: Bool . if b then false else true)</code> instead of <code>(λ b . if b then false else true)</code>.<ul>
+<li>This aligns with real-world programming languages (C++, Java, Rust, Swift, Haskell, etc.)</li>
+<li>This increases readability.</li>
+<li>This simplifies both the Typing Rules and the Inference Rules and Type Checking Rules of Bidirectional Typing.</li>
+</ul>
+</li>
+</ul>
+<h1 id="Feedback-from-the-Class-Discussion"><a href="#Feedback-from-the-Class-Discussion" class="headerlink" title="Feedback from the Class Discussion"></a>Feedback from the Class Discussion</h1><p>Small Step Semantics, represented using $\rightarrow$’s, depict <strong>one step in Evaluation</strong>. For example, if $e$ is $true$ itself, $\text{if}: e : \text{then} : e_1 : \text{else} : e_2$ can be Evaluated <strong>in one step</strong> to $e_1$. This can be represented using $\frac{e \rightarrow true}{\text{if}: e : \text{then} : e_1 : \text{else} : e_2 \rightarrow e_1}$</p>
+<p>Big Step Semantics, represented using $\Downarrow$’s, depict <strong>Reducing a Subexpression to a Value through several Small Steps</strong>. For example, if $e$ is a Subexpression that can be Reduced to $true$ after several Small Steps, $\text{if}: e : \text{then} : e_1 : \text{else} : e_2$ can be Reduced to $e_1$ <strong>after several Small Steps</strong>. This can be represented using $\frac{e \Downarrow true}{\text{if}: e : \text{then} : e_1 : \text{else} : e_2 \Downarrow e_1}$.</p>
+<p>Syntax Directed means a one-to-one correspondence between the Type of the Term and the Syntax (Derivation of the Grammar Rules) of the Term.</p>
+<p>There is no precise definition for Bidirectional Typing. Instead, Bidirectional Typing points a direction toward implementing a Type Inference&#x2F;Type Checking Algorithm.</p>
+<p>In Bidirectional Typing, we prefer to start from Inference Mode because if we can Infer the Type of a Term, we can Check the Type of the Term, while Checking falls back on Inference.</p>
+<p>Why is there only a Checking Rule and no Inference Rule for <code>if t then t else t</code>?</p>
+<ul>
+<li>This gives better error messages.<ul>
+<li>Should the Terms in the <code>then</code> branch and the <code>else</code> branch have different types, it is possible to give an error message directly stating this information.</li>
+<li>If an Inference Rule had been proposed instead, it would blame one branch for having a wrong type, which may be confusing and go against programmer intent.</li>
+</ul>
+</li>
+</ul>
+<p>We can read Typing Rules either from top to bottom or from bottom to top, with slightly different interpretations.</p>
+<ul>
+<li>Reading from top to bottom describes how to use the information for Type Checking.</li>
+<li>Reading from bottom to top describes how a Type Inference Algorithm works, e.g., what needs to be Checked to Infer the Type of a Term.</li>
+</ul>
+<p>From a historical perspective, there are two Design Philosophies for Type Systems.</p>
+<ul>
+<li>The first is to augment a Programming Language with more information, such as C which uses it to determine how much space a variable would take up in memory.</li>
+<li>The second is to express programmer intent.</li>
+</ul>
+<p>Type Annotations (Ascriptions) for Parameters are required for Functions that are not immediately used, such as Top Level Functions. However, it is helpful to omit Type Annotations (Ascriptions) for Parameters for immediately used Lambda Terms within Higher Order Functions.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Research-Inspiration/" class="category-chain-item">Research Inspiration</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Paper Reading: Bi-directional type checking</div>
+      <div>https://jifengwu2k.github.io/2023/01/30/Paper-Reading-Bi-directional-type-checking/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>January 30, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/02/05/Paper-Reading-Types-and-Programming-Languages-Chapter-13-and-Chapter-14/" title="Paper Reading: &#34;Types and Programming Languages&#34; Chapter 13 and Chapter 14">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Paper Reading: &#34;Types and Programming Languages&#34; Chapter 13 and Chapter 14</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/01/25/Paper-Reading-Types-and-Programming-Languages-Chapter-9-and-Chapter-11/" title="Paper Reading: &#34;Types and Programming Languages&#34; Chapter 9 and Chapter 11">
+                        <span class="hidden-mobile">Paper Reading: &#34;Types and Programming Languages&#34; Chapter 9 and Chapter 11</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

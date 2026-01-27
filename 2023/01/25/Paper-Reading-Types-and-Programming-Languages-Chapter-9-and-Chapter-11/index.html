@@ -1,0 +1,846 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="SummaryChapter 9 of “Types and Programming Languages” presents the simply typed lambda calculus, which constructs a type system for pure lambda calculus, explaining theoretical aspects such as the typ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Paper Reading: &quot;Types and Programming Languages&quot; Chapter 9 and Chapter 11">
+<meta property="og:url" content="https://jifengwu2k.github.io/2023/01/25/Paper-Reading-Types-and-Programming-Languages-Chapter-9-and-Chapter-11/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="SummaryChapter 9 of “Types and Programming Languages” presents the simply typed lambda calculus, which constructs a type system for pure lambda calculus, explaining theoretical aspects such as the typ">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-01-25T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:07:44.601Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Paper Reading: &#34;Types and Programming Languages&#34; Chapter 9 and Chapter 11 - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Paper Reading: "Types and Programming Languages" Chapter 9 and Chapter 11</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-01-25 00:00" pubdate>
+          January 25, 2023
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          89 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Paper Reading: &#34;Types and Programming Languages&#34; Chapter 9 and Chapter 11</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h1><p>Chapter 9 of “Types and Programming Languages” presents the simply typed lambda calculus, which constructs a type system for pure lambda calculus, explaining theoretical aspects such as the typing relation and the Curry-Howard Correspondence along the way.</p>
+<p>Chapter 11 introduces simple extensions to the simply typed lambda calculus presented in Chapter 9, such as base types, derived forms, type ascriptions, let bindings, and some compound data structures (pairs, tuples, records, sums, variants, and lists), making it better resemble a real-world programming language.</p>
+<h1 id="Critique"><a href="#Critique" class="headerlink" title="Critique"></a>Critique</h1><h2 id="Foreword"><a href="#Foreword" class="headerlink" title="Foreword"></a>Foreword</h2><p>I have found the textbook hard to follow in many places. Thus, I have followed the textbook and looked into many online resources to grasp the content. Below summarizes my understanding after studying the material.</p>
+<h2 id="Basic-Concepts-in-Type-Theory"><a href="#Basic-Concepts-in-Type-Theory" class="headerlink" title="Basic Concepts in Type Theory"></a>Basic Concepts in Type Theory</h2><h3 id="Terms-and-Types"><a href="#Terms-and-Types" class="headerlink" title="Terms and Types"></a>Terms and Types</h3><p>In Type Theory, every Term has a Type, often written together as <code>&lt;Term&gt;: &lt;Type&gt;</code>. Types include Natural Numbers (<code>nat</code>) and Boolean Logic Values (<code>bool</code>). For example (assuming <code>x: nat</code> and <code>y: nat</code>):</p>
+<ul>
+<li><code>0: nat</code></li>
+<li><code>x: nat</code></li>
+<li><code>1 + 1: nat</code></li>
+<li><code>x + y: nat</code></li>
+<li><code>true: bool</code></li>
+<li><code>x + y: nat</code></li>
+</ul>
+<h3 id="Functions"><a href="#Functions" class="headerlink" title="Functions"></a>Functions</h3><p>Functions are also Terms with Types, represented as Lambda Terms.</p>
+<p>A Lambda Term looks like <code>(λ &lt;First Parameter Name&gt;: &lt;First Parameter Type&gt; &lt;Second Parameter Name&gt;: &lt;Second Parameter Type&gt; ... . &lt;Term to Return&gt;)</code>.</p>
+<p>It has type <code>&lt;First Parameter Type&gt; → &lt;Second Parameter Type&gt; → ... → &lt;Type of Term to Return&gt;</code>. This indicates that the Lambda Term is a function that takes Parameters of <code>&lt;First Parameter Type&gt;</code>, <code>&lt;Second Parameter Type&gt;</code>, etc., and returns a Term of <code>&lt;Type of Term to Return&gt;</code>.</p>
+<p>Examples of Lambda Terms:</p>
+<ul>
+<li><code>(λ x: nat . (x + x)): nat → nat</code>: a Function which takes in a Parameter <code>x</code> of Type <code>nat</code> and returns the doubled Parameter.</li>
+<li><code>(λ x: nat y: nat . (x + y)): nat → nat → nat</code>: a Function which takes in two Parameters <code>x</code>, <code>y</code> all of Type <code>nat</code> and returns their sum.</li>
+</ul>
+<p>A Lambda Term is often called an Anonymous Function because it has no Name. We can use the notion to give a Name to a Lambda Term:</p>
+<ul>
+<li><code>add: nat → nat → nat ::= (λ x: nat y: nat . (x + y))</code></li>
+</ul>
+<h3 id="Function-Applications"><a href="#Function-Applications" class="headerlink" title="Function Applications"></a>Function Applications</h3><p>In Type Theory, a Function Call is called a Function Application, which “takes a Term of a Type and results in a Term of another Type.” Function Application is written as <code>&lt;Function&gt; &lt;Argument&gt; &lt;Argument&gt; ...</code> (akin to Function Calls in Haskell and Commands in Unix Shell) instead of the conventional <code>&lt;Function&gt;(&lt;Argument&gt;, &lt;Argument&gt;, ...)</code> in Programming Languages.</p>
+<p>If we define a Function <code>add</code> that takes two <code>nat</code>‘s and returns a <code>nat</code>, the following are valid Terms:</p>
+<ul>
+<li><code>add 0 0: nat</code></li>
+<li><code>add 2 3: nat</code></li>
+<li><code>add 1 (add 1 (add 1 0)): nat</code></li>
+</ul>
+<h3 id="Dependent-Typing"><a href="#Dependent-Typing" class="headerlink" title="Dependent Typing"></a>Dependent Typing</h3><p>Sometimes, the Type returned by a Function depends on the Value of its Argument. This is known as Dependent Typing. </p>
+<p>For example, a function <code>if</code> takes three arguments, with <code>if true b c</code> returning <code>b</code>, and  <code>if false b c</code> returning <code>c</code>. If <code>b</code> and <code>c</code> have different Types, then the type of <code>if</code> depends on the value of <code>a</code>.</p>
+<p>Dependent Typing is a reasonably complicated subject that is an active domain of research.</p>
+<h3 id="Zero-Type-Unit-Type-and-Universal-Type"><a href="#Zero-Type-Unit-Type-and-Universal-Type" class="headerlink" title="Zero Type, Unit Type, and Universal Type"></a>Zero Type, Unit Type, and Universal Type</h3><h4 id="Zero-Type"><a href="#Zero-Type" class="headerlink" title="Zero Type"></a>Zero Type</h4><p>In some programming languages, there is a <strong>Zero Type</strong> or <strong>Bottom Type</strong> - a Type whose Set of Terms is the empty set and a Subtype of all other Types.</p>
+<p>In these programming languages, denoting the Zero Type as a Function’s Return Type frequently indicates that <strong>the Function never returns (never completes computation) - instead, it may loop forever, throw an exception, or terminate the process</strong>.</p>
+<p>As a real-world example, in Rust, the Zero Type is called the Never Type and is denoted by !. It is the kind of calculation that never returns any result. For example, the exit function <code>fn exit(code: i32) -&gt; !</code> terminates the process without returning.</p>
+<h4 id="Unit-Type"><a href="#Unit-Type" class="headerlink" title="Unit Type"></a>Unit Type</h4><p>In some programming languages, the <strong>Unit Type</strong> is a Type whose Set of Terms is a singleton set, i.e., the type allows only one value. <strong>It is typically used to describe the Argument Type of a Function that doesn’t need arguments or the Return Type of a Function whose only goal is to have a side effect.</strong> For example:</p>
+<ul>
+<li>In Haskell, Rust, and Elm, the Unit Type is the Type of the 0-tuple <code>()</code>.</li>
+<li>In Python, the Unit Type is <code>NoneType</code>, which only has a single instance <code>None</code>.</li>
+<li>In JavaScript, both <code>Null</code> (which only has a single instance <code>null</code>) and <code>Undefined</code> (which only has a single instance <code>undefined</code>) are Unit Types.</li>
+</ul>
+<p>In languages such as C, C++, Java, and C#, <code>void</code>, which designates that a Function accepts no Arguments or does not return anything, plays a similar role to the Unit Type. However, there are also key differences:</p>
+<ul>
+<li>There are no Terms (Instances) of <code>void</code>.</li>
+<li>A proper Unit Type may always be the Type of an Argument to a Function, but <code>void</code> cannot be the Type of an Argument.</li>
+</ul>
+<h4 id="Universal-Type"><a href="#Universal-Type" class="headerlink" title="Universal Type"></a>Universal Type</h4><p>Most object-oriented programming languages include a universal base class. In Type Theory, this is known as a <strong>Universal Type</strong> or a <strong>Top Type</strong>. Its Set of Terms encompasses any valid Term in the programming language, and all other types in the programming language are subtypes. For example:</p>
+<ul>
+<li><code>Object</code> in Smalltalk and JavaScript</li>
+<li><code>java.lang.Object</code> in Java</li>
+<li><code>System.Object</code> in C#, Visual Basic .NET, and other .NET Framework languages</li>
+<li><code>object</code> in Python (can also be type-annotated as <code>typing.Any</code>)</li>
+<li><code>Any</code> in Scala and Julia</li>
+</ul>
+<p>Some object-oriented programming languages, such as C++, Objective-C, and Swift, do not have a universal base class. In these languages, some constructs function similarly to the Universal Type.</p>
+<ul>
+<li>In C++, <code>void *</code> can accept any non-function pointer (even though <code>void</code> itself is more akin to the Unit Type).</li>
+<li>In Objective-C, <code>id</code> can accept pointers to any object.</li>
+<li>In Swift, the protocol <code>Any</code> can accept any type.</li>
+</ul>
+<p>Languages that are not object-oriented usually do not have a Universal Type.</p>
+<h3 id="Typing-Context"><a href="#Typing-Context" class="headerlink" title="Typing Context"></a>Typing Context</h3><p>A Typing Context (or Typing Environment) $\Gamma$ is a Mapping from Terms to Types (or a collection of Term - Type Pairs). The judgement $\Gamma \vdash e: \tau$ is read as “$e$ has type $\tau$ in Context $\Gamma$”.</p>
+<p>In Statically Typed Programming Languages, these Typing Contexts are used and maintained by Typing Rules to Type Check a given Program or Expression.</p>
+<h3 id="Type-Inhabitation"><a href="#Type-Inhabitation" class="headerlink" title="Type Inhabitation"></a>Type Inhabitation</h3><p>Given a Typing Environment, a Type is <strong>inhabitated</strong> if an existing Term of the Type is available or a Term of the Type can be readily obtained (i.e., via Function Application).</p>
+<h3 id="Derived-Forms"><a href="#Derived-Forms" class="headerlink" title="Derived Forms"></a>Derived Forms</h3><p>In Type Theory, Syntactic Sugar is known as <strong>Derived Forms</strong>, while replacing a Derived Form with its lower-level definition (usually during compile time) is known as <strong>desugaring</strong>. For example:</p>
+<ul>
+<li>In C, <code>a[i]</code> and <code>*(a + 1)</code>, <code>a-&gt;x</code> and <code>(*a).x</code>.</li>
+<li>In the tidyverse collection of R packages, <code>x %&gt;% f(y)</code> is equivalent to <code>f(x, y)</code>.</li>
+</ul>
+<p>A programming language is typically divided into a compact core language, <strong>a rich set of syntax defined in terms of that core (Derived Forms)</strong>, and a comprehensive standard library. This makes the language maintainable for engineers while making it convenient for users.</p>
+<h3 id="Type-Ascription"><a href="#Type-Ascription" class="headerlink" title="Type Ascription"></a>Type Ascription</h3><p><strong>Type Ascription</strong> is an assertion within source code that a term has a particular type. This can lead to cleaner, easier-to-understand code documentation. </p>
+<h2 id="Important-Derived-Forms"><a href="#Important-Derived-Forms" class="headerlink" title="Important Derived Forms"></a>Important Derived Forms</h2><ul>
+<li>Tuple</li>
+<li>Record (Struct, Rows in a Database) - a collection of Fields, possibly of different Types</li>
+<li>Variant (Datatype, Tagged Union, Discriminated Union, Disjoint Union)<ul>
+<li>A data structure to hold a Term that could take on “several different, but fixed Types.”</li>
+<li>Contains a Value field and a Tag field</li>
+<li>Widely used for defining recursive data structures (e.g. Trees containing Leaves and Internal Nodes)</li>
+</ul>
+</li>
+<li>List</li>
+</ul>
+<h2 id="Curry-Howard-Correspondence"><a href="#Curry-Howard-Correspondence" class="headerlink" title="Curry-Howard Correspondence"></a>Curry-Howard Correspondence</h2><p>The Curry-Howard Correspondence, independently discovered by logicians Haskell Curry in 1958 and William Howard in 1969, states that “proofs in a given subset of mathematics are exactly programs from a particular programming language”. Specifically,</p>
+<ul>
+<li>Types correspond to logical formulas.<ul>
+<li>A Term having a Type can be understood as evidence that the Type is inhabited. For example, <code>3110: int</code> is evidence that <code>int</code> is inhabited.</li>
+<li>Logical Atoms $a$, $b$ correspond to whether Types <code>A</code>, <code>B</code> are inhabited.<ul>
+<li><code>true</code> corresponds to a Type that is always inhabited. The simplest of them all is the Unit Type.</li>
+<li><code>false</code> corresponds to a Type that is never inhabited - the Zero Type.</li>
+</ul>
+</li>
+<li>Conjunction $a \land b$ corresponds to a Type inhabited when both Types <code>A</code> and <code>B</code> are inhabited - <code>Tuple[A, B]</code>.</li>
+<li>Disjunction $a \lor b$ with the added condition that <strong>you know which one of $a$, $b$ is true when $a \lor b$ is true</strong> corresponds to a Type that is inhabited when one of <code>A</code>, <code>B</code> is inhabited, and you know which one is inhabited - <code>Variant[A, B]</code>.</li>
+<li>Implication $a \rightarrow b$ corresponds to a Type that, when inhibited, ensures <code>B</code> must be inhabited when <code>A</code> is inhabited - a Function Type, <code>A -&gt; B</code>.</li>
+</ul>
+</li>
+<li>Programs correspond to proofs.</li>
+<li>Analyzing the types of expressions evaluated during the execution of a program corresponds to simplifying a proof.</li>
+</ul>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Type_theory">https://en.wikipedia.org/wiki/Type_theory</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Bottom_type">https://en.wikipedia.org/wiki/Bottom_type</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Typing_environment">https://en.wikipedia.org/wiki/Typing_environment</a></li>
+<li><a target="_blank" rel="noopener" href="https://softwareengineering.stackexchange.com/questions/277197/is-there-a-reason-to-have-a-bottom-type-in-a-programming-language">https://softwareengineering.stackexchange.com/questions/277197/is-there-a-reason-to-have-a-bottom-type-in-a-programming-language</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/32505911/what-is-the-role-of-bottom-%E2%8A%A5-in-haskell-function-definitions">https://stackoverflow.com/questions/32505911/what-is-the-role-of-bottom-%E2%8A%A5-in-haskell-function-definitions</a></li>
+<li><a target="_blank" rel="noopener" href="https://doc.rust-lang.org/std/primitive.never.html">https://doc.rust-lang.org/std/primitive.never.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Unit_type">https://en.wikipedia.org/wiki/Unit_type</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Top_type">https://en.wikipedia.org/wiki/Top_type</a></li>
+<li><a target="_blank" rel="noopener" href="https://cs3110.github.io/textbook/chapters/adv/curry-howard.html#types-correspond-to-propositions">https://cs3110.github.io/textbook/chapters/adv/curry-howard.html#types-correspond-to-propositions</a></li>
+<li><a target="_blank" rel="noopener" href="https://wiki.haskell.org/Curry-Howard-Lambek_correspondence">https://wiki.haskell.org/Curry-Howard-Lambek_correspondence</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.pédrot.fr/slides/inria-junior-02-15.pdf">https://www.pédrot.fr/slides/inria-junior-02-15.pdf</a></li>
+<li><a target="_blank" rel="noopener" href="https://math.stackexchange.com/questions/2686280/what-do-logicians-mean-by-type">https://math.stackexchange.com/questions/2686280/what-do-logicians-mean-by-type</a></li>
+<li><a target="_blank" rel="noopener" href="https://homepages.inf.ed.ac.uk/stg/NOTES/node35.html">https://homepages.inf.ed.ac.uk/stg/NOTES/node35.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://cs.wellesley.edu/~cs251/s02/scheme-intro.pdf">https://cs.wellesley.edu/~cs251/s02/scheme-intro.pdf</a></li>
+<li><a target="_blank" rel="noopener" href="https://cs.brown.edu/~sk/Publications/Papers/Published/pk-resuarging-types/paper.pdf">https://cs.brown.edu/~sk/Publications/Papers/Published/pk-resuarging-types/paper.pdf</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Syntactic_sugar">https://en.wikipedia.org/wiki/Syntactic_sugar</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.wikidata.org/wiki/Q73072308">https://www.wikidata.org/wiki/Q73072308</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/36389974/what-is-type-ascription">https://stackoverflow.com/questions/36389974/what-is-type-ascription</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/rust-lang/rfcs/blob/master/text/0803-type-ascription.md">https://github.com/rust-lang/rfcs/blob/master/text/0803-type-ascription.md</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@andrew_lucker/things-you-cant-do-in-rust-type-ascription-5253951c7427">https://medium.com/@andrew_lucker/things-you-cant-do-in-rust-type-ascription-5253951c7427</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.scala-lang.org/style/types.html">https://docs.scala-lang.org/style/types.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://futhark-lang.org/examples/type-ascriptions.html">https://futhark-lang.org/examples/type-ascriptions.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Record_(computer_science)">https://en.wikipedia.org/wiki/Record_(computer_science)</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.m.wikipedia.org/wiki/List_(abstract_data_type)">https://en.m.wikipedia.org/wiki/List_(abstract_data_type)</a></li>
+</ul>
+<h1 id="Feedback-from-the-Class-Discussion"><a href="#Feedback-from-the-Class-Discussion" class="headerlink" title="Feedback from the Class Discussion"></a>Feedback from the Class Discussion</h1><p>An Introduction Rule describes how Elements of the Type can be Created, and is akin to a description of a Constructor. Similarly, an Elimination Rule describes how Elements of the Type can be used in an Expression, and is akin to a description of an Overloaded Operator.</p>
+<p>A lot of papers propose Typing Rules that don’t make much sense in isolation, but can be plugged into other Type Systems to add a Feature (i.e., allow the non-intrusive addition of other Typing Rules).</p>
+<p>Well-designed Type Systems provide guarantees on a program’s behavior (i.e., guarantee predictable runtime behavior).</p>
+<p>C introduced types, not for verification, but to determine how much space a variable would take up in memory.</p>
+<p>Uniqueness of Typing (i.e., a Term can only have one Type) doesn’t hold when there is Subtyping.</p>
+<p>Curry Style allows representing errors explicitly and describing the type of errors, which is suitable for languages where things can go wrong. In comparision, Church Style does not allow errors</p>
+<p>The Erasure Property is built upon the assumption that the Execution of the Program doesn’t rely on Types.</p>
+<p>Type Ascription woule be beneficial for giving hints to the Type Inference&#x2F;Type Checking Algorithm.</p>
+<p>Usually, Desugaring happens before Type Checking, as the Type System does not directly handle the Syntactic Sugar. </p>
+<p>Tuples are also called Sum Types, and Variants are also called Product Types. This is based on how many possible values the Tuple or Variant Type has. For example, <code>std::pair&lt;char, bool&gt;</code> has <code>256 * 2 = 512</code> values, <code>std::variant&lt;char, bool&gt;</code> has <code>256 + 2 = 258</code> values, and <code>std::optional&lt;char&gt;</code> has <code>256 + 1 = 257</code> values.</p>
+<p>Enums can be seen as Variants where each value is associated with the Unit Type.</p>
+<p>Tuples and Records are distinct Types because Compilers implement them differently</p>
+<p>Programming in Dynamically Typed Programming is akin to programming with variables which are Variants of all possible types.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Research-Inspiration/" class="category-chain-item">Research Inspiration</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Paper Reading: &#34;Types and Programming Languages&#34; Chapter 9 and Chapter 11</div>
+      <div>https://jifengwu2k.github.io/2023/01/25/Paper-Reading-Types-and-Programming-Languages-Chapter-9-and-Chapter-11/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>January 25, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/01/30/Paper-Reading-Bi-directional-type-checking/" title="Paper Reading: Bi-directional type checking">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Paper Reading: Bi-directional type checking</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/12/31/Date-and-Time-Types-in-Python/" title="Date and Time Types in Python">
+                        <span class="hidden-mobile">Date and Time Types in Python</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

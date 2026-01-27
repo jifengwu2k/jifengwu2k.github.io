@@ -1,0 +1,780 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="AbstractThe following is a polished version of a conversation with Prof. Robert Xiao on the confluence of Programming Languages, Software Engineering, and Human-Computer Interaction (HCI) for research">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Conversation with Prof. Robert Xiao">
+<meta property="og:url" content="https://jifengwu2k.github.io/2023/10/23/Conversation-with-Prof-Robert-Xiao/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="AbstractThe following is a polished version of a conversation with Prof. Robert Xiao on the confluence of Programming Languages, Software Engineering, and Human-Computer Interaction (HCI) for research">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-10-23T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:06:36.157Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Conversation with Prof. Robert Xiao - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Conversation with Prof. Robert Xiao</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-10-23 00:00" pubdate>
+          October 23, 2023
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          16k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          131 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Conversation with Prof. Robert Xiao</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>The following is a polished version of a conversation with <a target="_blank" rel="noopener" href="https://www.robertxiao.ca/">Prof. Robert Xiao</a> on the confluence of Programming Languages, Software Engineering, and Human-Computer Interaction (HCI) for research programming. The main points mentioned by Prof. Robert Xiao are as follows.</p>
+<ul>
+<li>Determining which aspects of research programming are amenable to systematization is a challenge.</li>
+<li>Advancements in code tracing, like PyTorch 2’s bytecode analysis, which, while not addressing verifiability directly, allows for in-depth program behavior analysis.</li>
+<li>Understanding the influence of input data on outputs is central to the challenge of explainable AI (XAI). However, pinpointing specific model features or layers leading to an output is perhaps more accessible and useful for debugging.</li>
+<li>The concept of ‘radioactively’ tagging data to trace its influence through a model is an intriguing one, akin to tracking the uptake of a tagged substance in a biological system.</li>
+<li>There are many scenarios with extensive object interactions in programming. Game programming provides a more structured context to study these complexities, with ample open-source resources for research. The difficulty in game programming arises from the myriad interactions between diverse object systems - like physics, collision, and interaction logic. Coding these interactions is a lot of work. It would be enlightening to study how game developers handle this complexity and whether there are ways to simplify it. Game studios, being the behemoths they are, would undoubtedly embrace methods to alleviate the strenuous nature of their programming efforts.</li>
+</ul>
+<h1 id="Polished-Transcript"><a href="#Polished-Transcript" class="headerlink" title="Polished Transcript"></a>Polished Transcript</h1><p>Robert Xiao: [00:00] Could you share the focus of your research and how it’s pertinent to this project? Also, what do you aim to achieve with it? There seem to be several components you’ve touched upon, such as visualization, pipeline development, and programming processes. These represent different approaches you could potentially adopt or consider integrating into a comprehensive pipeline. I believe the ultimate goal here is to aid research programmers in accelerating system development while minimizing errors, correct?</p>
+<p>Jifeng Wu: [00:43] Yes, precisely.</p>
+<p>Robert Xiao: [00:45] Let’s delve into your research focus. How does your current work align with this?</p>
+<p>Jifeng Wu: [00:52] My ongoing research isn’t directly related, as this is a path I’m contemplating for a future Ph.D. project, which I still need to commit to. I’m currently working on my master’s thesis titled ‘Type Inference for Python.’ It aims to infer types in Python code, which often lacks annotations. This lack can lead to IDEs providing less accurate suggestions. With type information, predictions become more reliable, enhancing the coding and code interaction experience.</p>
+<p>Robert Xiao: [01:54] So, to clarify, your project is about developing a system for automatic type inference that assists IDEs, not just creating a type annotation database. Existing tools do offer preliminary type extraction, but I’m interested in the novel contribution your research makes.</p>
+<p>Jifeng Wu: [02:31] Exactly. I’m not just extracting types; I’m inferring them in unannotated code bases to enhance IDE functionality.</p>
+<p>Robert Xiao: [02:45] Understood. There are incremental typing tools available, but we can explore that later. For now, it’s great that you’re well-versed in Python, especially since it’s prevalent in LLM research. An interesting aspect of your direction could be mitigating bugs, which often derail projects. Implementing automated checks could be invaluable. However, the challenge lies in determining which aspects of research programming are amenable to systematization.</p>
+<p>Jifeng Wu: [06:17] My vision is to support researchers engaged in data analysis or custom model design in an environment akin to Jupyter notebooks. And touching on debugging, I see a potential to harness functional programming due to its purity and ease of debugging.</p>
+<p>Robert Xiao: [07:22] The question, however, is the application of functional programming to research code, which often depends on pre-existing libraries. While functional design has its merits, the practicality of integrating it into the current ecosystem is worth discussing.</p>
+<p>Jifeng Wu: [07:55] I concede the point; many codebases are indeed messy. I’m contemplating a clean slate design, potentially developing a new language or library to demonstrate the concept.</p>
+<p>Robert Xiao: [08:21] It’s noteworthy that there have been advancements in code tracing, like PyTorch 2’s bytecode analysis, which, while not addressing verifiability directly, allows for in-depth program behavior analysis.</p>
+<p>Jifeng Wu: [11:09]<br>Certainly. There are facets of current notebook technologies that pique my interest, primarily due to their inadequate support, with debugging being a prime example. Debugging encompasses two key aspects: the logic of the program, as previously mentioned, and data provenance. Sometimes, despite the sound logic, I need to delve into the origins of an unexpected output data point by tracing the implicit calculations that led to it.</p>
+<p>[11:58]<br>This necessity for data provenance tracking is something I find critically important in my daily research, and I understand it’s known as the data provenance problem.</p>
+<p>Robert Xiao: [12:09]<br>Indeed, if you’ve ever discussed this with Margo, you’re likely well-versed in the topic, given her research focuses precisely on provenance. Many of her colleagues are exploring this area, which is complex, particularly in the context of outputs from extensive machine learning models. While it would be beneficial to trace data points back to their origins, integrating such a mechanism into a model is a formidable challenge.</p>
+<p>[12:55]<br>As a developer, I’m keen on understanding the influence of input data on outputs, which is central to the challenge of explainable AI (XAI). Resolving this would mark a significant milestone. However, pinpointing specific model features or layers leading to an output is perhaps more accessible and useful for debugging.</p>
+<p>[13:53]<br>For instance, identifying a misconfigured layer responsible for input-related issues would be invaluable. Although considering the interconnected nature of model layers, this remains a complex task.</p>
+<p>[14:57]<br>The concept of ‘radioactively’ tagging data to trace its influence through a model is an intriguing one, akin to tracking the uptake of a tagged substance in a biological system. Yet, translating this to a machine learning environment presents a unique set of challenges.</p>
+<p>[16:57]<br>While I’m not deeply familiar with the latest advancements in this field, it’s clear that XAI could significantly benefit HCI applications. The goal is to incrementally address these challenges by developing models that acknowledge tagged inputs throughout the data processing pipeline.</p>
+<p>[17:58]<br>These are some thoughts on the subject. I’d like to know which aspects you find most relevant or valuable for your future endeavors.</p>
+<p>Jifeng Wu: [18:15]<br>The examples and pointers you’ve provided are insightful. As someone with a software engineering background, I believe that adapting certain constructs, like functional programming and traditional program analysis, could offer potential solutions. These are directions I’m considering for my Ph.D. research.</p>
+<p>Robert Xiao: [18:58]<br>Exploring program tracing for optimization could prove fruitful, given the untapped potential in that area. The philosophy I subscribe to favors solutions that minimize user effort, exemplified by the tracing compiler feature in PyTorch 2.0. Unlike TensorFlow model, which requires upfront operation declarations, PyTorch’s immediate mode operation presents a more straightforward approach for users, facilitating a clearer understanding of variable flow during execution.</p>
+<p>Jifeng Wu: [ 24:12 ]<br>Incidentally, as a researcher in HCI, have you ever engaged in work that marries aspects of software engineering, specifically functional programming, with HCI?</p>
+<p>Robert Xiao: [ 24:28 ]<br>My experience with functional programming in a research capacity is virtually nonexistent. My computer science education covered the basics of functional programming - I dabbled in Scheme and Racket - but in terms of research, functional programming hasn’t been part of my repertoire. Our work typically involves Python, C#, and various visual programming tools, none of which adhere to a functional programming paradigm.</p>
+<p>[ 24:56 ]<br>Game programming, which encompasses many of our VR&#x2F;AR programming, is about as far removed from functional programming as possible. It’s heavily state-driven, with an ever-changing state environment. A functional approach could be applied to VR&#x2F;AR development. It could offer advantages over current methods. I’m aware of actor model programming being used for VR&#x2F;AR experiences, though it’s not functional programming per se, and I have yet to adopt it in my work personally. Conversely, when it comes to software engineering, we do integrate its methodologies into our software creation process. This includes best practices like code structuring for reusability, modularization, refactoring, and especially source control, which I find is grossly underutilized in research programming, among other things.</p>
+<p>Jifeng Wu: [ 26:33 ]<br>Understood, yes.</p>
+<p>My vision, when I speak of integrating functional programming, isn’t confined to conventional languages like Scheme or Racket that you mentioned earlier.</p>
+<p>My thoughts were more aligned with programming paradigms like the actor model you described, as well as visual programming. I’m interested in approaches that are more formalized, easier to reason about, and offer a clearer path to verifying properties and facilitating debugging.</p>
+<p>Robert Xiao: [ 27:18 ]<br>With general-purpose imperative coding, the debugging process is, frankly, a nightmare. Although my personal experience in developing large-scale games is limited, our research typically involves creating specific VR&#x2F;AR experiences. These are smaller in scale, utilizing existing libraries to build a finite number of interactive elements within a controlled environment. This contrasts with the vast complexity of full-scale game development, where the difficulty arises from the myriad interactions between diverse object systems - like physics, collision, and interaction logic.</p>
+<p>[ 28:55 ]<br>Take collision logic as an instance; the multitude of possible outcomes from a single collision event can be incredibly intricate to code. If we consider bullet dynamics in games, the behavior of these projectiles upon impact with walls, enemies, or objects varies dramatically, leading to a cascade of different effects. Coding these interactions is a lot of work. It would be enlightening to study how game developers handle this complexity and whether there are ways to simplify the process. The Entity Component System (ECS) attempts to mitigate this by adopting an actor-like model, but even then, complexity escalates rapidly as interactions increase.</p>
+<p>[ 30:56 ]<br>Despite efforts to manage these interactions, there comes a point where local decisions require some form of higher-level orchestration. When a bullet is fired, for instance, numerous actions must be coordinated, from ammo count adjustments to triggering animations. All this complexity makes game programming something I would not want to revisit except in the context of my research. However, there lies a vast potential for impactful research in understanding and easing the complexities of game development. Game studios, being the behemoths they are, would undoubtedly embrace methods to alleviate the strenuous nature of their programming efforts. Yes, indeed.</p>
+<p>Jifeng Wu: [32:00]<br>Indeed, that aligns with my central interests. My master’s thesis on Python type inference encountered similar challenges to those you’ve highlighted. In analyzing types, one must grapple with substantial propagation throughout the program. This is precisely the issue at hand, and it serves as a prime motivator in my quest to develop formalizations that simplify the process for programmers, particularly in areas like game development, where complex interactions are commonplace.</p>
+<p>Robert Xiao: [32:45]<br>You’ve sparked a thought here - this may be a digression - but I’m curious. Has there been research into the amount of typing necessary for untyped code to converge? You made an excellent point about the recursive search required in untyped code to determine types, which resembles an intricate graph search. However, it’s more than that because the connections in the ‘type graph’ are not always apparent. This raises an intriguing theoretical question: At what point in a code base’s typing does the cost shift from an exponential to a linear time complexity? It’s a highly theoretical question, indeed, and one that surely must have been examined in terms of computational complexity.</p>
+<p>[34:58]<br>It’s fascinating because most research focuses on strong typing systems and type inference within defined parameters. But the dynamics change with untyped constructs. Apologies for the tangent - it’s just a curious question.</p>
+<p>Jifeng Wu: [35:32]<br>Your point is very interesting, and it is pertinent to my future research endeavors.</p>
+<p>Robert Xiao: [35:39]<br>There ought to be studies on this - how computationally complex is a type system? The PL community has likely delved into this. However, the issue becomes significantly more compelling when considering untyped languages. Sorry for the tangent, but it’s a topic worth exploring.</p>
+<p>Jifeng Wu: [36:15]<br>Returning to our discussion, my work in type inference for Python resonates with your mention of interaction-heavy domains like game programming.</p>
+<p>Robert Xiao: [36:27]<br>Certainly. Game programming exemplifies a scenario with extensive object interactions, which is atypical in most systems where such interactions are minimized. For instance, hiring a student triggers a cascade of bureaucratic actions, illustrating how a single decision can activate multiple layers of complexity. Managing these interactions presents a formidable challenge in software engineering - taming the complexity is a substantial part of the job. However, game programming provides a more structured context to study these complexities, with ample open-source resources for research.</p>
+<p>Jifeng Wu: [38:55]<br>Your insights on game programming are quite valuable.</p>
+<p>[38:59]<br>I hadn’t realized the prominence of such problems in that field. Your points offer an excellent foundation for my research into these issues.</p>
+<p>Robert Xiao: [39:16]<br>There are indeed intriguing research opportunities at the intersection of AI, software, programming languages, and HCI. Although my HCI pursuits are broad, one key HCI interest is explainable AI. As language models advance, the ability to explain AI operations lags, posing a risk of increasing reliance on inscrutable systems. Advancing explainable AI methodologies will be critical in HCI, particularly in the coming years.</p>
+<p>Jifeng Wu: [42:10]<br>Yes, indeed. What captivates my interest more than the empirical approach to software engineering - like automated bug detection and performance optimization - is the human-computer interaction aspect, particularly making developers’ lives easier. This is crucial, especially for rapid prototyping.</p>
+<p>Robert Xiao: [42:42]<br>Right, your IDE example aligns perfectly with that. It’s a tool that enhances usability for people - expanding how they interact with typing. It could very well be something for publication. So, you’re drawing connections here. When do you expect to graduate?</p>
+<p>Jifeng Wu: [43:05]<br>If all goes according to my advisor’s plan, I should graduate in May 2024.</p>
+<p>Robert Xiao: [43:13]<br>Okay. And your advisor is?</p>
+<p>Jifeng Wu: [43:16]<br>Caroline Lemieux from the Software Practices Lab.</p>
+<p>Robert Xiao: [43:20]<br>Oh, yes, she’s a recent addition. So, she’s guiding you toward a May graduation. And regarding your Ph.D., are you considering continuing in the Software Practices Lab or exploring other areas?</p>
+<p>Jifeng Wu: [43:38]<br>Well, our lab’s focus is split between user studies and the technical side, like bug detection or software fuzzing, and, on the other hand, theoretical topics like formal semantics. There isn’t much overlap with HCI and usability, so I’m uncertain about where I’ll pursue a Ph.D., if at all, but likely not within our Software Practices Lab.</p>
+<p>Robert Xiao: [44:21]<br>That’s something to ponder, especially as you approach graduation in May. Are you already applying to Ph.D. programs?</p>
+<p>Jifeng Wu: [44:34]<br>I am still deciding. I’m still considering my options.</p>
+<p>Robert Xiao: [44:38]<br>Sure, it’s a big decision. My focus is on VR&#x2F;AR-related projects, where my funding comes from. It’s trickier to shift to developing support tools for developers without an established portfolio. However, I’m open to discussing co-advisory opportunities or committee collaborations if you pursue a Ph.D. here at UBC.</p>
+<p>Jifeng Wu: [45:44]<br>That’s encouraging to hear.</p>
+<p>Robert Xiao: [45:45]<br>To clarify, I’m not sure I could supervise a Ph.D., but I’m open to discussing future possibilities.</p>
+<p>Jifeng Wu: [45:59]<br>That aligns with my thoughts as well.</p>
+<p>Robert Xiao: [46:01]<br>Engaging in research discussions can help refine your interests, which is beneficial for crafting a strong research statement for Ph.D. applications. These conversations can guide your initial research direction, even though your focus may evolve.</p>
+<p>Jifeng Wu: [47:10]<br>Thank you for the insights and advice today. They’ve been very helpful, and I’ll reflect on them further.</p>
+<p>Robert Xiao: [47:24]<br>I’m glad to assist. You should have my email address.</p>
+<p>Jifeng Wu: [47:30]<br>Is it listed on your website?</p>
+<p>Robert Xiao: [47:32]<br>It should be - unless my website isn’t updated with my current email, which would be a blunder. Let me check.</p>
+<p>Jifeng Wu: [47:36]<br>I’ll look it up.</p>
+<p>Robert Xiao: [47:37]<br>If it’s on there, then it’s correct.</p>
+<p>Jifeng Wu: [47:45]<br>Yes, it’s on your site.</p>
+<p>Robert Xiao: [47:47]<br>Great, feel free to reach out anytime.</p>
+<p>Robert Xiao: [47:56]<br>I’m impressed by your work and would be happy to attend your thesis presentation when the time comes.</p>
+<p>Jifeng Wu: [48:15]<br>I appreciate that. Our conversation today has been very enjoyable.</p>
+<p>Robert Xiao: [48:21]<br>It was an enlightening chat, indeed. If you have further questions or topics, don’t hesitate to email me.</p>
+<p>Jifeng Wu: [48:34]<br>For now, that’s all I have. If something else comes up, I’ll send you an email. Thank you.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Research-Inspiration/" class="category-chain-item">Research Inspiration</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Conversation with Prof. Robert Xiao</div>
+      <div>https://jifengwu2k.github.io/2023/10/23/Conversation-with-Prof-Robert-Xiao/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 23, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/11/05/Sarah-Chasins-Works-on-PL-and-HCI/" title="Sarah Chasins&#39; Works on PL and HCI">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Sarah Chasins&#39; Works on PL and HCI</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/10/13/Nico-Ritschel-s-Ph-D-Defense-Summary/" title="Nico Ritschel&#39;s Ph.D. Defense Summary">
+                        <span class="hidden-mobile">Nico Ritschel&#39;s Ph.D. Defense Summary</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

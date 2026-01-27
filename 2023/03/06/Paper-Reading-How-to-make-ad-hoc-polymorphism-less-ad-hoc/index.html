@@ -1,0 +1,754 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="NOTE: This is a Paper Reading for Topics in Programming Languages: Type Systems. The original paper can be found here. SummaryThe paper first defines and compares parametric and ad-hoc polymorphism an">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Paper Reading: How to make ad-hoc polymorphism less ad-hoc">
+<meta property="og:url" content="https://jifengwu2k.github.io/2023/03/06/Paper-Reading-How-to-make-ad-hoc-polymorphism-less-ad-hoc/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="NOTE: This is a Paper Reading for Topics in Programming Languages: Type Systems. The original paper can be found here. SummaryThe paper first defines and compares parametric and ad-hoc polymorphism an">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-03-06T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:07:24.381Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Paper Reading: How to make ad-hoc polymorphism less ad-hoc - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Paper Reading: How to make ad-hoc polymorphism less ad-hoc</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-06 00:00" pubdate>
+          March 6, 2023
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.6k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          47 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Paper Reading: How to make ad-hoc polymorphism less ad-hoc</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>NOTE: This is a Paper Reading for <a target="_blank" rel="noopener" href="https://williamjbowman.com/teaching/2022/w2/cpsc539b/">Topics in Programming Languages: Type Systems</a>. The original paper can be found <a target="_blank" rel="noopener" href="https://doi.org/10.1145/75277.75283">here</a>.</p>
+<h1 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h1><p>The paper first defines and compares <a target="_blank" rel="noopener" href="https://abbaswu.github.io/2023/02/10/Paper-Review-Types-and-Programming-Languages-Chapter-15-and-Chapter-16/#Polymorphism">parametric and ad-hoc polymorphism</a> and points out the limitations of existing implementations of ad-hoc polymorphism. It then presents type classes that extend the Hindley&#x2F;Milner type system to support ad-hoc polymorphism as a remedy to these limitations and explains how to translate a program using type classes into an equivalent program without them at compile-time. Furthermore, it showcases the power of type classes and the translation mechanism using the example of a polymorphic equality operation. Finally, it explores subclassing of type classes.</p>
+<h1 id="Critique"><a href="#Critique" class="headerlink" title="Critique"></a>Critique</h1><p>The paper is easy to follow as it is written in a lucid manner and gives an informal introduction to type classes and its translation rules. Furthermore, the motivation for type classes and how it connects to object-oriented programming languages is explicitly stated in the paper. I have further looked up some material following these lines. I will summarize them before presenting some questions and comments.</p>
+<h2 id="My-Takeaways"><a href="#My-Takeaways" class="headerlink" title="My Takeaways"></a>My Takeaways</h2><h3 id="Different-Types-of-Polymorphism"><a href="#Different-Types-of-Polymorphism" class="headerlink" title="Different Types of Polymorphism"></a>Different Types of Polymorphism</h3><p>See <a target="_blank" rel="noopener" href="https://abbaswu.github.io/2023/02/10/Paper-Review-Types-and-Programming-Languages-Chapter-15-and-Chapter-16/#Polymorphism">my Paper Reading for “Types and Programming Languages” Chapter 15 and Chapter 16</a>.</p>
+<h3 id="Type-Classes-and-Protocols-Interfaces-in-Smalltalk-Objective-C-Java-C"><a href="#Type-Classes-and-Protocols-Interfaces-in-Smalltalk-Objective-C-Java-C" class="headerlink" title="Type Classes and Protocols&#x2F;Interfaces in Smalltalk&#x2F;Objective-C&#x2F;Java&#x2F;C#"></a>Type Classes and Protocols&#x2F;Interfaces in Smalltalk&#x2F;Objective-C&#x2F;Java&#x2F;C#</h3><p>An interface is an abstract type used to provide a collection of methods compliant classes must implement in the Java (and C#) programming languages.</p>
+<p>Java is mostly influenced by Objective-C, and Java’s interfaces are adaptations of the protocols in Objective-C and Smalltalk, which in turn is based on protocols in networking, notably the ARPANet.</p>
+<p>Although Type Classes and Interfaces do not share a common lineage, it is straightforward to implement Type Classes with <em>Generic Interfaces</em> whose Generic Parameters should be Classes that comply with the Interface.</p>
+<p>For instance, the Type Class below specifies the equal (&#x3D;&#x3D;) operations for Type Constructors that are its instances:</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="type">Eq</span> a <span class="keyword">where</span></span></span><br><span class="line">  (==) :: a -&gt; a -&gt; <span class="type">Bool</span></span><br></pre></td></tr></table></figure>
+
+<p>This can be implemented in Java using the following Generic Interface:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Eq</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">isEqual</span><span class="params">(T other)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Type-Classes-and-Concepts-in-C"><a href="#Type-Classes-and-Concepts-in-C" class="headerlink" title="Type Classes and Concepts in C++"></a>Type Classes and Concepts in C++</h3><p>Although Java’s syntax resembles C++’s, its semantics of late-binding, single inheritance, class objects, and an extensive runtime system are in the lineage of Smalltalk and Objective-C, far away from that of C++’s. However, in C++’s Template Metaprogramming world, Concepts, added in C++20, resembles Type Classes.</p>
+<p>Template Metaprogramming in C++ had been untyped, with template parameters being generic type variables substituted at template instantiation.</p>
+<p>In C++20, a type system has been added to this untyped template language through concepts. They are Boolean predicates on template parameters evaluated at the point of, not after, template instantiation. The compiler will produce a clear error immediately if a programmer tries to use a template parameter that doesn’t meet the requirements of a concept.</p>
+<p>This starkly contrasts the challenging-to-grasp errors reported after an invalid type substitutes a generic type variable emanating from the implementation context rather than the template instantiation itself.</p>
+<p>For instance, the first two arguments to <code>std::sort</code> must be random-access iterators. If an argument is not a random-access iterator, an error will occur when <code>std::sort</code> attempts to use it as a bidirectional iterator.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::list&lt;<span class="type">int</span>&gt; l = &#123;<span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>&#125;;</span><br><span class="line">std::<span class="built_in">sort</span>(l.<span class="built_in">begin</span>(), l.<span class="built_in">end</span>());</span><br></pre></td></tr></table></figure>
+
+<p>Without concepts, compilers may produce large amounts of error information, starting with an equation that failed to compile when it tried to subtract two non-random-access iterators:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">In instantiation of &#x27;void std::__sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = std::_List_iterator&lt;int&gt;; _Compare = __gnu_cxx::__ops::_Iter_less_iter]&#x27;:</span><br><span class="line"> error: no match for &#x27;operator-&#x27; (operand types are &#x27;std::_List_iterator&lt;int&gt;&#x27; and &#x27;std::_List_iterator&lt;int&gt;&#x27;)</span><br><span class="line"> std::__lg(__last - __first) * 2,</span><br></pre></td></tr></table></figure>
+
+<p>However, if concepts are used, the problem can be found and reported at template instantiation:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">error: cannot call function &#x27;void std::sort(_RAIter, _RAIter) [with _RAIter = std::_List_iterator&lt;int&gt;]&#x27;</span><br><span class="line">note:   concept &#x27;RandomAccessIterator()&#x27; was not satisfied</span><br></pre></td></tr></table></figure>
+
+<p>It is straightforward to implement Type Classes with concepts. For instance, the Type Class below specifies the equal (&#x3D;&#x3D;) operations for Type Constructors that are its instances: </p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="type">Eq</span> a <span class="keyword">where</span></span></span><br><span class="line">  (==) :: a -&gt; a -&gt; <span class="type">Bool</span></span><br></pre></td></tr></table></figure>
+
+<p>This can be implemented using the following C++ concept:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;concepts&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// Declaration of the concept &quot;Eq&quot;, which is satisfied by any type &#x27;T&#x27;</span></span><br><span class="line"><span class="comment">// such that for values &#x27;t&#x27; of type &#x27;T&#x27;, the expression t == t compiles</span></span><br><span class="line"><span class="comment">// and its type satisfies the concept std::same_as&lt;bool&gt;</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <span class="keyword">concept</span> Eq = <span class="built_in">requires</span> (T t) &#123;</span><br><span class="line">    &#123; t == t &#125; -&gt; std::same_as&lt;<span class="type">bool</span>&gt;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Afterwards, such a concept can be specified when template parameters are being introduced in a template definition, to indicate that the corresponding template parameter must satisfy the concept.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;Eq T&gt; <span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; t)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/6948166/javas-interface-and-haskells-type-class-differences-and-similarities">https://stackoverflow.com/questions/6948166/javas-interface-and-haskells-type-class-differences-and-similarities</a></li>
+<li><a target="_blank" rel="noopener" href="https://cs.gmu.edu/~sean/stuff/java-objc.html">https://cs.gmu.edu/~sean/stuff/java-objc.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://functionalcpp.wordpress.com/2013/08/16/type-classes/">https://functionalcpp.wordpress.com/2013/08/16/type-classes/</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/32124627/how-are-c-concepts-different-to-haskell-typeclasses">https://stackoverflow.com/questions/32124627/how-are-c-concepts-different-to-haskell-typeclasses</a></li>
+<li><a target="_blank" rel="noopener" href="https://wiki.haskell.org/OOP_vs_type_classes">https://wiki.haskell.org/OOP_vs_type_classes</a></li>
+<li><a target="_blank" rel="noopener" href="https://doi.org/10.1145/1411318.1411324">https://doi.org/10.1145/1411318.1411324</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.foonathan.net/2021/07/concepts-structural-nominal/">https://www.foonathan.net/2021/07/concepts-structural-nominal/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.reddit.com/r/haskell/comments/1e9f49/concepts_in_c_template_programming_and_type/">https://www.reddit.com/r/haskell/comments/1e9f49/concepts_in_c_template_programming_and_type/</a></li>
+</ul>
+<h2 id="Questions-and-Comments"><a href="#Questions-and-Comments" class="headerlink" title="Questions and Comments"></a>Questions and Comments</h2><ul>
+<li>The translation mechanism (pre-processor) proposed in this paper translates a program using type classes into an equivalent program without them at compile-time so that an existing Hindley&#x2F;Milner type system can be used afterward instead of having to develop a new, complex type system to support type classes. This is indeed a very clever mechanism. Can this be viewed as an example of <a target="_blank" rel="noopener" href="https://abbaswu.github.io/2023/01/25/Paper-Review-Types-and-Programming-Languages-Chapter-9-and-Chapter-11/#Derived-Forms">desugaring</a>?</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Research-Inspiration/" class="category-chain-item">Research Inspiration</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Paper Reading: How to make ad-hoc polymorphism less ad-hoc</div>
+      <div>https://jifengwu2k.github.io/2023/03/06/Paper-Reading-How-to-make-ad-hoc-polymorphism-less-ad-hoc/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>March 6, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/19/Paper-Reading-Refinement-Types/" title="Paper Reading: Refinement Types">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Paper Reading: Refinement Types</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/01/Type-Theoretic-Constructs-in-CXX/" title="Type-Theoretic Constructs in C++">
+                        <span class="hidden-mobile">Type-Theoretic Constructs in C++</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

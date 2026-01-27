@@ -1,0 +1,760 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Make sure you go through Compiling C++ Code in a Conda Environment Using Conda-managed Headers and Libraries and set up the toolchain and environment variables first. autosshInstall openssh: 1conda in">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Building C&#x2F;C++ Open Source Applications in a Conda Environment">
+<meta property="og:url" content="https://jifengwu2k.github.io/2025/12/06/Building-C-C-Open-Source-Applications-in-a-Conda-Environment/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="Make sure you go through Compiling C++ Code in a Conda Environment Using Conda-managed Headers and Libraries and set up the toolchain and environment variables first. autosshInstall openssh: 1conda in">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-12-06T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:07:46.641Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Building C/C++ Open Source Applications in a Conda Environment - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Building C/C++ Open Source Applications in a Conda Environment</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-12-06 00:00" pubdate>
+          December 6, 2025
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.8k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          32 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Building C/C++ Open Source Applications in a Conda Environment</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Make sure you go through <a href="/2025/08/24/Compiling-C-Code-in-a-Conda-Environment-Using-Conda-managed-Headers-and-Libraries/">Compiling C++ Code in a Conda Environment Using Conda-managed Headers and Libraries</a> and set up the toolchain and environment variables first.</p>
+<h2 id="autossh"><a href="#autossh" class="headerlink" title="autossh"></a><a target="_blank" rel="noopener" href="https://github.com/Autossh/autossh">autossh</a></h2><p>Install openssh:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge openssh</span><br></pre></td></tr></table></figure>
+
+<p>Then clone, compile, and install:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/Autossh/autossh.git</span><br><span class="line"><span class="built_in">cd</span> autossh</span><br><span class="line">./configure --prefix=<span class="string">&quot;<span class="variable">$CONDA_PREFIX</span>&quot;</span> &amp;&amp; make &amp;&amp; make install</span><br><span class="line"><span class="built_in">cd</span> ..</span><br></pre></td></tr></table></figure>
+
+<h2 id="busybox"><a href="#busybox" class="headerlink" title="busybox"></a><a target="_blank" rel="noopener" href="https://busybox.net/">busybox</a></h2><p>Note that <code>busybox</code> does not use <code>configure</code>, only <code>make</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">make \</span><br><span class="line">    CPATH=<span class="string">&quot;<span class="variable">$CPATH</span>&quot;</span> \</span><br><span class="line">    LIBRARY_PATH=<span class="string">&quot;<span class="variable">$LIBRARY_PATH</span>&quot;</span> \</span><br><span class="line">    CC=<span class="string">&quot;<span class="variable">$CC</span>&quot;</span> \</span><br><span class="line">    CXX=<span class="string">&quot;<span class="variable">$CXX</span>&quot;</span> \</span><br><span class="line">    LDFLAGS=<span class="string">&quot;<span class="variable">$LDFLAGS</span>&quot;</span> \</span><br><span class="line">    AR=<span class="string">&quot;<span class="variable">$AR</span>&quot;</span> \</span><br><span class="line">    RANLIB=<span class="string">&quot;<span class="variable">$RANLIB</span>&quot;</span> \</span><br><span class="line">    LD=<span class="string">&quot;<span class="variable">$LD</span>&quot;</span> \</span><br><span class="line">    defconfig</span><br></pre></td></tr></table></figure>
+
+<p>Edit <code>.config</code>: Change line <code>CONFIG_TC=y</code> to <code>CONFIG_TC=n</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">make \</span><br><span class="line">    CPATH=<span class="string">&quot;<span class="variable">$CPATH</span>&quot;</span> \</span><br><span class="line">    LIBRARY_PATH=<span class="string">&quot;<span class="variable">$LIBRARY_PATH</span>&quot;</span> \</span><br><span class="line">    CC=<span class="string">&quot;<span class="variable">$CC</span>&quot;</span> \</span><br><span class="line">    CXX=<span class="string">&quot;<span class="variable">$CXX</span>&quot;</span> \</span><br><span class="line">    LDFLAGS=<span class="string">&quot;<span class="variable">$LDFLAGS</span>&quot;</span> \</span><br><span class="line">    AR=<span class="string">&quot;<span class="variable">$AR</span>&quot;</span> \</span><br><span class="line">    RANLIB=<span class="string">&quot;<span class="variable">$RANLIB</span>&quot;</span> \</span><br><span class="line">    LD=<span class="string">&quot;<span class="variable">$LD</span>&quot;</span> \</span><br><span class="line">    all</span><br></pre></td></tr></table></figure>
+
+<p>Now, the <code>busybox</code> binary is built.</p>
+<h2 id="enscript"><a href="#enscript" class="headerlink" title="enscript"></a><a target="_blank" rel="noopener" href="https://www.gnu.org/software/enscript">enscript</a></h2><p>Install ghostscript:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge ghostscript</span><br></pre></td></tr></table></figure>
+
+<p>Clone, compile, and install:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git://git.savannah.gnu.org/enscript.git</span><br><span class="line"><span class="built_in">cd</span> enscript</span><br><span class="line"><span class="comment"># The makefiles hard code AR=ar. We would have to override that.</span></span><br><span class="line">./configure --prefix=<span class="string">&quot;<span class="variable">$CONDA_PREFIX</span>&quot;</span> &amp;&amp; make <span class="string">&quot;AR=<span class="variable">$&#123;AR&#125;</span>&quot;</span> &amp;&amp; make install</span><br><span class="line"><span class="built_in">cd</span> ..</span><br></pre></td></tr></table></figure>
+
+<h2 id="mlir"><a href="#mlir" class="headerlink" title="mlir"></a><a target="_blank" rel="noopener" href="https://mlir.llvm.org/">mlir</a></h2><p>Install dependencies:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge cmake git libxml2 ninja python zlib </span><br><span class="line">pip install ml_dtypes nanobind numpy pyyaml typing_extensions</span><br></pre></td></tr></table></figure>
+
+<p>Clone <code>llvm-project</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/llvm/llvm-project.git</span><br></pre></td></tr></table></figure>
+
+<p>Build <code>llvm-project</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p llvm-project/build &amp;&amp; <span class="built_in">cd</span> llvm-project/build</span><br><span class="line">cmake -G Ninja ../llvm \</span><br><span class="line">    -DCMAKE_BUILD_TYPE=Release \</span><br><span class="line">    -DLLVM_BUILD_EXAMPLES=ON \</span><br><span class="line">    -DLLVM_ENABLE_ASSERTIONS=ON \</span><br><span class="line">    -DLLVM_ENABLE_PROJECTS=<span class="string">&quot;mlir&quot;</span> \</span><br><span class="line">    -DLLVM_INSTALL_UTILS=ON \</span><br><span class="line">    -DLLVM_TARGETS_TO_BUILD=<span class="string">&quot;host&quot;</span> \</span><br><span class="line">    -DMLIR_ENABLE_BINDINGS_PYTHON=ON \</span><br><span class="line">    -DPython3_EXECUTABLE=$(<span class="built_in">which</span> python) \</span><br><span class="line">    &amp;&amp; ninja</span><br></pre></td></tr></table></figure>
+
+<h2 id="ocaml-dune"><a href="#ocaml-dune" class="headerlink" title="ocaml+dune"></a><a target="_blank" rel="noopener" href="https://dune.build/">ocaml+dune</a></h2><p>First compile <code>ocaml</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge awk make sed zstd</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/ocaml/ocaml.git</span><br><span class="line"><span class="built_in">pushd</span> ocaml</span><br><span class="line">./configure --prefix=<span class="string">&quot;<span class="variable">$CONDA_PREFIX</span>&quot;</span></span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line"><span class="built_in">popd</span></span><br></pre></td></tr></table></figure>
+
+<p>Do not install <code>opam</code>, as <code>opam</code> is hard-coded to use <code>~/.opam</code> (even different binaries).</p>
+<p>Install <code>dune</code>, which is not only a build system but also a dependency manager:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/ocaml/dune.git</span><br><span class="line"><span class="built_in">pushd</span> dune</span><br><span class="line">PREFIX=<span class="string">&quot;<span class="variable">$CONDA_PREFIX</span>&quot;</span> make release</span><br><span class="line">PREFIX=<span class="string">&quot;<span class="variable">$CONDA_PREFIX</span>&quot;</span> make install</span><br><span class="line"><span class="built_in">popd</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="proot"><a href="#proot" class="headerlink" title="proot"></a><a target="_blank" rel="noopener" href="https://github.com/proot-me/proot">proot</a></h2><p>Install dependencies:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge curl git libarchive pkg-config</span><br></pre></td></tr></table></figure>
+
+<p>Build and install <code>talloc</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl -O https://www.samba.org/ftp/talloc/talloc-2.4.3.tar.gz</span><br><span class="line">tar -xvf talloc-2.4.3.tar.gz</span><br><span class="line"><span class="built_in">pushd</span> talloc-2.4.3</span><br><span class="line">./configure --disable-python --prefix=<span class="string">&quot;<span class="variable">$CONDA_PREFIX</span>&quot;</span> &amp;&amp; make &amp;&amp; make install</span><br><span class="line"><span class="built_in">popd</span></span><br></pre></td></tr></table></figure>
+
+<p>Install <code>uthash</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/troydhanson/uthash</span><br><span class="line"><span class="built_in">cp</span> -rv uthash/include/ <span class="string">&quot;<span class="variable">$&#123;CONDA_PREFIX&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Build and install <code>proot</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/proot-me/proot.git</span><br><span class="line"><span class="built_in">pushd</span> proot</span><br><span class="line">CC=<span class="string">&quot;<span class="variable">$CC</span>&quot;</span> LD=<span class="string">&quot;<span class="variable">$LD</span>&quot;</span> PKG_CONFIG_PATH=<span class="string">&quot;<span class="variable">$&#123;CONDA_PREFIX&#125;</span>/lib/pkgconfig&quot;</span> make -C src loader.elf loader-m32.elf build.h</span><br><span class="line">CC=<span class="string">&quot;<span class="variable">$CC</span>&quot;</span> LD=<span class="string">&quot;<span class="variable">$LD</span>&quot;</span> PKG_CONFIG_PATH=<span class="string">&quot;<span class="variable">$&#123;CONDA_PREFIX&#125;</span>/lib/pkgconfig&quot;</span> make -C src proot care</span><br><span class="line">CC=<span class="string">&quot;<span class="variable">$CC</span>&quot;</span> LD=<span class="string">&quot;<span class="variable">$LD</span>&quot;</span> PKG_CONFIG_PATH=<span class="string">&quot;<span class="variable">$&#123;CONDA_PREFIX&#125;</span>/lib/pkgconfig&quot;</span> make -C <span class="built_in">test</span></span><br><span class="line"><span class="built_in">cp</span> src/proot src/care <span class="string">&quot;<span class="variable">$&#123;CONDA_PREFIX&#125;</span>/bin&quot;</span></span><br><span class="line"><span class="built_in">popd</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="qemu"><a href="#qemu" class="headerlink" title="qemu"></a><a target="_blank" rel="noopener" href="https://www.qemu.org/">qemu</a></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge cmake git meson ninja pkgconfig python</span><br><span class="line">conda install -c conda-forge elfutils glib libcapstone libfdt libpng pixman zlib</span><br><span class="line">pip install sphinx sphinx_rtd_theme</span><br></pre></td></tr></table></figure>
+
+<p>Download <code>qemu</code> source code and enter directory:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -O https://download.qemu.org/qemu-10.2.0-rc2.tar.xz</span><br><span class="line">tar xvJf qemu-10.2.0-rc2.tar.xz</span><br><span class="line"><span class="built_in">cd</span> qemu-10.2.0-rc2</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">./configure \</span><br><span class="line">  --disable-bsd-user \</span><br><span class="line">  --disable-gtk \</span><br><span class="line">  --disable-linux-user \</span><br><span class="line">  --disable-rust \</span><br><span class="line">  --disable-sdl \</span><br><span class="line">  --disable-selinux \</span><br><span class="line">  --disable-spice \</span><br><span class="line">  --enable-curses \</span><br><span class="line">  --enable-vnc \</span><br><span class="line">  --prefix=<span class="string">&quot;<span class="variable">$CONDA_PREFIX</span>&quot;</span></span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Environments/" class="category-chain-item">Environments</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Building C/C++ Open Source Applications in a Conda Environment</div>
+      <div>https://jifengwu2k.github.io/2025/12/06/Building-C-C-Open-Source-Applications-in-a-Conda-Environment/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>December 6, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/12/10/Running-a-Rootless-SSH-Server-on-a-Custom-Port/" title="Running a Rootless SSH Server on a Custom Port">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Running a Rootless SSH Server on a Custom Port</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/11/29/Understanding-What-Instructions-Your-Old-x86-CPU-Supports/" title="Understanding What Instructions Your Old x86 CPU Supports">
+                        <span class="hidden-mobile">Understanding What Instructions Your Old x86 CPU Supports</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

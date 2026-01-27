@@ -1,0 +1,845 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Removing Suffix by SeparatorWant to strip off everything after the first or last occurrence of a separator in a string? Suppose your string is $string and the separator is $separator: Before the first">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shell Coding Guidelines">
+<meta property="og:url" content="https://jifengwu2k.github.io/2025/09/28/Shell-Coding-Guidelines/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="Removing Suffix by SeparatorWant to strip off everything after the first or last occurrence of a separator in a string? Suppose your string is $string and the separator is $separator: Before the first">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-09-28T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-25T04:06:38.665Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Shell Coding Guidelines - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.3","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Shell Coding Guidelines</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-09-28 00:00" pubdate>
+          September 28, 2025
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          95 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Shell Coding Guidelines</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Removing-Suffix-by-Separator"><a href="#Removing-Suffix-by-Separator" class="headerlink" title="Removing Suffix by Separator"></a>Removing Suffix by Separator</h2><p>Want to strip off everything after the <strong>first or last occurrence</strong> of a separator in a string? Suppose your string is <code>$string</code> and the separator is <code>$separator</code>:</p>
+<p>Before the <strong>first</strong> occurrence:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">result=<span class="string">&quot;<span class="variable">$&#123;string%%&quot;$separator&quot;*&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Before the <strong>last</strong> occurrence:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">result=<span class="string">&quot;<span class="variable">$&#123;string%&quot;$separator&quot;*&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Example:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">string=<span class="string">&#x27;abc-def-ghi&#x27;</span></span><br><span class="line">separator=<span class="string">&#x27;-&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$&#123;string%%&quot;$separator&quot;*&#125;</span>&quot;</span>  <span class="comment"># Outputs: abc</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$&#123;string%&quot;$separator&quot;*&#125;</span>&quot;</span>   <span class="comment"># Outputs: abc-def</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Appending-Content-to-a-Command-Pipeline"><a href="#Appending-Content-to-a-Command-Pipeline" class="headerlink" title="Appending Content to a Command Pipeline"></a>Appending Content to a Command Pipeline</h2><p>Suppose you have a file and want to process its contents, then append more data before passing it all to the next part of a pipeline. The most robust, portable (POSIX-compliant) solution is:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="built_in">cat</span> file.txt; <span class="built_in">echo</span> <span class="string">&#x27;additional content&#x27;</span>; &#125; | your_next_command</span><br></pre></td></tr></table></figure>
+
+<p>Why this works:</p>
+<ul>
+<li><code>&#123; ...; &#125;</code> groups commands together in the current shell.</li>
+<li>The pipe (<code>|</code>) passes their combined output.</li>
+<li>This does not create unnecessary subshells and works in all POSIX shells.</li>
+</ul>
+<p><strong>Syntax tip:</strong> A space is required after <code>&#123;</code> and the last command must end in a semicolon (<code>;</code>) before the closing <code>&#125;</code>.</p>
+<h2 id="Safely-Using-find-xargs-with-Filenames"><a href="#Safely-Using-find-xargs-with-Filenames" class="headerlink" title="Safely Using find + xargs with Filenames"></a>Safely Using <code>find</code> + <code>xargs</code> with Filenames</h2><p>Using <code>find</code> + <code>xargs</code> with filenames can break when filenames have spaces or special characters. To handle this safely, use null (<code>\0</code>) terminators:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find mydir -name <span class="string">&#x27;*.txt&#x27;</span> -print0 | xargs -0 <span class="built_in">rm</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-print0</code> makes <code>find</code> use a null character at the end of each filename.</li>
+<li><code>-0</code> tells <code>xargs</code> to expect null-delimited input.</li>
+</ul>
+<p>This combination ensures even weird filenames (with spaces, newlines, quotes, etc.) are handled safely.</p>
+<h2 id="Running-Commands-Concurrently-with-GNU-Parallel"><a href="#Running-Commands-Concurrently-with-GNU-Parallel" class="headerlink" title="Running Commands Concurrently with GNU Parallel"></a>Running Commands Concurrently with GNU Parallel</h2><p>When you need to run multiple jobs in parallel, <strong>GNU Parallel</strong> is a powerful alternative to writing manual process control code in Bash. Some of its key features:</p>
+<ul>
+<li><strong>Runs jobs concurrently</strong>: Starts as many jobs as the number of cores (configurable).</li>
+<li><strong>Waits for all jobs to finish</strong>: The <code>parallel</code> process only exits once all child jobs complete.</li>
+<li><strong>Automatic signal propagation</strong>: If you press <code>Ctrl+C</code> or send <code>SIGTERM</code> to <code>parallel</code>, it automatically sends the same signal to all running subjobs.</li>
+</ul>
+<p><strong>Basic usage:</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parallel ::: command-1 command-2 command-3</span><br></pre></td></tr></table></figure>
+
+<h3 id="Output-Handling"><a href="#Output-Handling" class="headerlink" title="Output Handling"></a>Output Handling</h3><p>By default, <code>parallel</code> <strong>buffers</strong> the output of each job; only after a job finishes is its full output printed. This prevents interleaving.</p>
+<ul>
+<li><p>To output each job’s data <em><strong>immediately</strong></em> (allowing interleaved output from competing jobs), use the <code>--ungroup</code> option (applies separately to stdout and stderr):</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parallel --ungroup --ungroup ::: command-1 command-2 command-3</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Controlling-Concurrency-and-Failure"><a href="#Controlling-Concurrency-and-Failure" class="headerlink" title="Controlling Concurrency and Failure"></a>Controlling Concurrency and Failure</h3><ul>
+<li><p><strong>Limit parallelism (to 2 jobs):</strong></p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parallel -j 2 ::: command-1 command-2 command-3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Fail immediately if any job fails:</strong></p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parallel --halt soon,fail=1 ::: command-1 command-2 command-3</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Running-Full-Shell-Commands"><a href="#Running-Full-Shell-Commands" class="headerlink" title="Running Full Shell Commands"></a>Running Full Shell Commands</h3><p>To run arbitrary shell code (pipes, loops, redirections, etc.), use the <code>bash -c</code> idiom:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">parallel bash -c ::: \</span><br><span class="line"><span class="string">&quot;long command 1 with args and pipes&quot;</span> \</span><br><span class="line"><span class="string">&quot;another-long-command | with-pipes&quot;</span> \</span><br><span class="line"><span class="string">&quot;for f in *.txt; do echo \$f; done&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Parameterized-Commands"><a href="#Parameterized-Commands" class="headerlink" title="Parameterized Commands"></a>Parameterized Commands</h3><p>If you have a list of input files and want to repeat the same command on each:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> *.biginput | parallel <span class="string">&#x27;long-processing-step --input &#123;&#125; --output &#123;&#125;.out&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>Here <code>parallel</code> replaces <code>&#123;&#125;</code> with the filename sent through the pipeline.</p>
+<h2 id="Batch-Killing-Processes"><a href="#Batch-Killing-Processes" class="headerlink" title="Batch Killing Processes"></a>Batch Killing Processes</h2><p>Sometimes we acidentally spawn a series of processes, and we want to kill them. We can look up their pid’s through <code>ps -aux | grep &lt;process_name&gt;</code> (as shown below) and manually run the <code>kill</code> command to kill each process by providing its pid, but <em>how can we automate this tedious task</em>?</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ ps aux | grep pipreqs</span><br><span class="line">jifengwu   58180  0.0  0.1  46440 27332 pts/0    T    13:38   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/spectria/tildes/tildes --mode no-pin</span><br><span class="line">jifengwu   58205  0.1  0.1  48140 29392 pts/0    T    13:38   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/PnX-SI/GeoNature --mode no-pin</span><br><span class="line">jifengwu   58224  5.7  0.2  51856 33108 pts/0    T    13:38   0:23 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/fabiandevia/home --mode no-pin</span><br><span class="line">jifengwu   58267  4.4  0.2  57880 38204 pts/0    T    13:39   0:17 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/377312117/gitproject --mode no-pin</span><br><span class="line">jifengwu   58272  2.3  0.2  53756 34252 pts/0    T    13:39   0:08 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/crazyfish1111/home --mode no-pin</span><br><span class="line">jifengwu   58282  0.1  0.1  47840 28132 pts/0    T    13:39   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/Piratenpartei/ekklesia-portal --mode no-pin</span><br><span class="line">jifengwu   58295  0.1  0.1  48220 28492 pts/0    T    13:39   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/jauhararifin/ugrade/server --mode no-pin</span><br><span class="line">jifengwu   58659  0.3  0.1  48608 29324 pts/0    T    13:41   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/klen/pylama --mode no-pin</span><br><span class="line">jifengwu   59564  0.0  0.0  19612  2516 pts/2    S+   13:45   0:00 grep --color=auto pipreqs</span><br></pre></td></tr></table></figure>
+
+<p>First, we can add <code>grep -v grep</code> to the pipe to <em>hide the grep processes from the output</em>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ ps aux | grep pipreqs | grep -v grep</span><br><span class="line">jifengwu   58180  0.0  0.1  46440 27332 pts/0    T    13:38   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/spectria/tildes/tildes --mode no-pin</span><br><span class="line">jifengwu   58205  0.1  0.1  48140 29392 pts/0    T    13:38   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/PnX-SI/GeoNature --mode no-pin</span><br><span class="line">jifengwu   58224  5.6  0.2  51856 33108 pts/0    T    13:38   0:23 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/fabiandevia/home --mode no-pin</span><br><span class="line">jifengwu   58267  4.4  0.2  57880 38204 pts/0    T    13:39   0:17 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/377312117/gitproject --mode no-pin</span><br><span class="line">jifengwu   58272  2.2  0.2  53756 34252 pts/0    T    13:39   0:08 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/crazyfish1111/home --mode no-pin</span><br><span class="line">jifengwu   58282  0.1  0.1  47840 28132 pts/0    T    13:39   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/Piratenpartei/ekklesia-portal --mode no-pin</span><br><span class="line">jifengwu   58295  0.1  0.1  48220 28492 pts/0    T    13:39   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/jauhararifin/ugrade/server --mode no-pin</span><br><span class="line">jifengwu   58659  0.3  0.1  48608 29324 pts/0    T    13:41   0:00 /home/jifengwu/miniconda3/envs/dataset_investigation/bin/python /home/jifengwu/miniconda3/envs/dataset_investigation/bin/pipreqs repos/klen/pylama --mode no-pin</span><br></pre></td></tr></table></figure>
+
+<p>Then, we can add <code>awk &#39;&#123;print $2&#125;&#39;</code> to the pipe to invoke <code>awk</code> to <em>trim the second space-delimited component</em> (which in this case is the pid). Now we have a list of the pid’s of the processes we want to kill:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ ps aux | grep pipreqs | grep -v grep | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span></span><br><span class="line">58180</span><br><span class="line">58205</span><br><span class="line">58224</span><br><span class="line">58267</span><br><span class="line">58272</span><br><span class="line">58282</span><br><span class="line">58295</span><br><span class="line">58659</span><br></pre></td></tr></table></figure>
+
+<p>Finally, we can iterate over the pid’s in a for-loop to kill them.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> pid <span class="keyword">in</span> $(ps aux | grep pipreqs | grep -v grep | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span>)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="built_in">kill</span> -15 <span class="variable">$pid</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Copying-Files-via-cat-and-dd"><a href="#Copying-Files-via-cat-and-dd" class="headerlink" title="Copying Files via cat and dd"></a>Copying Files via <code>cat</code> and <code>dd</code></h2><p><code>cat</code> and <code>dd</code> are standard Unix utilities for handling file data.  </p>
+<ul>
+<li><code>cat</code> outputs the contents of a file to <code>stdout</code>.</li>
+<li><code>dd</code> reads <code>stdin</code> (if no <code>if=</code>) and writes to <code>stdout</code> or a file.</li>
+</ul>
+<p>To copy a file, you can use a Unix pipe (<code>|</code>) to send <code>cat</code>‘s output to <code>dd</code>, then write to a destination file:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> sourcefile | <span class="built_in">dd</span> of=destinationfile</span><br></pre></td></tr></table></figure>
+
+<h3 id="Potential-Advantages-of-cat-and-dd-Over-cp"><a href="#Potential-Advantages-of-cat-and-dd-Over-cp" class="headerlink" title="Potential Advantages of cat and dd Over cp"></a>Potential Advantages of <code>cat</code> and <code>dd</code> Over <code>cp</code></h3><h4 id="Better-progress-statistics"><a href="#Better-progress-statistics" class="headerlink" title="Better progress&#x2F;statistics"></a><strong>Better progress&#x2F;statistics</strong></h4><ul>
+<li><code>dd</code> with the <code>status=progress</code> (GNU dd) option shows live copy statistics:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat bigfile | dd of=outfile status=progress</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="Working-Around-cp-Limitations"><a href="#Working-Around-cp-Limitations" class="headerlink" title="Working Around cp Limitations"></a><strong>Working Around <code>cp</code> Limitations</strong></h4><ul>
+<li>Some device files, file descriptors, or pseudo-files (like <code>/proc</code> or <code>/sys</code>) do not support <code>cp</code>, but streaming with <code>cat</code> + <code>dd</code> may work.</li>
+</ul>
+<h2 id="Parsing-Command-line-Options"><a href="#Parsing-Command-line-Options" class="headerlink" title="Parsing Command-line Options"></a>Parsing Command-line Options</h2><p><code>getopts</code> is a built-in Unix shell command for parsing command-line options. It is a wrapper around <code>getopt</code>, a POSIX C library function used to parse command-line options of the Unix&#x2F;POSIX style. Specifically:</p>
+<ul>
+<li>Options are <em>single-character alphanumerics</em> preceded by a - (hyphen-minus) character, i.e. <code>-a</code>. <code>-b</code>, <code>-c</code>.</li>
+<li>Options can take an argument or none.</li>
+<li>Multiple options can be chained together, as long as the non-last ones are not argument-taking. If <code>-a</code> and <code>-b</code> take no arguments while <code>-c</code> takes an argument, <code>-abc foo</code> is the same as <code>-a -c -e foo</code>, but <code>-bca</code> is not the same as <code>-b -c a</code> due to the preceding rule.</li>
+<li>When an option takes an argument, this can be in the same token or in the next one. In other words, if <code>-c</code> takes an argument, <code>-cfoo</code> is the same as <code>-c foo</code>.</li>
+</ul>
+<h3 id="optstring‘s"><a href="#optstring‘s" class="headerlink" title="optstring‘s"></a><code>optstring</code>‘s</h3><p>Both getopt and getopts specifies specify options using a <em>optstring</em>. Specifically:</p>
+<ul>
+<li><em>Begin an optstring with <code>:</code>.</em></li>
+<li>To specify an option that <em>does not take an argument</em>, append its name to the optstring.</li>
+<li>To specify an option that <em>takes an argument</em>, append its name <em>and <code>:</code></em> to the optstring.</li>
+</ul>
+<p>For example, the optstring that specifies two options <code>-a</code>, <code>-b</code> that do not take arguments and two options <code>-c</code>, <code>-d</code> that take arguments is <code>:abc:d:</code>.</p>
+<h3 id="Using-getopts-in-a-Shell-Script"><a href="#Using-getopts-in-a-Shell-Script" class="headerlink" title="Using getopts in a Shell Script"></a>Using <code>getopts</code> in a Shell Script</h3><p>In Shell scripts, <code>getopts</code> invoked with an <code>optstring</code> is used with a <code>while</code>-loop to parse command-line options.</p>
+<p>Say that our Shell script <code>test_getopts.sh</code> accepts two options <code>-a</code>, <code>-b</code> that do not take arguments and two options <code>-c</code>, <code>-d</code> that take arguments. Our Shell script can look like this:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="built_in">getopts</span> <span class="string">&#x27;:abc:d:&#x27;</span> name</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">case</span> <span class="variable">$name</span> <span class="keyword">in</span></span><br><span class="line">        a)</span><br><span class="line">            <span class="built_in">echo</span> <span class="string">&quot;You provided option -a&quot;</span></span><br><span class="line">            ;;</span><br><span class="line">        b)</span><br><span class="line">            <span class="built_in">echo</span> <span class="string">&quot;You provided option -b&quot;</span></span><br><span class="line">            ;;</span><br><span class="line">        c)</span><br><span class="line">            <span class="built_in">echo</span> <span class="string">&quot;You provided option -c with argument <span class="variable">$OPTARG</span>&quot;</span></span><br><span class="line">            ;;</span><br><span class="line">        d)</span><br><span class="line">            <span class="built_in">echo</span> <span class="string">&quot;You provided option -d with argument <span class="variable">$OPTARG</span>&quot;</span></span><br><span class="line">            ;;</span><br><span class="line">        :)</span><br><span class="line">            <span class="built_in">echo</span> <span class="string">&quot;Option -<span class="variable">$OPTARG</span> requires an argument&quot;</span></span><br><span class="line">            ;;</span><br><span class="line">        ?)</span><br><span class="line">            <span class="built_in">echo</span> <span class="string">&quot;You provided an invalid option -<span class="variable">$OPTARG</span>&quot;</span></span><br><span class="line">            ;;</span><br><span class="line">    <span class="keyword">esac</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>Here, <code>getopts</code> is invoked with the <code>optstring</code> for specifying our options, <code>:abc:d:</code>. In each iteration of the <code>while</code>-loop, the <em>next option</em> is parsed and the Shell variables <code>name</code> and <code>OPTARG</code> are set to different values based on different conditions we may encounter.</p>
+<ul>
+<li>If a <em>valid</em> option is detected and that option <em>does not take an argument</em>, the Shell variable <code>name</code> is set to the name of the option.</li>
+<li>If a <em>valid</em> option is detected and that option <em>takes an argument</em>:<ul>
+<li>If we have provided an argument, the Shell variable <code>name</code> is set to the name of the option, and the Shell variable <code>OPTARG</code> is set to the value of the argument.</li>
+<li>If we <em>haven’t provided an argument</em>, <em>the Shell variable <code>name</code> is set to <code>:</code>, and the Shell variable <code>OPTARG</code> is set to the name of the argument</em>.</li>
+</ul>
+</li>
+<li>If an <em>invalid</em> option is detected, <em>the Shell variable <code>name</code> is set to <code>?</code>, and the Shell variable <code>OPTARG</code> is set to the name of the argument</em>.</li>
+</ul>
+<p>We can see <code>getopts</code> at work by providing different command-line options when invoking our Shell script.</p>
+<p>Providing no command-line options:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sh test_getopts.sh</span><br></pre></td></tr></table></figure>
+
+<p>Providing option <code>-a</code> that do not take arguments:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sh test_getopts.sh -a</span><br><span class="line">You provided option -a</span><br></pre></td></tr></table></figure>
+
+<p>Providing option <code>-a</code> that do not take arguments <em>twice</em>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ sh test_getopts.sh -a -a</span><br><span class="line">You provided option -a</span><br><span class="line">You provided option -a</span><br><span class="line">$ sh test_getopts.sh -aa</span><br><span class="line">You provided option -a</span><br><span class="line">You provided option -a</span><br></pre></td></tr></table></figure>
+
+<p>Providing option <code>-c</code> that takes an argument with an argument <code>foo</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sh test_getopts.sh -c foo</span><br><span class="line">You provided option -c with argument foo</span><br></pre></td></tr></table></figure>
+
+<p>Providing option <code>-c</code> that takes an argument with an argument <code>foo</code> <em>twice</em>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sh test_getopts.sh -c foo -c bar</span><br><span class="line">You provided option -c with argument foo</span><br><span class="line">You provided option -c with argument bar</span><br></pre></td></tr></table></figure>
+
+<p>Providing option <code>-c</code> that takes an argument without an argument:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sh test_getopts.sh -c</span><br><span class="line">Option -c requires an argument</span><br></pre></td></tr></table></figure>
+
+<p>Providing an invalid argument <code>-e</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sh test_getopts.sh -e</span><br><span class="line">You provided an invalid option -e</span><br></pre></td></tr></table></figure>
+
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.baeldung.com/linux/grep-exclude-ps-results">https://www.baeldung.com/linux/grep-exclude-ps-results</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/46008880/how-to-always-cut-the-pid-from-ps-aux-command">https://stackoverflow.com/questions/46008880/how-to-always-cut-the-pid-from-ps-aux-command</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Getopts">https://en.wikipedia.org/wiki/Getopts</a></li>
+<li><a target="_blank" rel="noopener" href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/getopts.html">https://pubs.opengroup.org/onlinepubs/9699919799/utilities/getopts.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Getopt">https://en.wikipedia.org/wiki/Getopt</a></li>
+<li><a target="_blank" rel="noopener" href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html">https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Reference/" class="category-chain-item">Reference</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Shell Coding Guidelines</div>
+      <div>https://jifengwu2k.github.io/2025/09/28/Shell-Coding-Guidelines/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>September 28, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/10/04/Using-Jupyter-Lab-as-a-Lightweight-Remote-Desktop/" title="Using Jupyter Lab as a Lightweight Remote Desktop">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Using Jupyter Lab as a Lightweight Remote Desktop</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/09/15/C-Coding-Guidelines/" title="C++ Coding Guidelines">
+                        <span class="hidden-mobile">C++ Coding Guidelines</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'abbaswu/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('mermaid' in window) {
+        mermaid.init();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
