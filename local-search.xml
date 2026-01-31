@@ -4,6 +4,50 @@
   
   
   <entry>
+    <title>2026-01 Financial Statement</title>
+    <link href="/2026/01/31/2026-01-Financial-Statement/"/>
+    <url>/2026/01/31/2026-01-Financial-Statement/</url>
+    
+    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs csv">2026-01-02,ONEPAY CASHREWRD SYF PAYMNT,-41.51<br>2026-01-05,Cash Redemption,40.40<br>2026-01-05,Collegetown Terr Rent,-1535.00<br>2026-01-05,ONEPAY CASHREWRD SYF PAYMNT,-30.96<br>2026-01-07,ONEPAY CASHREWRD SYF PAYMNT,-41.51<br>2026-01-08,ONEPAY CASHREWRD SYF PAYMNT,-41.51<br>2026-01-13,Payment to Chase card,-7.50<br>2026-01-14,ONEPAY CASHREWRD SYF PAYMNT,-2.88<br>2026-01-15,Cornell Universi DIR DEP PPD,1300.89<br>2026-01-16,REAL TIME PAYMENT CREDIT RECD,0.01<br>2026-01-16,Payment to Chase card,-38.46<br>2026-01-16,RunPod Inc RUNPOD.IO,-10.00<br>2026-01-20,PROTON,-13.98<br>2026-01-20,Payment to Chase card,-36.48<br>2026-01-21,TRANSAC CAMPUS CORNELLU,-71.37<br>2026-01-21,ONEPAY CASHREWRD SYF PAYMNT,-35.41<br>2026-01-22,Payment to Chase card,-4.89<br>2026-01-26,ONEPAY CASHREWRD SYF PAYMNT,-41.51<br>2026-01-26,Payment to Chase card,-48.85<br>2026-01-26,Payment to Chase card,-121.63<br>2026-01-27,LAMBDA CLOUD LAMBDA.AI CA,-0.60<br>2026-01-27,Payment to Chase card,-18.93<br>2026-01-29,ONEPAY CASHREWRD SYF PAYMNT,-43.68<br>2026-01-30,Cornell Universi DIR DEP PPD,1745.84<br>2026-01-30,Payment to Chase card,-3.00<br>2026-01-30,Payment to Chase card,-56.40<br></code></pre></td></tr></table></figure><p>Total: 841.08</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Financial Statements</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Uncompromising Performance with Exocompilation: A Recap of Yuka Ikarashi&#39;s Talk</title>
+    <link href="/2026/01/28/Uncompromising-Performance-with-Exocompilation-A-Recap-of-Yuka-Ikarashi-s-Talk/"/>
+    <url>/2026/01/28/Uncompromising-Performance-with-Exocompilation-A-Recap-of-Yuka-Ikarashi-s-Talk/</url>
+    
+    <content type="html"><![CDATA[<p>Key Ideas from the Talk</p><ul><li>Modern CPUs, GPUs, TPUs, and matrix engines are evolving rapidly, and the <em>potential</em> peak performance of these accelerators is enormous. In practice, typical code delivers less than 1% of the available peak performance. Achieving state-of-the-art performance requires manual, architecture-specific optimizations. These hand-tuned kernels (like those in cuBLAS or MKL) are extremely intricate (“fast code is complex”).</li><li>In current compiler design, hardware backends and optimization strategies are embedded directly in the compiler (“baked in”).<ul><li>Conventional compilers either automate too aggressively (trading away performance) or force programmers to drop into low-level, architecture-specific code, sacrificing productivity, portability, and safety.</li><li>Domain experts have almost no way to customize or extend these strategies safely (short of forking the compiler).</li></ul></li><li>Performance engineers want fine-grained control. Compiler users want productivity and safety. However, Yuka pointed out that in industry, the primary metric of success is often just raw performance rather than language design or usability. Compiler innovations that improve usability but do not deliver top benchmark results are often ignored or discarded. This creates unique challenges for anyone trying to innovate in the compiler space.</li><li>The Exocompilation Solution: Shifting Control to User Libraries<ul><li>Exocompilation is all about <em>not</em> hardcoding compiler automation. Instead, optimizations are represented as libraries  - extensible and verifiable.</li><li><strong>User-Schedulable Performance</strong>: With Exo, optimizations are performed as verified rewrites guaranteeing functional equivalence.</li><li><strong>Real-World Impact</strong>: Exo-generated kernels already match or surpass established libraries (like cuBLAS or MKL), and are deployed in production on Apple devices.</li></ul></li></ul><p>Q&amp;A: Industry Incentives vs. Entrepreneurship</p><p>During the Q&amp;A, I asked Yuka about the constraint of industry standards:</p><blockquote><p><em>Me</em>: Given the industry’s incentive structure - where usability is often secondary to raw performance - have you thought about entrepreneurship outside the traditional industry establishment?</p></blockquote><p>Yuka shared candidly:</p><blockquote><p><em>Yuka</em>: Yes, I tried, but gave up. I think it’s really hard to do a compiler startup.</p></blockquote><p>We discussed the challenge: compilers per se are not commodities you can easily sell like hardware or services. Developers expect their compilers to be open-source and maintained over the long term.</p><p>I suggested a more vertically integrated approach:</p><blockquote><p><em>Me</em>: Have you considered vertical integration, like starting a knitting company? </p></blockquote><p>(Referencing Yuka’s own illustration of how scheduling applies, from high-performance computing to knitting machines!)</p><p>This resonated with Yuka:</p><blockquote><p><em>Yuka</em>: Yes, that’s actually something I’m very interested in.</p></blockquote><p>Perhaps the lesson is that compiler innovations, to find a path out of the lab and into the world, might need to own the vertical and deliver an end product - whether that’s machine learning, hardware, or even knitting!</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Computer Architecture, Operating Systems, Computer Networks, Distributed Systems</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Talks</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>YAML Coding Guidelines</title>
     <link href="/2026/01/20/YAML-Coding-Guidelines/"/>
     <url>/2026/01/20/YAML-Coding-Guidelines/</url>
@@ -137,25 +181,6 @@
   
   
   <entry>
-    <title>2026-01 Financial Statement</title>
-    <link href="/2026/01/07/2026-01-Financial-Statement/"/>
-    <url>/2026/01/07/2026-01-Financial-Statement/</url>
-    
-    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs csv">2026-01-02,ONEPAY CASHREWRD SYF PAYMNT,-41.51<br>2026-01-05,Cash Redemption,40.40<br>2026-01-05,Collegetown Terr Rent,-1535.00<br>2026-01-05,ONEPAY CASHREWRD SYF PAYMNT,-30.96<br>2026-01-07,ONEPAY CASHREWRD SYF PAYMNT,-41.51<br>2026-01-08,ONEPAY CASHREWRD SYF PAYMNT,-41.51<br>2026-01-13,Payment to Chase card,-7.50<br>2026-01-14,ONEPAY CASHREWRD SYF PAYMNT,-2.88<br>2026-01-15,Cornell Universi DIR DEP PPD,1300.89<br>2026-01-16,REAL TIME PAYMENT CREDIT RECD,0.01<br>2026-01-16,Payment to Chase card,-38.46<br>2026-01-16,RunPod Inc RUNPOD.IO,-10.00<br>2026-01-20,PROTON,-13.98<br>2026-01-20,Payment to Chase card,-36.48<br>2026-01-21,TRANSAC CAMPUS CORNELLU,-71.37<br>2026-01-21,ONEPAY CASHREWRD SYF PAYMNT,-35.41<br>2026-01-22,Payment to Chase card,-4.89<br>2026-01-26,ONEPAY CASHREWRD SYF PAYMNT,-41.51<br>2026-01-26,Payment to Chase card,-48.85<br>2026-01-26,Payment to Chase card,-121.63<br></code></pre></td></tr></table></figure>]]></content>
-    
-    
-    <categories>
-      
-      <category>Financial Statements</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>2025-12 Financial Statement</title>
     <link href="/2026/01/01/2025-12-Financial-Statement/"/>
     <url>/2026/01/01/2025-12-Financial-Statement/</url>
@@ -179,15 +204,21 @@
     <link href="/2025/12/11/Paper-Reading-AccelOpt-A-Self-Improving-LLM-Agentic-System-for-AI-Accelerator-Kernel-Optimization/"/>
     <url>/2025/12/11/Paper-Reading-AccelOpt-A-Self-Improving-LLM-Agentic-System-for-AI-Accelerator-Kernel-Optimization/</url>
     
-    <content type="html"><![CDATA[<h1 id="Paper-Reading-“AccelOpt-A-Self-Improving-LLM-Agentic-System-for-AI-Accelerator-Kernel-Optimization”"><a href="#Paper-Reading-“AccelOpt-A-Self-Improving-LLM-Agentic-System-for-AI-Accelerator-Kernel-Optimization”" class="headerlink" title="Paper Reading: “AccelOpt: A Self-Improving LLM Agentic System for AI Accelerator Kernel Optimization”"></a>Paper Reading: <a href="http://arxiv.org/abs/2511.15915">“AccelOpt: A Self-Improving LLM Agentic System for AI Accelerator Kernel Optimization”</a></h1><h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><h3 id="Approach"><a href="#Approach" class="headerlink" title="Approach"></a>Approach</h3><ul><li>Agentic workflow: Three LLM-based agents (Planner, Executor, Summarizer):<ul><li>Planner: proposes optimization plans.</li><li>Executor: codes up, tests, measures kernels.</li><li>Summarizer: distills and records useful strategies.</li></ul></li><li>Optimization memory: Past experiences (slow-fast kernel pairs, code snippets, and summarized optimization lessons) are stored and reused in future searches.</li><li>Beam search: LLM agents generate and iteratively improve candidate kernels in parallel.</li></ul><blockquote><p>Prompts included in the appendix.</p><p>Agent suitability: The executor agent’s LLM quality is most critical; planner quality is less sensitive.</p></blockquote><h3 id="Benchmark-Evaluation"><a href="#Benchmark-Evaluation" class="headerlink" title="Benchmark &amp; Evaluation"></a>Benchmark &amp; Evaluation</h3><ul><li>NKIBench: a new benchmark suite of Trainium kernels (from real LLM workloads) with peak performance estimates for each task.</li><li>Experiments on AWS Trainium 1 and 2: Measured:<ul><li>Average % of peak throughput (“absolute” optimization metric).</li><li>Whether AccelOpt could match or beat proprietary models like Claude Sonnet 4 in both performance and cost.</li></ul></li></ul><h3 id="Limitations"><a href="#Limitations" class="headerlink" title="Limitations"></a>Limitations</h3><ul><li>For very hard or poorly specified kernels, performance may plateau.</li><li>The efficiency of self-improvement is limited by the quality&#x2F;capability of the underlying LLM, especially for coding&#x2F;execution.</li><li>Currently focuses on single-core kernels, not (yet) on multi-core&#x2F;large-scale parallelism.</li></ul><h2 id="Ideas"><a href="#Ideas" class="headerlink" title="Ideas"></a>Ideas</h2><p>Investigate the Executor, especially how it transforms fuzzy natural language into precise commands.</p>]]></content>
+    <content type="html"><![CDATA[<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><h3 id="Approach"><a href="#Approach" class="headerlink" title="Approach"></a>Approach</h3><ul><li>Agentic workflow: Three LLM-based agents (Planner, Executor, Summarizer):<ul><li>Planner: proposes optimization plans.</li><li>Executor: codes up, tests, measures kernels.</li><li>Summarizer: distills and records useful strategies.</li></ul></li><li>Optimization memory: Past experiences (slow-fast kernel pairs, code snippets, and summarized optimization lessons) are stored and reused in future searches.</li><li>Beam search: LLM agents generate and iteratively improve candidate kernels in parallel.</li></ul><blockquote><p>Prompts included in the appendix.</p><p>Agent suitability: The executor agent’s LLM quality is most critical; planner quality is less sensitive.</p></blockquote><h3 id="Benchmark-Evaluation"><a href="#Benchmark-Evaluation" class="headerlink" title="Benchmark &amp; Evaluation"></a>Benchmark &amp; Evaluation</h3><ul><li>NKIBench: a new benchmark suite of Trainium kernels (from real LLM workloads) with peak performance estimates for each task.</li><li>Experiments on AWS Trainium 1 and 2: Measured:<ul><li>Average % of peak throughput (“absolute” optimization metric).</li><li>Whether AccelOpt could match or beat proprietary models like Claude Sonnet 4 in both performance and cost.</li></ul></li></ul><h3 id="Limitations"><a href="#Limitations" class="headerlink" title="Limitations"></a>Limitations</h3><ul><li>For very hard or poorly specified kernels, performance may plateau.</li><li>The efficiency of self-improvement is limited by the quality&#x2F;capability of the underlying LLM, especially for coding&#x2F;execution.</li><li>Currently focuses on single-core kernels, not (yet) on multi-core&#x2F;large-scale parallelism.</li></ul><h2 id="Ideas"><a href="#Ideas" class="headerlink" title="Ideas"></a>Ideas</h2><p>Investigate the Executor, especially how it transforms fuzzy natural language into precise commands.</p>]]></content>
     
     
     <categories>
       
-      <category>Research Inspiration</category>
+      <category>Computer Architecture, Operating Systems, Computer Networks, Distributed Systems</category>
       
     </categories>
     
+    
+    <tags>
+      
+      <tag>Paper Readings</tag>
+      
+    </tags>
     
   </entry>
   
