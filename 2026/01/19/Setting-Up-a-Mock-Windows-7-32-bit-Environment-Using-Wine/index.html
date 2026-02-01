@@ -267,16 +267,16 @@
                 
                 <p>Setting up a mock Windows 7 32-bit environment using Wine is a common way to run older Windows applications on Linux&#x2F;macOS. Here’s a step-by-step guide.</p>
 <h2 id="Install-Wine-if-not-already-installed"><a href="#Install-Wine-if-not-already-installed" class="headerlink" title="Install Wine (if not already installed)"></a>Install Wine (if not already installed)</h2><p>On Debian&#x2F;Ubuntu:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> dpkg --add-architecture i386</span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install wine32 wine64 winetricks</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> dpkg --add-architecture i386<br><span class="hljs-built_in">sudo</span> apt update<br><span class="hljs-built_in">sudo</span> apt install wine32 wine64 winetricks<br></code></pre></td></tr></table></figure>
 
 <p>On Fedora:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> dnf install wine</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> dnf install wine<br></code></pre></td></tr></table></figure>
 
 <p>On macOS:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install --cask wine-stable</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">brew install --cask wine-stable<br></code></pre></td></tr></table></figure>
 
 <h2 id="Create-a-Fresh-32-bit-Wine-Prefix"><a href="#Create-a-Fresh-32-bit-Wine-Prefix" class="headerlink" title="Create a Fresh 32-bit Wine Prefix"></a>Create a Fresh 32-bit Wine Prefix</h2><p>A Wine prefix is like a virtual <code>C:</code> drive. By default, Wine uses <code>~/.wine</code>, but you can<br>create as many custom prefixes as you want.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> WINEPREFIX=~/wine-win7-32</span><br><span class="line">WINEARCH=win32 winecfg</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> WINEPREFIX=~/wine-win7-32<br>WINEARCH=win32 winecfg<br></code></pre></td></tr></table></figure>
 
 <ul>
 <li><code>WINEARCH=win32</code> ensures a 32-bit prefix.</li>
@@ -290,23 +290,23 @@
 <li>Click <strong>Apply</strong> and <strong>OK</strong>.</li>
 </ul>
 <h2 id="Use-Winetricks-for-Dependencies"><a href="#Use-Winetricks-for-Dependencies" class="headerlink" title="Use Winetricks for Dependencies"></a>Use Winetricks for Dependencies</h2><p>Often, apps need extra libraries or fonts. Use <strong>winetricks</strong>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> WINEPREFIX=~/wine-win7-32</span><br><span class="line">winetricks</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> WINEPREFIX=~/wine-win7-32<br>winetricks<br></code></pre></td></tr></table></figure>
 
 <p>From the GUI you can install components (like .NET, Visual C++, etc).</p>
 <h2 id="Use-the-Environment"><a href="#Use-the-Environment" class="headerlink" title="Use the Environment"></a>Use the Environment</h2><p>To <strong>run an installer</strong> within this environment:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> WINEPREFIX=~/wine-win7-32</span><br><span class="line">wine setup.exe</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> WINEPREFIX=~/wine-win7-32<br>wine setup.exe<br></code></pre></td></tr></table></figure>
 <ul>
 <li>Replace <code>setup.exe</code> with your installer.</li>
 <li>Always export <code>WINEPREFIX</code> before running anything for this prefix.</li>
 </ul>
 <p>To launch cmd.exe:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> WINEPREFIX=~/wine-win7-32</span><br><span class="line">wine cmd</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> WINEPREFIX=~/wine-win7-32<br>wine cmd<br></code></pre></td></tr></table></figure>
 
 <p>or, explicitly:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> WINEPREFIX=~/wine-win7-32</span><br><span class="line">wine <span class="string">&#x27;C:\windows\system32\cmd.exe&#x27;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> WINEPREFIX=~/wine-win7-32<br>wine <span class="hljs-string">&#x27;C:\windows\system32\cmd.exe&#x27;</span><br></code></pre></td></tr></table></figure>
 
 <p>To launch Word 2007 (after installation):</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> WINEPREFIX=~/wine-win7-32</span><br><span class="line">wine <span class="string">&#x27;C:\Program Files\Microsoft Office\Office12\WINWORD.EXE&#x27;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> WINEPREFIX=~/wine-win7-32<br>wine <span class="hljs-string">&#x27;C:\Program Files\Microsoft Office\Office12\WINWORD.EXE&#x27;</span><br></code></pre></td></tr></table></figure>
 
                 
               </div>

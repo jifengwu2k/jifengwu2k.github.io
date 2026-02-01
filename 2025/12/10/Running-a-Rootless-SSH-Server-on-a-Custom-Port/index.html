@@ -273,7 +273,7 @@
 <p><strong>Note:</strong> If <code>/usr/sbin/sshd</code> is not properly configured or you want to reconfigure the logic to facilitate logins (e.g., allow password login), and you <em>don’t</em> have root access, this method <em>won’t</em> work. Consider alternatives like <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Telnet">telnet</a> for shell or <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/WebDAV">WebDAV</a> for file transfers.</p>
 </blockquote>
 <h2 id="Generate-a-Custom-Host-Key"><a href="#Generate-a-Custom-Host-Key" class="headerlink" title="Generate a Custom Host Key"></a>Generate a Custom Host Key</h2><p>First, create a new Ed25519 host key (keeps the main host keys untouched):</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t ed25519 -f ~/my_host_ed25519_key -N <span class="string">&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh-keygen -t ed25519 -f ~/my_host_ed25519_key -N <span class="hljs-string">&#x27;&#x27;</span><br></code></pre></td></tr></table></figure>
 
 <ul>
 <li>This creates the private key: <code>~/my_host_ed25519_key</code></li>
@@ -281,7 +281,7 @@
 <li><code>-N &#39;&#39;</code> means no passphrase</li>
 </ul>
 <h2 id="Start-sshd-on-a-Custom-Port-in-Foreground"><a href="#Start-sshd-on-a-Custom-Port-in-Foreground" class="headerlink" title="Start sshd on a Custom Port in Foreground"></a>Start <code>sshd</code> on a Custom Port in Foreground</h2><p>You can launch the SSH daemon on, for example, port 2222, using your key:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/usr/sbin/sshd \</span><br><span class="line">    -D \</span><br><span class="line">    -p 2222 \</span><br><span class="line">    -o <span class="string">&quot;HostKey=<span class="subst">$(realpath ~/my_host_ed25519_key)</span>&quot;</span> \</span><br><span class="line">    -o PasswordAuthentication=<span class="built_in">yes</span> \</span><br><span class="line">    -o PermitRootLogin=<span class="built_in">yes</span> \</span><br><span class="line">    -o PubkeyAuthentication=<span class="built_in">yes</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">/usr/sbin/sshd \<br>    -D \<br>    -p 2222 \<br>    -o <span class="hljs-string">&quot;HostKey=<span class="hljs-subst">$(realpath ~/my_host_ed25519_key)</span>&quot;</span> \<br>    -o PasswordAuthentication=<span class="hljs-built_in">yes</span> \<br>    -o PermitRootLogin=<span class="hljs-built_in">yes</span> \<br>    -o PubkeyAuthentication=<span class="hljs-built_in">yes</span><br></code></pre></td></tr></table></figure>
 
 <p><strong>Explanation:</strong></p>
 <ul>
@@ -290,7 +290,7 @@
 <li><code>-o HostKey=...</code> - Use just the specified host key</li>
 </ul>
 <p>Now you or a teammate can connect like:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -p 2222 &lt;user&gt;@&lt;host&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh -p 2222 &lt;user&gt;@&lt;host&gt;<br></code></pre></td></tr></table></figure>
 
                 
               </div>

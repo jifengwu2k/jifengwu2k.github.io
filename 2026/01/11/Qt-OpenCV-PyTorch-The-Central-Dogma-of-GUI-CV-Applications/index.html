@@ -270,7 +270,18 @@
                 <p>Just as the central dogma in molecular biology describes genetic information flow from DNA to RNA to protein, we can use a similar terminology to describe how pixels flow from GUI to classic CV algorithms to deep learning-based CV models in GUI CV applications.</p>
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/d/dd/Extended_Central_Dogma_with_Enzymes.jpg" srcset="/img/loading.gif" lazyload alt="The Central Dogma in Molecular Biology"></p>
 <p>The Central Dogma of GUI CV Applications:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">    QI[RGB32/ARGB32 QImage]</span><br><span class="line">    CV[HWC BGRX 8888 ndarray]</span><br><span class="line">    CHWRGB[CHW RGB 0-1 Tensor]</span><br><span class="line">    PI[HWC RGB 888 PIL.Image]</span><br><span class="line">    </span><br><span class="line">    QI -- copy or zero-copy --&gt; CV</span><br><span class="line">    CV -- copy or zero-copy --&gt; QI</span><br><span class="line">    CV -- OpenCV processing --&gt; CV</span><br><span class="line">    CV -- convert --&gt; CHWRGB</span><br><span class="line">    CV -- convert --&gt; PI</span><br></pre></td></tr></table></figure>
+<pre><code class=" mermaid">graph TD
+    QI[RGB32/ARGB32 QImage]
+    CV[HWC BGRX 8888 ndarray]
+    CHWRGB[CHW RGB 0-1 Tensor]
+    PI[HWC RGB 888 PIL.Image]
+    
+    QI -- copy or zero-copy --&gt; CV
+    CV -- copy or zero-copy --&gt; QI
+    CV -- OpenCV processing --&gt; CV
+    CV -- convert --&gt; CHWRGB
+    CV -- convert --&gt; PI
+</code></pre>
 
 <h2 id="Step-by-Step"><a href="#Step-by-Step" class="headerlink" title="Step-by-Step"></a>Step-by-Step</h2><h3 id="RGB32-ARGB32-QImage-HWC-BGRX-8888-ndarray"><a href="#RGB32-ARGB32-QImage-HWC-BGRX-8888-ndarray" class="headerlink" title="RGB32&#x2F;ARGB32 QImage &lt;-&gt; HWC BGRX 8888 ndarray"></a>RGB32&#x2F;ARGB32 QImage &lt;-&gt; HWC BGRX 8888 ndarray</h3><p>Both <a target="_blank" rel="noopener" href="https://github.com/jifengwu2k/qimage-hwc-bgrx-8888-ndarray-interop">copy and zero-copy</a> are possible. However, pay attention to memory lifetime and whether the ndarray is contiguous!</p>
 <h3 id="HWC-BGRX-8888-ndarray-HWC-BGRX-8888-ndarray"><a href="#HWC-BGRX-8888-ndarray-HWC-BGRX-8888-ndarray" class="headerlink" title="HWC BGRX 8888 ndarray -&gt; HWC BGRX 8888 ndarray"></a>HWC BGRX 8888 ndarray -&gt; HWC BGRX 8888 ndarray</h3><p>A common preprocessing step is <a target="_blank" rel="noopener" href="https://github.com/jifengwu2k/hwc-ndarray-letterbox">letterboxing</a>, such as for YOLO object detection models.</p>

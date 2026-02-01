@@ -271,12 +271,12 @@
 <li><code>sudo apk add poppler-utils</code> (Alpine)</li>
 <li><code>brew install poppler</code> (macOS)</li>
 </ul>
-<h2 id="Extract-Text-from-a-PDF"><a href="#Extract-Text-from-a-PDF" class="headerlink" title="Extract Text from a PDF"></a>Extract Text from a PDF</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pdftotext input.pdf output.txt</span><br></pre></td></tr></table></figure>
+<h2 id="Extract-Text-from-a-PDF"><a href="#Extract-Text-from-a-PDF" class="headerlink" title="Extract Text from a PDF"></a>Extract Text from a PDF</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdftotext input.pdf output.txt<br></code></pre></td></tr></table></figure>
 
-<h2 id="Merge-PDFs-Together"><a href="#Merge-PDFs-Together" class="headerlink" title="Merge PDFs Together"></a>Merge PDFs Together</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pdfunite file1.pdf file2.pdf merged.pdf</span><br></pre></td></tr></table></figure>
+<h2 id="Merge-PDFs-Together"><a href="#Merge-PDFs-Together" class="headerlink" title="Merge PDFs Together"></a>Merge PDFs Together</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdfunite file1.pdf file2.pdf merged.pdf<br></code></pre></td></tr></table></figure>
 
 <h2 id="Split-Extract-Pages-from-a-PDF"><a href="#Split-Extract-Pages-from-a-PDF" class="headerlink" title="Split (Extract) Pages from a PDF"></a>Split (Extract) Pages from a PDF</h2><p>This will split each page of <code>input.pdf</code> to <code>output_1.pdf</code>, <code>output_2.pdf</code>, etc.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pdfseparate input.pdf output_%d.pdf</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdfseparate input.pdf output_%d.pdf<br></code></pre></td></tr></table></figure>
 
                 
               </div>

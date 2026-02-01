@@ -274,32 +274,32 @@
 </ul>
 <p>All within your browser, without heavy windowing systems or VNC, making it a great alternative to traditional remote desktops!</p>
 <h2 id="Setup-Instructions"><a href="#Setup-Instructions" class="headerlink" title="Setup Instructions"></a>Setup Instructions</h2><h3 id="Server-Side"><a href="#Server-Side" class="headerlink" title="Server Side"></a>Server Side</h3><p>First, <a href="/2025/07/10/Managing-Development-Environments-with-Conda/">install Conda and set up a Conda environment</a>.</p>
-<h4 id="Install-Jupyter-Lab"><a href="#Install-Jupyter-Lab" class="headerlink" title="Install Jupyter Lab"></a>Install Jupyter Lab</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge jupyterlab</span><br></pre></td></tr></table></figure>
+<h4 id="Install-Jupyter-Lab"><a href="#Install-Jupyter-Lab" class="headerlink" title="Install Jupyter Lab"></a>Install Jupyter Lab</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda install -c conda-forge jupyterlab<br></code></pre></td></tr></table></figure>
 
 <p>Install kernels for Jupyter Lab:</p>
 <p>Python (IPyKernel):</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge ipykernel</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda install -c conda-forge ipykernel<br></code></pre></td></tr></table></figure>
 
 <p>R (IRKernel):</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge r-irkernel</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda install -c conda-forge r-irkernel<br></code></pre></td></tr></table></figure>
 
 <h4 id="Launch-Jupyter-Lab-and-Make-it-accessible"><a href="#Launch-Jupyter-Lab-and-Make-it-accessible" class="headerlink" title="Launch Jupyter Lab and Make it accessible"></a>Launch Jupyter Lab and Make it accessible</h4><p>Start a <code>tmux</code> session.</p>
 <p>Start JupyterLab in it, listening on localhost:8888, with no password&#x2F;token:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">jupyter lab \</span><br><span class="line">    --ip=127.0.0.1 --port 8888 \</span><br><span class="line">    --allow-root \</span><br><span class="line">    --no-browser \</span><br><span class="line">    --IdentityProvider.token=<span class="string">&#x27;&#x27;</span> \</span><br><span class="line">    --ServerApp.password=<span class="string">&#x27;&#x27;</span> \</span><br><span class="line">    --ServerApp.allow_remote_access=True</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">jupyter lab \<br>    --ip=127.0.0.1 --port 8888 \<br>    --allow-root \<br>    --no-browser \<br>    --IdentityProvider.token=<span class="hljs-string">&#x27;&#x27;</span> \<br>    --ServerApp.password=<span class="hljs-string">&#x27;&#x27;</span> \<br>    --ServerApp.allow_remote_access=True<br></code></pre></td></tr></table></figure>
 
 <p>Then open another <code>tmux</code> pane, set up <a target="_blank" rel="noopener" href="https://github.com/jifengwu2k/push-pull-port">push-pull-port</a>, and push port 8888 to port <code>$PRIVATE_PORT</code> (localhost only) of remote public server <code>$PUBLIC_HOST</code>:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh push-local-port.sh -l 8888 -r $PRIVATE_PORT -u $PUBLIC_USER -h $PUBLIC_HOST -x</span><br></pre></td></tr></table></figure>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs perl">sh <span class="hljs-keyword">push</span>-<span class="hljs-keyword">local</span>-port.sh -l <span class="hljs-number">8888</span> -r <span class="hljs-variable">$PRIVATE_PORT</span> -u <span class="hljs-variable">$PUBLIC_USER</span> -h <span class="hljs-variable">$PUBLIC_HOST</span> -<span class="hljs-keyword">x</span><br></code></pre></td></tr></table></figure>
 
 <p>Then detach from the <code>tmux</code> session.</p>
 <h3 id="Client-Side"><a href="#Client-Side" class="headerlink" title="Client Side"></a>Client Side</h3><p>Set up <a target="_blank" rel="noopener" href="https://github.com/jifengwu2k/push-pull-port">push-pull-port</a>.</p>
 <p>Pull the remote port and forward it to your local <code>8888</code> port:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh pull-remote-port.sh -r $PRIVATE_PORT -l 8888 -u $PUBLIC_USER -h $PUBLIC_HOST</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">sh pull-remote-port<span class="hljs-selector-class">.sh</span> -<span class="hljs-attribute">r</span> <span class="hljs-variable">$PRIVATE_PORT</span> -l <span class="hljs-number">8888</span> -u <span class="hljs-variable">$PUBLIC_USER</span> -h <span class="hljs-variable">$PUBLIC_HOST</span><br></code></pre></td></tr></table></figure>
 
 <p>Access in Browser: Open <a target="_blank" rel="noopener" href="http://localhost:8888/lab">http://localhost:8888/lab</a>.</p>
 <h2 id="Exporting-Jupyter-Notebooks"><a href="#Exporting-Jupyter-Notebooks" class="headerlink" title="Exporting Jupyter Notebooks"></a>Exporting Jupyter Notebooks</h2><p>You can export a Jupyter Notebook to a Python script or Markdown file by using <code>nbconvert</code> to convert notebooks:</p>
-<h3 id="Export-to-Python"><a href="#Export-to-Python" class="headerlink" title="Export to Python"></a>Export to Python</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter nbconvert --to script your_notebook.ipynb</span><br></pre></td></tr></table></figure>
+<h3 id="Export-to-Python"><a href="#Export-to-Python" class="headerlink" title="Export to Python"></a>Export to Python</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">jupyter nbconvert --to script your_notebook.ipynb<br></code></pre></td></tr></table></figure>
 
-<h3 id="Export-to-Markdown"><a href="#Export-to-Markdown" class="headerlink" title="Export to Markdown"></a>Export to Markdown</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter nbconvert --to markdown your_notebook.ipynb</span><br></pre></td></tr></table></figure>
+<h3 id="Export-to-Markdown"><a href="#Export-to-Markdown" class="headerlink" title="Export to Markdown"></a>Export to Markdown</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">jupyter nbconvert --to markdown your_notebook.ipynb<br></code></pre></td></tr></table></figure>
 
 <p>This will create <code>your_notebook.py</code> or <code>your_notebook.md</code> in the current directory.</p>
 
@@ -385,9 +385,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/10/04/2025-09-Financial-Statement/" title="2025-09 Financial Statement">
+                      <a href="/2025/10/09/Paper-Reading-Registerless-Hardware-Description/" title="Paper Reading: Registerless Hardware Description">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">2025-09 Financial Statement</span>
+                        <span class="hidden-mobile">Paper Reading: Registerless Hardware Description</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -395,8 +395,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/09/28/Shell-Coding-Guidelines/" title="Shell Coding Guidelines">
-                        <span class="hidden-mobile">Shell Coding Guidelines</span>
+                      <a href="/2025/09/30/2025-09-Financial-Statement/" title="2025-09 Financial Statement">
+                        <span class="hidden-mobile">2025-09 Financial Statement</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
