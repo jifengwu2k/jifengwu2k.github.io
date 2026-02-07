@@ -19,13 +19,14 @@
     <meta name="description" content="Here are some of the most frequent Git operations you may need in day-to-day development. Basic Git OperationsConnect Your Local Folder to a GitHub RepositoryYou have an existing local folder with fil">
 <meta property="og:type" content="article">
 <meta property="og:title" content="High-Frequency Git Operations for Everyday Development">
-<meta property="og:url" content="https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/index.html">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/02/07/High-Frequency-Git-Operations-for-Everyday-Development/index.html">
 <meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
 <meta property="og:description" content="Here are some of the most frequent Git operations you may need in day-to-day development. Basic Git OperationsConnect Your Local Folder to a GitHub RepositoryYou have an existing local folder with fil">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-08-21T20:43:36.000Z">
-<meta property="article:modified_time" content="2026-01-25T04:06:54.681Z">
+<meta property="article:published_time" content="2026-02-07T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-02-07T15:55:33.989Z">
 <meta property="article:author" content="Jifeng Wu">
+<meta property="article:tag" content="Reference">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -199,8 +200,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-08-21 20:43" pubdate>
-          August 21, 2025
+        <time datetime="2026-02-07 00:00" pubdate>
+          February 7, 2026
         </time>
       </span>
     
@@ -211,7 +212,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          9k words
+          9.9k words
         
       </span>
     
@@ -222,7 +223,7 @@
         
         
         
-          76 mins
+          83 mins
         
       </span>
     
@@ -352,7 +353,36 @@
 <li><code>-f</code> &#x3D; force</li>
 <li><code>-d</code> &#x3D; include directories</li>
 </ul>
-<h2 id="File-Tracking-and-Management"><a href="#File-Tracking-and-Management" class="headerlink" title="File Tracking and Management"></a>File Tracking and Management</h2><h3 id="Remove-Previously-Committed-Files-Now-in-gitignore"><a href="#Remove-Previously-Committed-Files-Now-in-gitignore" class="headerlink" title="Remove Previously Committed Files Now in .gitignore"></a>Remove Previously Committed Files Now in <code>.gitignore</code></h3><p>You added rules to <code>.gitignore</code> but some files were already committed.</p>
+<h2 id="File-Tracking-and-Management"><a href="#File-Tracking-and-Management" class="headerlink" title="File Tracking and Management"></a>File Tracking and Management</h2><h3 id="gitignore-Reference"><a href="#gitignore-Reference" class="headerlink" title=".gitignore Reference"></a><code>.gitignore</code> Reference</h3><table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Ignores</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>foo</code></td>
+<td>Any file or dir named <code>foo</code> anywhere</td>
+</tr>
+<tr>
+<td><code>foo/</code></td>
+<td>Any directory named <code>foo</code> (any level)</td>
+</tr>
+<tr>
+<td><code>/foo</code></td>
+<td>Only top-level <code>foo</code> file or dir</td>
+</tr>
+<tr>
+<td><code>/foo/</code></td>
+<td>Only top-level directory named <code>foo</code></td>
+</tr>
+</tbody></table>
+<p><code>.gitignore</code> files allow comments</p>
+<ul>
+<li>Lines beginning with the <code>#</code> character are treated as comments and are ignored by Git.</li>
+<li>Whitespace before the <code>#</code> is ignored (i.e., you can indent your comments).</li>
+</ul>
+<h3 id="Remove-Previously-Committed-Files-Now-in-gitignore"><a href="#Remove-Previously-Committed-Files-Now-in-gitignore" class="headerlink" title="Remove Previously Committed Files Now in .gitignore"></a>Remove Previously Committed Files Now in <code>.gitignore</code></h3><p>You added rules to <code>.gitignore</code> but some files were already committed.</p>
 <p>Stage removal of all currently tracked files (but not delete locally):</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">rm</span> -r --cached .<br></code></pre></td></tr></table></figure>
 
@@ -479,7 +509,15 @@
 <p>Delete your local temp branch:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">git branch -D temp-recovery<br></code></pre></td></tr></table></figure>
 
-<h2 id="Repository-Management"><a href="#Repository-Management" class="headerlink" title="Repository Management"></a>Repository Management</h2><h3 id="Duplicate-a-Repository-on-GitHub-Without-Forking"><a href="#Duplicate-a-Repository-on-GitHub-Without-Forking" class="headerlink" title="Duplicate a Repository on GitHub Without Forking"></a>Duplicate a Repository on GitHub Without Forking</h3><p>First, clone the repo you’d like to duplicate:</p>
+<h2 id="Repository-Management"><a href="#Repository-Management" class="headerlink" title="Repository Management"></a>Repository Management</h2><h3 id="Set-up-a-Git-Repository-on-a-Remote-SSH-Server"><a href="#Set-up-a-Git-Repository-on-a-Remote-SSH-Server" class="headerlink" title="Set up a Git Repository on a Remote SSH Server"></a>Set up a Git Repository on a Remote SSH Server</h3><h4 id="On-the-SSH-Server"><a href="#On-the-SSH-Server" class="headerlink" title="On the SSH Server"></a>On the SSH Server</h4><p>Create a “bare” Git repository (recommended for central repos):</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">mkdir</span> -p /abspath/to/myproject.git<br>git init --bare /abspath/to/myproject.git<br></code></pre></td></tr></table></figure>
+
+<h4 id="On-Your-Local-Machine"><a href="#On-Your-Local-Machine" class="headerlink" title="On Your Local Machine"></a>On Your Local Machine</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">mkdir</span> -p path/to/myproject<br>git init path/to/myproject<br><span class="hljs-built_in">cd</span> path/to/myproject<br>git add .<br>git commit -m <span class="hljs-string">&quot;Initial commit&quot;</span><br>git branch -M main   <span class="hljs-comment"># or master depending on your setup</span><br>git remote add origin ssh://username@your.server.com/abspath/to/myproject.git<br>git push -u origin main<br></code></pre></td></tr></table></figure>
+
+<h4 id="Clone-from-the-SSH-server-elsewhere"><a href="#Clone-from-the-SSH-server-elsewhere" class="headerlink" title="Clone from the SSH server elsewhere"></a>Clone from the SSH server elsewhere</h4><p>To clone onto another machine:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">git <span class="hljs-built_in">clone</span> ssh://username@your.server.com/abspath/to/myproject.git<br></code></pre></td></tr></table></figure>
+
+<h3 id="Duplicate-a-Repository-on-GitHub-Without-Forking"><a href="#Duplicate-a-Repository-on-GitHub-Without-Forking" class="headerlink" title="Duplicate a Repository on GitHub Without Forking"></a>Duplicate a Repository on GitHub Without Forking</h3><p>First, clone the repo you’d like to duplicate:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> --bare https://github.com/username/original-repo.git<br></code></pre></td></tr></table></figure>
 <blockquote>
 <p><code>--bare</code> makes a bare repository, useful for duplicating all branches and history.</p>
@@ -515,7 +553,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/DevOps/" class="category-chain-item">DevOps</a>
+  <a href="/categories/DevOps-SysAdmin/" class="category-chain-item">DevOps, SysAdmin</a>
   
   
 
@@ -527,6 +565,13 @@
     </div>
   
   
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Reference/">#Reference</a>
+      
+    </div>
+  
 </div>
 
 
@@ -536,7 +581,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>High-Frequency Git Operations for Everyday Development</div>
-      <div>https://jifengwu2k.github.io/2025/08/21/High-Frequency-Git-Operations-for-Everyday-Development/</div>
+      <div>https://jifengwu2k.github.io/2026/02/07/High-Frequency-Git-Operations-for-Everyday-Development/</div>
     </div>
     <div class="license-meta">
       
@@ -548,7 +593,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>August 21, 2025</div>
+          <div>February 7, 2026</div>
         </div>
       
       
@@ -580,18 +625,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/08/22/%E7%AE%80%E6%98%93%E9%A3%9F%E8%B0%B1/" title="简易食谱">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">简易食谱</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/08/21/Eating-in-the-Americas-Down-to-earth-Foodstuffs/" title="Eating in the Americas - Down-to-earth Foodstuffs">
-                        <span class="hidden-mobile">Eating in the Americas - Down-to-earth Foodstuffs</span>
+                      <a href="/2026/02/06/2026-02-Financial-Statement/" title="2026-02 Financial Statement">
+                        <span class="hidden-mobile">2026-02 Financial Statement</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
