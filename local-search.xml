@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>PRoot: Lightweight Userland Linux Distros Without Root</title>
+    <link href="/2026/02/11/PRoot-Lightweight-Userland-Linux-Distros-Without-Root/"/>
+    <url>/2026/02/11/PRoot-Lightweight-Userland-Linux-Distros-Without-Root/</url>
+    
+    <content type="html"><![CDATA[<p>Need to build and run applications in a different Linux distribution than your host, but can’t use root, Docker or Podman containers, or virtualization on your system (e.g. on shared HPC, constrained cloud VMs)?</p><p>Enter <strong><a href="https://proot-me.github.io/">PRoot</a></strong>, a lightweight, rootless isolation solution that is:</p><ul><li>More isolated than Conda</li><li>Less privileged than Docker&#x2F;Podman (which need root)</li></ul><h2 id="What-is-PRoot"><a href="#What-is-PRoot" class="headerlink" title="What is PRoot?"></a>What is PRoot?</h2><p>PRoot is a user-space implementation of <code>chroot</code>, <code>mount --bind</code>, and <code>binfmt_misc</code>, all carried out without special privileges. You can “fake” running almost any Linux distribution as a sub-root in a different root filesystem. It’s not an emulator or a full virtual machine. All processes run natively on your kernel, using the same CPU architecture, but isolated in a “virtualized” root.</p><h2 id="How-To-Run-a-Userland-Linux-Distro-with-PRoot"><a href="#How-To-Run-a-Userland-Linux-Distro-with-PRoot" class="headerlink" title="How To Run a Userland Linux Distro with PRoot"></a>How To Run a Userland Linux Distro with PRoot</h2><h3 id="Build-PRoot"><a href="#Build-PRoot" class="headerlink" title="Build PRoot"></a>Build PRoot</h3><p>Refer to <a href="https://jifengwu2k.github.io/2025/12/06/Building-C-C-Open-Source-Applications-in-a-Conda-Environment/#proot">this tutorial</a>.</p><h3 id="Download-a-Minimal-Root-Filesystem"><a href="#Download-a-Minimal-Root-Filesystem" class="headerlink" title="Download a Minimal Root Filesystem"></a>Download a Minimal Root Filesystem</h3><p>For example:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -O https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-amd64-root.tar.gz<br></code></pre></td></tr></table></figure><h3 id="Unpack-it-into-a-folder"><a href="#Unpack-it-into-a-folder" class="headerlink" title="Unpack it into a folder"></a>Unpack it into a folder</h3><p>For example:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> ~/ubuntu-rootfs<br><span class="hljs-comment"># Ignore warnings about missing device files</span><br>tar -xpf ubuntu-bionic-core-cloudimg-amd64-root.tar.gz -C ~/ubuntu-rootfs<br></code></pre></td></tr></table></figure><h3 id="Run-PRoot"><a href="#Run-PRoot" class="headerlink" title="Run PRoot"></a>Run PRoot</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs bash">proot \<br>-0 \<br>-b /dev/ \<br>-b /etc/group \<br>-b /etc/host.conf \<br>-b /etc/hosts \<br>-b /etc/mtab \<br>-b /etc/networks \<br>-b /etc/nsswitch.conf \<br>-b /etc/passwd \<br>-b /etc/resolv.conf \<br>-b /etc/localtime \<br>-b /proc/ \<br>-b /run/ \<br>-b /sys/ \<br>-b /var/run/dbus/system_bus_socket \<br>-r ~/ubuntu-rootfs \<br>-w / \<br>/bin/bash<br></code></pre></td></tr></table></figure><p>Let’s break that down:</p><ul><li><code>-0</code>: fake root user (UID 0)</li><li><code>-b</code>: bind-mount host system files for basic functionality (network, system info)</li><li><code>-r</code>: set the root directory to our extracted mini-Ubuntu</li><li><code>-w</code>: set working directory after “chroot”</li><li><code>/bin/bash</code>: start a bash shell as if this were a real Ubuntu system!</li></ul><h3 id="Use-Your-Distro"><a href="#Use-Your-Distro" class="headerlink" title="Use Your Distro"></a>Use Your Distro</h3><p>You’re now inside a minimal Ubuntu environment! You can <code>apt update</code>, install packages, build anything you want - totally isolated from your host system.</p><p>But:</p><ul><li>No process, user, or network namespaces: All processes run as your user, on the host kernel, with the host’s IP.</li><li>No systemd, no daemons.</li><li>Root is faked: You’re “root” inside the userland, but you don’t have actual kernel privileges.</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>DevOps, SysAdmin</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Reference</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>High-Frequency Git Operations for Everyday Development</title>
     <link href="/2026/02/07/High-Frequency-Git-Operations-for-Everyday-Development/"/>
     <url>/2026/02/07/High-Frequency-Git-Operations-for-Everyday-Development/</url>
@@ -33,7 +58,7 @@
     <link href="/2026/02/06/2026-02-Financial-Statement/"/>
     <url>/2026/02/06/2026-02-Financial-Statement/</url>
     
-    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs csv">date,name,amount<br>2026-02-02,ONEPAY CASHREWRD SYF PAYMNT,-36.47<br>2026-02-03,Collegetown Terr Rent,-1535.00<br>2026-02-03,Payment to Chase card ending in 6502,-23.03<br>2026-02-04,ONEPAY CASHREWRD SYF PAYMNT,-45.86<br></code></pre></td></tr></table></figure><p>Total: -1640.36</p>]]></content>
+    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs csv">date,name,amount<br>2026-02-02,ONEPAY CASHREWRD SYF PAYMNT,-36.47<br>2026-02-03,Collegetown Terr Rent,-1535.00<br>2026-02-03,Payment to Chase card,-23.03<br>2026-02-04,ONEPAY CASHREWRD SYF PAYMNT,-45.86<br>2026-02-06,Payment to Chase card,-163.54<br>2026-02-09,Payment to Chase card,-43.21<br>2026-02-09,ONEPAY CASHREWRD SYF PAYMNT,-34.34<br>2026-02-09,Payment to Chase card,-23.85<br></code></pre></td></tr></table></figure><p>Total: -1905.30</p>]]></content>
     
     
     <categories>
