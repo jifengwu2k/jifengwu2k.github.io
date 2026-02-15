@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>Installing Fonts on Linux</title>
+    <link href="/2026/02/15/Installing-Fonts-on-Linux/"/>
+    <url>/2026/02/15/Installing-Fonts-on-Linux/</url>
+    
+    <content type="html"><![CDATA[<p>First, download your desired font. Fonts are usually TTF (<code>.ttf</code>), OTF (<code>.otf</code>). For illustration, let’s say you downloaded <code>MyFont.ttf</code>.</p><h2 id="Install-for-your-user-only"><a href="#Install-for-your-user-only" class="headerlink" title="Install for your user only"></a>Install for your user only</h2><p>Place the font file into <code>˜/.local/share/fonts</code>. If this folder does not exist, you can create it.</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">mkdir</span> -p ˜/.local/share/fonts<br><span class="hljs-built_in">cp</span> MyFont.ttf ˜/.local/share/fonts/<br></code></pre></td></tr></table></figure><h2 id="Install-system-wide"><a href="#Install-system-wide" class="headerlink" title="Install system-wide"></a>Install system-wide</h2><p>Copy the font to <code>/usr/share/fonts</code> or <code>/usr/local/share/fonts</code>. You’ll need root privileges:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">cp</span> MyFont.ttf /usr/share/fonts/<br></code></pre></td></tr></table></figure><h2 id="Update-the-font-cache"><a href="#Update-the-font-cache" class="headerlink" title="Update the font cache"></a>Update the font cache</h2><p>After copying the font file, update the font cache so the system recognizes it:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">fc-cache -fv<br></code></pre></td></tr></table></figure><h2 id="Verify-Installation"><a href="#Verify-Installation" class="headerlink" title="Verify Installation"></a>Verify Installation</h2><p>You can check if the font is installed by listing fonts:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">fc-list<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>Data Science, Machine Learning, Multimedia Processing</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Reference</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>PRoot: Lightweight Userland Linux Distros Without Root</title>
     <link href="/2026/02/11/PRoot-Lightweight-Userland-Linux-Distros-Without-Root/"/>
     <url>/2026/02/11/PRoot-Lightweight-Userland-Linux-Distros-Without-Root/</url>
@@ -756,15 +781,21 @@
     <link href="/2025/08/27/Manipulating-PDFs-from-the-Unix-Command-Line/"/>
     <url>/2025/08/27/Manipulating-PDFs-from-the-Unix-Command-Line/</url>
     
-    <content type="html"><![CDATA[<p>The <a href="https://poppler.freedesktop.org/">Poppler utilities</a> provide many Unix command-line tools for manipulating PDFs. Install via:</p><ul><li><code>sudo apt-get install poppler-utils</code> (Ubuntu)</li><li><code>sudo apk add poppler-utils</code> (Alpine)</li><li><code>brew install poppler</code> (macOS)</li></ul><h2 id="Extract-Text-from-a-PDF"><a href="#Extract-Text-from-a-PDF" class="headerlink" title="Extract Text from a PDF"></a>Extract Text from a PDF</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdftotext input.pdf output.txt<br></code></pre></td></tr></table></figure><h2 id="Merge-PDFs-Together"><a href="#Merge-PDFs-Together" class="headerlink" title="Merge PDFs Together"></a>Merge PDFs Together</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdfunite file1.pdf file2.pdf merged.pdf<br></code></pre></td></tr></table></figure><h2 id="Split-Extract-Pages-from-a-PDF"><a href="#Split-Extract-Pages-from-a-PDF" class="headerlink" title="Split (Extract) Pages from a PDF"></a>Split (Extract) Pages from a PDF</h2><p>This will split each page of <code>input.pdf</code> to <code>output_1.pdf</code>, <code>output_2.pdf</code>, etc.</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdfseparate input.pdf output_%d.pdf<br></code></pre></td></tr></table></figure>]]></content>
+    <content type="html"><![CDATA[<h2 id="Poppler-Utilities"><a href="#Poppler-Utilities" class="headerlink" title="Poppler Utilities"></a>Poppler Utilities</h2><p>The <a href="https://poppler.freedesktop.org/">Poppler utilities</a> provide many Unix command-line tools for manipulating PDFs. Install via:</p><ul><li><code>sudo apt-get install poppler-utils</code> (Ubuntu)</li><li><code>sudo apk add poppler-utils</code> (Alpine)</li><li><code>brew install poppler</code> (macOS)</li></ul><h3 id="Extract-Text-from-a-PDF"><a href="#Extract-Text-from-a-PDF" class="headerlink" title="Extract Text from a PDF"></a>Extract Text from a PDF</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdftotext input.pdf output.txt<br></code></pre></td></tr></table></figure><h3 id="Merge-PDFs-Together"><a href="#Merge-PDFs-Together" class="headerlink" title="Merge PDFs Together"></a>Merge PDFs Together</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdfunite file1.pdf file2.pdf merged.pdf<br></code></pre></td></tr></table></figure><h3 id="Split-Extract-Pages-from-a-PDF"><a href="#Split-Extract-Pages-from-a-PDF" class="headerlink" title="Split (Extract) Pages from a PDF"></a>Split (Extract) Pages from a PDF</h3><p>This will split each page of <code>input.pdf</code> to <code>output_1.pdf</code>, <code>output_2.pdf</code>, etc.</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pdfseparate input.pdf output_%d.pdf<br></code></pre></td></tr></table></figure><h2 id="Convert-SVG-to-PDF"><a href="#Convert-SVG-to-PDF" class="headerlink" title="Convert SVG to PDF"></a>Convert SVG to PDF</h2><h3 id="Using-inkscape"><a href="#Using-inkscape" class="headerlink" title="Using inkscape"></a>Using <code>inkscape</code></h3><p>Inkscape is a powerful SVG editor with command-line support.  </p><p>You can convert SVG to PDF like this:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">inkscape input.svg --export-type=pdf --export-filename=output.pdf<br></code></pre></td></tr></table></figure><h3 id="Using-rsvg-convert-from-the-librsvg-package"><a href="#Using-rsvg-convert-from-the-librsvg-package" class="headerlink" title="Using rsvg-convert (from the librsvg package)"></a>Using <code>rsvg-convert</code> (from the librsvg package)</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">rsvg-convert -f pdf -o output.pdf input.svg<br></code></pre></td></tr></table></figure>]]></content>
     
     
     <categories>
       
-      <category>Data Science, Multimedia, and Process Automation</category>
+      <category>Data Science, Machine Learning, Multimedia Processing</category>
       
     </categories>
     
+    
+    <tags>
+      
+      <tag>Reference</tag>
+      
+    </tags>
     
   </entry>
   
