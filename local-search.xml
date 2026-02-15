@@ -58,7 +58,7 @@
     <link href="/2026/02/06/2026-02-Financial-Statement/"/>
     <url>/2026/02/06/2026-02-Financial-Statement/</url>
     
-    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs csv">date,name,amount<br>2026-02-02,ONEPAY CASHREWRD SYF PAYMNT,-36.47<br>2026-02-03,Collegetown Terr Rent,-1535.00<br>2026-02-03,Payment to Chase card,-23.03<br>2026-02-04,ONEPAY CASHREWRD SYF PAYMNT,-45.86<br>2026-02-06,Payment to Chase card,-163.54<br>2026-02-09,Payment to Chase card,-43.21<br>2026-02-09,ONEPAY CASHREWRD SYF PAYMNT,-34.34<br>2026-02-09,Payment to Chase card,-23.85<br></code></pre></td></tr></table></figure><p>Total: -1905.30</p>]]></content>
+    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs csv">date,name,amount<br>2026-02-02,ONEPAY CASHREWRD SYF PAYMNT,-36.47<br>2026-02-03,Collegetown Terr Rent,-1535.00<br>2026-02-03,Payment to Chase card,-23.03<br>2026-02-04,ONEPAY CASHREWRD SYF PAYMNT,-45.86<br>2026-02-06,Payment to Chase card,-163.54<br>2026-02-09,Payment to Chase card,-43.21<br>2026-02-09,ONEPAY CASHREWRD SYF PAYMNT,-34.34<br>2026-02-09,Payment to Chase card,-23.85<br>2026-02-13,Cornell Universi DIR DEP PPD,1745.84<br>2026-02-13,Payment to Chase card,-85.21<br></code></pre></td></tr></table></figure><p>Total: -244.67</p>]]></content>
     
     
     <categories>
@@ -232,10 +232,16 @@
     
     <categories>
       
-      <category>Environments</category>
+      <category>DevOps, SysAdmin</category>
       
     </categories>
     
+    
+    <tags>
+      
+      <tag>Reference</tag>
+      
+    </tags>
     
   </entry>
   
@@ -396,10 +402,16 @@
     
     <categories>
       
-      <category>Environments</category>
+      <category>DevOps, SysAdmin</category>
       
     </categories>
     
+    
+    <tags>
+      
+      <tag>Reference</tag>
+      
+    </tags>
     
   </entry>
   
@@ -415,10 +427,16 @@
     
     <categories>
       
-      <category>Environments</category>
+      <category>DevOps, SysAdmin</category>
       
     </categories>
     
+    
+    <tags>
+      
+      <tag>Reference</tag>
+      
+    </tags>
     
   </entry>
   
@@ -522,10 +540,16 @@
     
     <categories>
       
-      <category>Environments</category>
+      <category>DevOps, SysAdmin</category>
       
     </categories>
     
+    
+    <tags>
+      
+      <tag>Reference</tag>
+      
+    </tags>
     
   </entry>
   
@@ -851,10 +875,16 @@
     
     <categories>
       
-      <category>Environments</category>
+      <category>DevOps, SysAdmin</category>
       
     </categories>
     
+    
+    <tags>
+      
+      <tag>Reference</tag>
+      
+    </tags>
     
   </entry>
   
@@ -1022,10 +1052,16 @@
     
     <categories>
       
-      <category>Environments</category>
+      <category>DevOps, SysAdmin</category>
       
     </categories>
     
+    
+    <tags>
+      
+      <tag>Reference</tag>
+      
+    </tags>
     
   </entry>
   
@@ -1450,19 +1486,25 @@
   
   
   <entry>
-    <title>From the Fourier Series to the Fourier Transform to the Discrete-time Fourier Transform: Demystifying the Formulas</title>
-    <link href="/2023/09/04/From-the-Fourier-Series-to-the-Fourier-Transform-to-the-Discrete-time-Fourier-Transform-Demystifying-the-Formulas/"/>
-    <url>/2023/09/04/From-the-Fourier-Series-to-the-Fourier-Transform-to-the-Discrete-time-Fourier-Transform-Demystifying-the-Formulas/</url>
+    <title> From the Fourier Series to the Fourier Transform to the Discrete Fourier Transform: Demystifying the Formulas</title>
+    <link href="/2023/09/04/From-the-Fourier-Series-to-the-Fourier-Transform-to-the-Discrete-Fourier-Transform-Demystifying-the-Formulas/"/>
+    <url>/2023/09/04/From-the-Fourier-Series-to-the-Fourier-Transform-to-the-Discrete-Fourier-Transform-Demystifying-the-Formulas/</url>
     
-    <content type="html"><![CDATA[<p>In realms as broad as electrical engineering, acoustics, optics, signal processing, quantum mechanics, and econometrics, the Fourier Series, Fourier Transform, and Discrete-time Fourier Transform play a pivotal role in analyzing signals by allowing us to decompose them into simpler components. Many articles present their formulas or dive into their intuition and applications. However, what seems to be missing is a blog post that explains the derivation of their formulas in a way that is both clear and accessible, requiring no more than a rudimentary understanding of calculus.</p><h1 id="Fourier-Series"><a href="#Fourier-Series" class="headerlink" title="Fourier Series"></a>Fourier Series</h1><h2 id="Standard-Form-of-the-Fourier-Series"><a href="#Standard-Form-of-the-Fourier-Series" class="headerlink" title="Standard Form of the Fourier Series"></a>Standard Form of the Fourier Series</h2><p>Our journey begins with the <a href="https://en.wikipedia.org/wiki/Fourier_series">Fourier Series</a> - a method to represent periodic functions as a sum of sine and cosine waves.</p><p>Let $x(t)$ be a periodic function with period $T$. The <em>standard form of the Fourier series</em> for $x(t)$ is given by:</p><p>$$x(t) &#x3D; \frac{a_0}{2} + a_1 \cos{\frac{2\pi}{T} t} + b_1 \sin{\frac{2\pi}{T} t} + a_2 \cos{\frac{4\pi}{T} t} + b_2 \sin{\frac{4\pi}{T} t} + \dots $$</p><p>To solve for $a_0, a_1, b_1, \dots$, we first observe the .</p><p>Thus, we can multiply both sides of the equation by $cos{\frac{2k\pi}{T} t}$ or $\sin{\frac{2k\pi}{T} t}$ $(k \in {0, 1, 2, \dots, n})$, and then integrate over one period $[-\frac{T}{2}, \frac{T}{2})$ to obtain:</p><p>$$a_k &#x3D; \frac{2}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) \cos{\frac{2k\pi}{T} t} dt}$$</p><p>$$b_k &#x3D; \frac{2}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) \sin{\frac{2k\pi}{T} t} dt}$$</p><h2 id="Exponential-Form-of-the-Fourier-Series"><a href="#Exponential-Form-of-the-Fourier-Series" class="headerlink" title="Exponential Form of the Fourier Series"></a>Exponential Form of the Fourier Series</h2><p>Using Euler’s formula $e^{ix} &#x3D; \cos{x} + i \sin{x}$, we can derive:</p><p>$$\cos{x} &#x3D; \frac{e^{ix} + e^{-ix}}{2}$$</p><p>$$\sin{x} &#x3D; -i \frac{e^{ix} - e^{-ix}}{2}$$</p><p>Substituting these representations of $\cos{x}$ and $\sin{x}$ into $a_k$ and $b_k$, we get:</p><p>$$a_k &#x3D; \frac{2}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) \frac{e^{i \frac{2k\pi}{T} t} + e^{-i \frac{2k\pi}{T} t}}{2} dt}$$</p><p>$$b_k &#x3D; \frac{2}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{-i x(t) \frac{e^{i \frac{2k\pi}{T} t} - e^{-i \frac{2k\pi}{T} t}}{2} dt}$$</p><p>And:</p><p>$$a_k \cos{\frac{2k\pi}{T} t} + b_k \sin{\frac{2k\pi}{T} t} &#x3D; a_k \frac{e^{i \frac{2k\pi}{T} t} + e^{-i \frac{2k\pi}{T} t}}{2} - i b_k \frac{e^{i \frac{2k\pi}{T} t} - e^{-i \frac{2k\pi}{T} t}}{2} &#x3D; \frac{a_k - i b_k}{2} e^{i \frac{2k\pi}{T} t} + \frac{a_k + i b_k}{2} e^{-i \frac{2k\pi}{T} t}$$</p><p>And:</p><p>$$\frac{a_k - i b_k}{2} &#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) e^{-i \frac{2k\pi}{T} t} dt}$$</p><p>$$\frac{a_k + i b_k}{2} &#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) e^{i \frac{2k\pi}{T} t} dt}$$</p><p>Furthermore, if we let:</p><p>$$c_k &#x3D; \frac{a_k - i b_k}{2} &#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) e^{-i \frac{2k\pi}{T} t} dt}$$</p><p>Substituting $k \leftarrow -k$ into the expression for $c_k$, we will obtain:</p><p>$$c_{-k} &#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) e^{i \frac{2k\pi}{T} t} dt} &#x3D; \frac{a_k + i b_k}{2}$$</p><p>Thus:</p><p>$$a_k \cos{\frac{2k\pi}{T} t} + b_k \sin{\frac{2k\pi}{T} t}  &#x3D; \frac{a_k - i b_k}{2} e^{i \frac{2k\pi}{T} t} + \frac{a_k + i b_k}{2} e^{-i \frac{2k\pi}{T} t}<br>&#x3D; c_k e^{i \frac{2k\pi}{T} t} + c_{-k} e^{-i \frac{2k\pi}{T} t}$$</p><p>And by substituting $k \leftarrow 0$ into the expression for $c_k$, we get:</p><p>$$c_0 &#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) dt} &#x3D; \frac{a_0}{2}$$</p><p>Therefore:</p><p>$$x(t) &#x3D; \frac{a_0}{2} + \sum_{k&#x3D;1}^{n}{(a_k \cos{\frac{2k\pi}{T} t} + b_k \sin{\frac{2k\pi}{T} t})}  &#x3D; c_0 + \sum_{k&#x3D;1}^{n}{(c_k e^{i \frac{2k\pi}{T} t} + c_{-k} e^{-i \frac{2k\pi}{T} t})} &#x3D; \sum_{k&#x3D;-n}^{n}{c_k e^{i \frac{2k\pi}{T} t}}$$</p><p>Where:</p><p>$$c_k&#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) e^{-i \frac{2k\pi}{T} t} dt}$$</p><p>This is the <em>exponential form of the Fourier series</em>. It is more concise than the standard form of the Fourier series and is used more often in practice.</p><h1 id="Fourier-Transform"><a href="#Fourier-Transform" class="headerlink" title="Fourier Transform"></a>Fourier Transform</h1><p>The Fourier transform is a generalization of the Fourier series, which can analyze the effect of a frequency in <em>any function</em> (which may not necessarily be a periodic function). In this section, we will present how it can be derived from the exponential form of the Fourier series.</p><p>Given a periodic function $x(t)$ with period $T$, the exponential form of the Fourier series of $x(t)$ is as follows:</p><p>$$x(t) &#x3D; \sum_{k&#x3D;-n}^{n}{c_k e^{i \frac{2k\pi}{T} t}}$$</p><p>Where:</p><p>$$c_k&#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) e^{-i \frac{2k\pi}{T} t} dt}$$</p><p>Let’s say that the period $T$ is associated with a frequency known as the <a href="https://en.wikipedia.org/wiki/Fundamental_frequency"><em>fundamental frequency</em></a> $f_0 &#x3D; \frac{1}{T}$. Given $f_0$, we can rewrite the previous Fourier series as:</p><p>$$x(t) &#x3D; \sum_{k&#x3D;-n}^{n}{c_k e^{i 2\pi k f_0 t}}$$</p><p>Where:</p><p>$$c_k&#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) e^{-i 2\pi k f_0 t} dt}$$</p><p>For a non-periodic function, we can consider it as a periodic function with $T \rightarrow +\infty$. In this case, the fundamental frequency $f_0$ is an infinitesimal quantity; therefore, <em>we can consider that any frequency $f$ can be expressed as an integer multiple of the fundamental frequency, and the difference between two neighboring frequencies is the fundamental frequency $f_0$</em>. In this case, the fundamental frequency $f_0$ can be expressed as a differential of the frequency $f$, i.e., $df$.</p><p>In this case, for a possibly non-periodic function $x(t)$:</p><p>$$x(t) &#x3D; \sum_{k&#x3D;-\infty}^{\infty}{c_k e^{i 2\pi k (df)t}}$$</p><p>$$c_k&#x3D; (df) \int_{-\infty}^{\infty}{x(t) e^{-i 2\pi k (df) t} dt}$$</p><p>Thus, $x(t)$ can be represented as:</p><p>$$x(t) &#x3D; \sum_{k&#x3D;-\infty}^{\infty}{[(df) \cdot \int_{-\infty}^{\infty}{x(t) e^{-i 2\pi k (df) t} dt} \cdot e^{i 2\pi k (df) t}]}$$</p><p>By considering $f \leftarrow k (df)$, <a href="https://maninbocss.medium.com/summation-and-the-definite-integral-235663ef5ec3">we can transform the summation into a definite integral</a>:</p><p>$$x(t)&#x3D; \int_{-\infty}^{\infty}{ [(\int_{-\infty}^{\infty}{x(t) e^{-i 2\pi f t} dt}) e^{i 2\pi f t}] df}$$</p><p>Let:</p><p>$$X(f) &#x3D; \int_{-\infty}^{\infty}{x(t) e^{-i 2\pi f t} dt}$$</p><p>Then $x(t)$ can be represented as:</p><p>$$x(t) &#x3D; \int_{-\infty}^{\infty}{ X(f) e^{i 2\pi f t} df}$$</p><p>These two equations are very important.</p><ul><li>If we know $x(t)$ (i.e., the value of $x(t)$ at any time $t$), through $X(f) &#x3D; \int_{-\infty}^{\infty}{x(t) e^{-i 2\pi f t} dt}$, we can compute <em>the relative magnitude of any frequency $f$ over the whole time period</em>.</li><li>At the same time, if we know $X(f)$ (i.e., the relative magnitude of any frequency $f$ over the whole time period), by means of $x(t) &#x3D; \int_{-\infty}^{\infty}{ X(f) e^{i 2\pi f t} df}$, we can calculate <em>the value of $x(t)$ at any time $t$</em>.</li></ul><p>We refer to $X(f)$ as the <em>Fourier transform</em> of $x(t)$, also known as the <em>spectrum</em> of $x(t)$, and to $x(t)$ as the <em>inverse Fourier transform</em> of $X(f)$.</p><h1 id="Discrete-time-Fourier-Transform"><a href="#Discrete-time-Fourier-Transform" class="headerlink" title="Discrete-time Fourier Transform"></a>Discrete-time Fourier Transform</h1><p>When we process signals with computers, as computers cannot store a continuous infinite function, we usually take $N$ samples of the original signal $x(t)$ at a certain time interval $\Delta t$, obtaining an array $x[0:N-1]$.</p><p>Using $x[0:N-1]$ to estimate the Fourier transform $X(f)$ of the sampled function $x(t)$, we get:</p><p>$$X(f) &#x3D; \int_{-\infty}^{\infty}{x(t) e^{-i 2\pi f t} dt} \approx \int_{0}^{N \Delta t}{x(t) e^{-i 2\pi f t} dt} \approx \sum_{m&#x3D;0}^{N - 1}{x(m \Delta t) e^{-i 2\pi f m \Delta t}}$$</p><p>If we <em>assume these samples have spanned a period of the original signal, e.g. $T &#x3D; N \Delta t$, and that we only consider frequencies satisfying $f &#x3D; k \frac{1}{N \Delta t} (k \in {0, 1, \dots, N - 1})$</em>, we get:</p><p>$$X(k \frac{1}{N \Delta t}) \approx \sum_{n&#x3D;0}^{N - 1}{x(n \Delta t) e^{-i 2\pi k \frac{1}{N \Delta t} n \Delta t}} &#x3D; \sum_{n&#x3D;0}^{N - 1}{x(n \Delta t) e^{-i 2\pi \frac{k}{N} n}} &#x3D; \sum_{n&#x3D;0}^{N - 1}{x[n] e^{-i 2\pi \frac{k}{N} n}}$$</p><p>Let:</p><p>$$X[k] &#x3D; \sum_{n&#x3D;0}^{N - 1}{x[n] e^{-i 2\pi \frac{k}{N} n}} (k \in {0, 1, \dots, N - 1})$$</p><p>We call such an array of $N$ discrete numbers $X[0:N-1]$ the <em>discrete-time Fourier transform</em> of $x[0:N-1]$, which is a <em>discrete</em> frequency domain representation of $x[0:N-1]$.</p><p>Using $X[0:N-1]$, we can restore $x[0:N-1]$:</p><p>$$x[n] &#x3D; \frac{1}{N} \sum_{k&#x3D;0}^{N - 1}{X[k] e^{i 2\pi \frac{k}{N} n}} (n \in {0, 1, \dots, N - 1})$$</p><p>We call $x[0:N-1]$ the <em>inverse discrete-time Fourier transform</em> of $X[0:N-1]$. This is analogous to $X(f)$ being the Fourier transform of $x(t)$ and $x(t)$ being the inverse Fourier transform of $X(f)$ in the continuous case.</p>]]></content>
+    <content type="html"><![CDATA[<p>In realms as broad as electrical engineering, acoustics, optics, signal processing, quantum mechanics, and econometrics, the Fourier Series, Fourier Transform, and Discrete Fourier Transform play a pivotal role in analyzing signals by allowing us to decompose them into simpler components. Many articles present their formulas or dive into their intuition and applications. However, what seems to be missing is a blog post that explains the derivation of their formulas in a way that is both clear and accessible, requiring no more than a rudimentary understanding of calculus.</p><h1 id="Fourier-Series"><a href="#Fourier-Series" class="headerlink" title="Fourier Series"></a>Fourier Series</h1><h2 id="Standard-Form-of-the-Fourier-Series"><a href="#Standard-Form-of-the-Fourier-Series" class="headerlink" title="Standard Form of the Fourier Series"></a>Standard Form of the Fourier Series</h2><p>Our journey begins with the <a href="https://en.wikipedia.org/wiki/Fourier_series">Fourier Series</a> - a method to represent periodic functions as a sum of sine and cosine waves.</p><p>Let $x(t)$ be a periodic function with period $T$. The <em>standard form of the Fourier series</em> for $x(t)$ is given by:</p><p>$$x(t) &#x3D; \frac{a_0}{2} + a_1 \cos{\frac{2\pi}{T} t} + b_1 \sin{\frac{2\pi}{T} t} + a_2 \cos{\frac{4\pi}{T} t} + b_2 \sin{\frac{4\pi}{T} t} + \dots $$</p><p>To solve for $a_0, a_1, b_1, \dots$, we first observe the .</p><p>Thus, we can multiply both sides of the equation by $cos{\frac{2k\pi}{T} t}$ or $\sin{\frac{2k\pi}{T} t}$ $(k \in {0, 1, 2, \dots, n})$, and then integrate over one period $[-\frac{T}{2}, \frac{T}{2})$ to obtain:</p><p>$$a_k &#x3D; \frac{2}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) \cos{\frac{2k\pi}{T} t} dt}$$</p><p>$$b_k &#x3D; \frac{2}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) \sin{\frac{2k\pi}{T} t} dt}$$</p><h2 id="Exponential-Form-of-the-Fourier-Series"><a href="#Exponential-Form-of-the-Fourier-Series" class="headerlink" title="Exponential Form of the Fourier Series"></a>Exponential Form of the Fourier Series</h2><p>Using Euler’s formula $e^{ix} &#x3D; \cos{x} + i \sin{x}$, we can derive:</p><p>$$\cos{x} &#x3D; \frac{e^{ix} + e^{-ix}}{2}$$</p><p>$$\sin{x} &#x3D; -i \frac{e^{ix} - e^{-ix}}{2}$$</p><p>Substituting these representations of $\cos{x}$ and $\sin{x}$ into $a_k$ and $b_k$, we get:</p><p>$$a_k &#x3D; \frac{2}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) \frac{e^{i \frac{2k\pi}{T} t} + e^{-i \frac{2k\pi}{T} t}}{2} dt}$$</p><p>$$b_k &#x3D; \frac{2}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{-i x(t) \frac{e^{i \frac{2k\pi}{T} t} - e^{-i \frac{2k\pi}{T} t}}{2} dt}$$</p><p>And:</p><p>$$a_k \cos{\frac{2k\pi}{T} t} + b_k \sin{\frac{2k\pi}{T} t} &#x3D; a_k \frac{e^{i \frac{2k\pi}{T} t} + e^{-i \frac{2k\pi}{T} t}}{2} - i b_k \frac{e^{i \frac{2k\pi}{T} t} - e^{-i \frac{2k\pi}{T} t}}{2} &#x3D; \frac{a_k - i b_k}{2} e^{i \frac{2k\pi}{T} t} + \frac{a_k + i b_k}{2} e^{-i \frac{2k\pi}{T} t}$$</p><p>And:</p><p>$$\frac{a_k - i b_k}{2} &#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) e^{-i \frac{2k\pi}{T} t} dt}$$</p><p>$$\frac{a_k + i b_k}{2} &#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) e^{i \frac{2k\pi}{T} t} dt}$$</p><p>Furthermore, if we let:</p><p>$$c_k &#x3D; \frac{a_k - i b_k}{2} &#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) e^{-i \frac{2k\pi}{T} t} dt}$$</p><p>Substituting $k \leftarrow -k$ into the expression for $c_k$, we will obtain:</p><p>$$c_{-k} &#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) e^{i \frac{2k\pi}{T} t} dt} &#x3D; \frac{a_k + i b_k}{2}$$</p><p>Thus:</p><p>$$a_k \cos{\frac{2k\pi}{T} t} + b_k \sin{\frac{2k\pi}{T} t}  &#x3D; \frac{a_k - i b_k}{2} e^{i \frac{2k\pi}{T} t} + \frac{a_k + i b_k}{2} e^{-i \frac{2k\pi}{T} t}<br>&#x3D; c_k e^{i \frac{2k\pi}{T} t} + c_{-k} e^{-i \frac{2k\pi}{T} t}$$</p><p>And by substituting $k \leftarrow 0$ into the expression for $c_k$, we get:</p><p>$$c_0 &#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) dt} &#x3D; \frac{a_0}{2}$$</p><p>Therefore:</p><p>$$x(t) &#x3D; \frac{a_0}{2} + \sum_{k&#x3D;1}^{n}{(a_k \cos{\frac{2k\pi}{T} t} + b_k \sin{\frac{2k\pi}{T} t})}  &#x3D; c_0 + \sum_{k&#x3D;1}^{n}{(c_k e^{i \frac{2k\pi}{T} t} + c_{-k} e^{-i \frac{2k\pi}{T} t})} &#x3D; \sum_{k&#x3D;-n}^{n}{c_k e^{i \frac{2k\pi}{T} t}}$$</p><p>Where:</p><p>$$c_k&#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) e^{-i \frac{2k\pi}{T} t} dt}$$</p><p>This is the <em>exponential form of the Fourier series</em>. It is more concise than the standard form of the Fourier series and is used more often in practice.</p><h1 id="Fourier-Transform"><a href="#Fourier-Transform" class="headerlink" title="Fourier Transform"></a>Fourier Transform</h1><p>The Fourier transform is a generalization of the Fourier series, which can analyze the effect of a frequency in <em>any function</em> (which may not necessarily be a periodic function). In this section, we will present how it can be derived from the exponential form of the Fourier series.</p><p>Given a periodic function $x(t)$ with period $T$, the exponential form of the Fourier series of $x(t)$ is as follows:</p><p>$$x(t) &#x3D; \sum_{k&#x3D;-n}^{n}{c_k e^{i \frac{2k\pi}{T} t}}$$</p><p>Where:</p><p>$$c_k&#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) e^{-i \frac{2k\pi}{T} t} dt}$$</p><p>Let’s say that the period $T$ is associated with a frequency known as the <a href="https://en.wikipedia.org/wiki/Fundamental_frequency"><em>fundamental frequency</em></a> $f_0 &#x3D; \frac{1}{T}$. Given $f_0$, we can rewrite the previous Fourier series as:</p><p>$$x(t) &#x3D; \sum_{k&#x3D;-n}^{n}{c_k e^{i 2\pi k f_0 t}}$$</p><p>Where:</p><p>$$c_k&#x3D; \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}}{x(t) e^{-i 2\pi k f_0 t} dt}$$</p><p>For a non-periodic function, we can consider it as a periodic function with $T \rightarrow +\infty$. In this case, the fundamental frequency $f_0$ is an infinitesimal quantity; therefore, <em>we can consider that any frequency $f$ can be expressed as an integer multiple of the fundamental frequency, and the difference between two neighboring frequencies is the fundamental frequency $f_0$</em>. In this case, the fundamental frequency $f_0$ can be expressed as a differential of the frequency $f$, i.e., $df$.</p><p>In this case, for a possibly non-periodic function $x(t)$:</p><p>$$x(t) &#x3D; \sum_{k&#x3D;-\infty}^{\infty}{c_k e^{i 2\pi k (df)t}}$$</p><p>$$c_k&#x3D; (df) \int_{-\infty}^{\infty}{x(t) e^{-i 2\pi k (df) t} dt}$$</p><p>Thus, $x(t)$ can be represented as:</p><p>$$x(t) &#x3D; \sum_{k&#x3D;-\infty}^{\infty}{[(df) \cdot \int_{-\infty}^{\infty}{x(t) e^{-i 2\pi k (df) t} dt} \cdot e^{i 2\pi k (df) t}]}$$</p><p>By considering $f \leftarrow k (df)$, <a href="https://maninbocss.medium.com/summation-and-the-definite-integral-235663ef5ec3">we can transform the summation into a definite integral</a>:</p><p>$$x(t)&#x3D; \int_{-\infty}^{\infty}{ [(\int_{-\infty}^{\infty}{x(t) e^{-i 2\pi f t} dt}) e^{i 2\pi f t}] df}$$</p><p>Let:</p><p>$$X(f) &#x3D; \int_{-\infty}^{\infty}{x(t) e^{-i 2\pi f t} dt}$$</p><p>Then $x(t)$ can be represented as:</p><p>$$x(t) &#x3D; \int_{-\infty}^{\infty}{ X(f) e^{i 2\pi f t} df}$$</p><p>These two equations are very important.</p><ul><li>If we know $x(t)$ (i.e., the value of $x(t)$ at any time $t$), through $X(f) &#x3D; \int_{-\infty}^{\infty}{x(t) e^{-i 2\pi f t} dt}$, we can compute <em>the relative magnitude of any frequency $f$ over the whole time period</em>.</li><li>At the same time, if we know $X(f)$ (i.e., the relative magnitude of any frequency $f$ over the whole time period), by means of $x(t) &#x3D; \int_{-\infty}^{\infty}{ X(f) e^{i 2\pi f t} df}$, we can calculate <em>the value of $x(t)$ at any time $t$</em>.</li></ul><p>We refer to $X(f)$ as the <em>Fourier transform</em> of $x(t)$, also known as the <em>spectrum</em> of $x(t)$, and to $x(t)$ as the <em>inverse Fourier transform</em> of $X(f)$.</p><h1 id="Discrete-Fourier-Transform"><a href="#Discrete-Fourier-Transform" class="headerlink" title="Discrete Fourier Transform"></a>Discrete Fourier Transform</h1><p>When we process signals with computers, as computers cannot store a continuous infinite function, we usually take $N$ samples of the original signal $x(t)$ at a certain time interval $\Delta t$, obtaining an array $x[0:N-1]$.</p><p>Using $x[0:N-1]$ to estimate the Fourier transform $X(f)$ of the sampled function $x(t)$, we get:</p><p>$$X(f) &#x3D; \int_{-\infty}^{\infty}{x(t) e^{-i 2\pi f t} dt} \approx \int_{0}^{N \Delta t}{x(t) e^{-i 2\pi f t} dt} \approx \sum_{m&#x3D;0}^{N - 1}{x(m \Delta t) e^{-i 2\pi f m \Delta t}}$$</p><p>If we <em>assume these samples have spanned a period of the original signal, e.g. $T &#x3D; N \Delta t$, and that we only consider frequencies satisfying $f &#x3D; k \frac{1}{N \Delta t} (k \in {0, 1, \dots, N - 1})$</em>, we get:</p><p>$$X(k \frac{1}{N \Delta t}) \approx \sum_{n&#x3D;0}^{N - 1}{x(n \Delta t) e^{-i 2\pi k \frac{1}{N \Delta t} n \Delta t}} &#x3D; \sum_{n&#x3D;0}^{N - 1}{x(n \Delta t) e^{-i 2\pi \frac{k}{N} n}} &#x3D; \sum_{n&#x3D;0}^{N - 1}{x[n] e^{-i 2\pi \frac{k}{N} n}}$$</p><p>Let:</p><p>$$X[k] &#x3D; \sum_{n&#x3D;0}^{N - 1}{x[n] e^{-i 2\pi \frac{k}{N} n}} (k \in {0, 1, \dots, N - 1})$$</p><p>We call such an array of $N$ discrete numbers $X[0:N-1]$ the <em>discrete Fourier transform</em> of $x[0:N-1]$, which is a <em>discrete</em> frequency domain representation of $x[0:N-1]$.</p><p>Using $X[0:N-1]$, we can restore $x[0:N-1]$:</p><p>$$x[n] &#x3D; \frac{1}{N} \sum_{k&#x3D;0}^{N - 1}{X[k] e^{i 2\pi \frac{k}{N} n}} (n \in {0, 1, \dots, N - 1})$$</p><p>We call $x[0:N-1]$ the <em>inverse discrete Fourier transform</em> of $X[0:N-1]$. This is analogous to $X(f)$ being the Fourier transform of $x(t)$ and $x(t)$ being the inverse Fourier transform of $X(f)$ in the continuous case.</p>]]></content>
     
     
     <categories>
       
-      <category>Mathematics</category>
+      <category>Theory, Data Structures, Algorithms, Programming Languages, Design Patterns</category>
       
     </categories>
     
+    
+    <tags>
+      
+      <tag>Essays</tag>
+      
+    </tags>
     
   </entry>
   
