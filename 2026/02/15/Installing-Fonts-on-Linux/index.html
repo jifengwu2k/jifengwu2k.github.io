@@ -16,15 +16,15 @@
   <meta name="author" content="Jifeng Wu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="First, download your desired font. Fonts are usually TTF (.ttf), OTF (.otf). For illustration, let’s say you downloaded MyFont.ttf. Install for your user onlyPlace the font file into ˜&#x2F;.local&#x2F;share&#x2F;fo">
+    <meta name="description" content="First, download your desired font. Fonts are usually TTF (.ttf), OTF (.otf). For illustration, let’s say you downloaded MyFont.ttf. Install for your user onlyPlace the font file into ~&#x2F;.local&#x2F;share&#x2F;fo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Installing Fonts on Linux">
 <meta property="og:url" content="https://jifengwu2k.github.io/2026/02/15/Installing-Fonts-on-Linux/index.html">
 <meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
-<meta property="og:description" content="First, download your desired font. Fonts are usually TTF (.ttf), OTF (.otf). For illustration, let’s say you downloaded MyFont.ttf. Install for your user onlyPlace the font file into ˜&#x2F;.local&#x2F;share&#x2F;fo">
+<meta property="og:description" content="First, download your desired font. Fonts are usually TTF (.ttf), OTF (.otf). For illustration, let’s say you downloaded MyFont.ttf. Install for your user onlyPlace the font file into ~&#x2F;.local&#x2F;share&#x2F;fo">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-02-15T00:00:00.000Z">
-<meta property="article:modified_time" content="2026-02-15T20:04:40.482Z">
+<meta property="article:modified_time" content="2026-02-23T03:34:26.676Z">
 <meta property="article:author" content="Jifeng Wu">
 <meta property="article:tag" content="Reference">
 <meta name="twitter:card" content="summary_large_image">
@@ -267,8 +267,8 @@
               <div class="markdown-body">
                 
                 <p>First, download your desired font. Fonts are usually TTF (<code>.ttf</code>), OTF (<code>.otf</code>). For illustration, let’s say you downloaded <code>MyFont.ttf</code>.</p>
-<h2 id="Install-for-your-user-only"><a href="#Install-for-your-user-only" class="headerlink" title="Install for your user only"></a>Install for your user only</h2><p>Place the font file into <code>˜/.local/share/fonts</code>. If this folder does not exist, you can create it.</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">mkdir</span> -p ˜/.local/share/fonts<br><span class="hljs-built_in">cp</span> MyFont.ttf ˜/.local/share/fonts/<br></code></pre></td></tr></table></figure>
+<h2 id="Install-for-your-user-only"><a href="#Install-for-your-user-only" class="headerlink" title="Install for your user only"></a>Install for your user only</h2><p>Place the font file into <code>~/.local/share/fonts</code>. If this folder does not exist, you can create it.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">mkdir</span> -p ~/.local/share/fonts<br><span class="hljs-built_in">cp</span> MyFont.ttf ~/.local/share/fonts/<br></code></pre></td></tr></table></figure>
 
 <h2 id="Install-system-wide"><a href="#Install-system-wide" class="headerlink" title="Install system-wide"></a>Install system-wide</h2><p>Copy the font to <code>/usr/share/fonts</code> or <code>/usr/local/share/fonts</code>. You’ll need root privileges:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">cp</span> MyFont.ttf /usr/share/fonts/<br></code></pre></td></tr></table></figure>
