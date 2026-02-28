@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Webcam Viewer</title>
+  </head>
+  <body>
+    <h1>Webcam Viewer</h1>
+
+    <!-- Dropdown to select the camera -->
+    <p>
+      <label for="cameras">Select Camera:</label>
+      <select id="cameras"></select>
+    </p>
+
+    <!-- Video element to display the webcam feed -->
+    <p>
+      <video id="webcam" autoplay></video>
+    </p>
+
+    <script>
+      const video = document.getElementById('webcam');
+      const cameraSelect = document.getElementById('cameras');
+
+      let currentStream = null;
+
+      // Function to stop the current stream
+      function stopStream(stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+
+      // Function to start the stream with the selected camera
+      function startStream(deviceId) {
+        const constraints = {
+          video: {
+            deviceId: deviceId ? { exact: deviceId } : undefined
+          }
+        };
+
+        // Stop the existing video stream if there's one
+        if (currentStream) {
+          stopStream(currentStream);
+        }
+
+        // Request access to the selected video device
+        navigator.mediaDevices.getUserMedia(constraints)
+          .then(stream => {
+            currentStream = stream;
+            video.srcObject = stream;
+          })
+          .catch(error => {
+            alert('Error accessing webcam: ', error);
+          });
+      }
+
+      // Function to populate the camera selection dropdown
+      function getCameras() {
+        navigator.mediaDevices.enumerateDevices()
+          .then(devices => {
+            cameraSelect.innerHTML = ''; // Clear the dropdown
+
+            // Filter video input devices (cameras)
+            const videoDevices = devices.filter(device => device.kind === 'videoinput');
+
+            // Populate the dropdown with the available cameras
+            videoDevices.forEach((device, index) => {
+              const option = document.createElement('option');
+              option.value = device.deviceId;
+              option.text = device.label || `Camera ${index}`;
+              cameraSelect.appendChild(option);
+            });
+
+            // Start the first camera by default
+            if (videoDevices.length > 0) {
+              startStream(videoDevices[0].deviceId);
+            }
+          })
+          .catch(error => {
+            alert('Error enumerating devices: ', error);
+          });
+      }
+
+      // Event listener for when the user changes the camera selection
+      cameraSelect.addEventListener('change', () => {
+        startStream(cameraSelect.value);
+      });
+
+      // Initialize the camera list on page load
+      getCameras();
+    </script>
+  </body>
+</html>
