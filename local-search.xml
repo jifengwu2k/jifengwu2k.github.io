@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>Trace Function Calls in C/C++ Programs</title>
+    <link href="/2026/02/28/Trace-Function-Calls-in-C-C-Programs/"/>
+    <url>/2026/02/28/Trace-Function-Calls-in-C-C-Programs/</url>
+    
+    <content type="html"><![CDATA[<p>Sometimes, it’s helpful to trace function calls in your program. Fortunately, GCC and Clang provide a built-in feature for this: <strong>function instrumentation</strong> via the <code>-finstrument-functions</code> flag. Here’s a hands-on tutorial.</p><h2 id="Step-1-Create-a-Simple-Program"><a href="#Step-1-Create-a-Simple-Program" class="headerlink" title="Step 1: Create a Simple Program"></a>Step 1: Create a Simple Program</h2><p>Let’s start with a straightforward C++ program (<code>main.cpp</code>):</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;foo\n&quot;</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">foo</span>();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="Step-2-Write-the-Instrumentation-Hooks"><a href="#Step-2-Write-the-Instrumentation-Hooks" class="headerlink" title="Step 2: Write the Instrumentation Hooks"></a>Step 2: Write the Instrumentation Hooks</h2><p>With <code>-finstrument-functions</code>, the compiler injects calls to two special functions at the entry and exit of every function:</p><ul><li><code>__cyg_profile_func_enter(void *func, void *caller)</code> (on entry)</li><li><code>__cyg_profile_func_exit(void *func, void *caller)</code> (on exit)</li></ul><p>Here’s an implementation that prints the function names using <code>dladdr</code> (POSIX):</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;dlfcn.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><br><span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;C&quot;</span> &#123;<br><span class="hljs-comment">// Prevent self-instrumentation of hook functions</span><br>__attribute__((no_instrument_function))<br><span class="hljs-type">void</span> __cyg_profile_func_enter(<span class="hljs-type">void</span> *func, <span class="hljs-type">void</span> *caller) &#123;<br>    Dl_info info;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">dladdr</span>(func, &amp;info)) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;enter %s\n&quot;</span>, info.dli_sname);<br>    &#125;<br>&#125;<br><br>__attribute__((no_instrument_function))<br><span class="hljs-type">void</span> __cyg_profile_func_exit(<span class="hljs-type">void</span> *func, <span class="hljs-type">void</span> *caller) &#123;<br>    Dl_info info;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">dladdr</span>(func, &amp;info)) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;exit %s\n&quot;</span>, info.dli_sname);<br>    &#125;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>Note: The attribute <code>no_instrument_function</code> is crucial! Otherwise, the instrumented hooks would recursively call themselves and likely crash.</p><h2 id="Step-3-Compile-the-Program"><a href="#Step-3-Compile-the-Program" class="headerlink" title="Step 3: Compile the Program"></a>Step 3: Compile the Program</h2><p>Compile with function instrumentation enabled, and ensure symbols are exported for name resolution:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh">clang++ -finstrument-functions main.cpp -c<br>clang++ hooks.cpp -c<br>clang++ main.o hooks.o -o main -ldl -rdynamic<br></code></pre></td></tr></table></figure><ul><li><code>-finstrument-functions</code>: injects calls on entry&#x2F;exit.</li><li><code>-ldl</code>: links the dynamic loader library, needed for <code>dladdr</code>.</li><li><code>-rdynamic</code>: exports all symbols for <code>dladdr</code> to resolve names.</li></ul><h2 id="Step-4-Run-the-Program"><a href="#Step-4-Run-the-Program" class="headerlink" title="Step 4: Run the Program"></a>Step 4: Run the Program</h2><p>Run the binary:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh">./main<br>enter main<br>enter _Z3foov<br>foo<br><span class="hljs-built_in">exit</span> _Z3foov<br><span class="hljs-built_in">exit</span> main<br></code></pre></td></tr></table></figure><ul><li>You see the entry&#x2F;exit for <code>main</code> and for <code>foo</code> (mangled name: <code>_Z3foov</code> in this case).</li><li>The hooks print function names as you enter&#x2F;exit them, allowing you to trace the call flow.</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Theory, Data Structures, Algorithms, Programming Languages, Design Patterns</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Reference</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Installing Fonts on Linux</title>
     <link href="/2026/02/15/Installing-Fonts-on-Linux/"/>
     <url>/2026/02/15/Installing-Fonts-on-Linux/</url>
@@ -83,7 +108,7 @@
     <link href="/2026/02/06/2026-02-Financial-Statement/"/>
     <url>/2026/02/06/2026-02-Financial-Statement/</url>
     
-    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs csv">date,name,amount<br>2026-02-02,ONEPAY CASHREWRD SYF PAYMNT,-36.47<br>2026-02-03,Collegetown Terr Rent,-1535.00<br>2026-02-03,Payment to Chase card,-23.03<br>2026-02-04,ONEPAY CASHREWRD SYF PAYMNT,-45.86<br>2026-02-06,Payment to Chase card,-163.54<br>2026-02-09,Payment to Chase card,-43.21<br>2026-02-09,ONEPAY CASHREWRD SYF PAYMNT,-34.34<br>2026-02-09,Payment to Chase card,-23.85<br>2026-02-13,Cornell Universi DIR DEP PPD,1745.84<br>2026-02-13,Payment to Chase card,-85.21<br>2026-02-15,EBAY,-97.15<br>2026-02-15,EBAY,-10.25<br>2026-02-17,Payment to Chase card,-163.89<br>2026-02-17,Payment to Chase card,-44.68<br>2026-02-17,ONEPAY CASHREWRD SYF PAYMNT,-101.28<br>2026-02-19,Zelle payment,27.00<br>2026-02-20,OPENAI OPENAI.COM CA,-45.40<br>2026-02-20,Payment to Chase card,-200.00<br></code></pre></td></tr></table></figure><p>Total: -880.32</p>]]></content>
+    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs csv">date,name,amount<br>2026-02-02,ONEPAY CASHREWRD SYF PAYMNT,-36.47<br>2026-02-03,Collegetown Terr Rent,-1535.00<br>2026-02-03,Payment to Chase card,-23.03<br>2026-02-04,ONEPAY CASHREWRD SYF PAYMNT,-45.86<br>2026-02-06,Payment to Chase card,-163.54<br>2026-02-09,Payment to Chase card,-43.21<br>2026-02-09,ONEPAY CASHREWRD SYF PAYMNT,-34.34<br>2026-02-09,Payment to Chase card,-23.85<br>2026-02-13,Cornell Universi DIR DEP PPD,1745.84<br>2026-02-13,Payment to Chase card,-85.21<br>2026-02-15,EBAY,-97.15<br>2026-02-15,EBAY,-10.25<br>2026-02-17,Payment to Chase card,-163.89<br>2026-02-17,Payment to Chase card,-44.68<br>2026-02-17,ONEPAY CASHREWRD SYF PAYMNT,-101.28<br>2026-02-19,Zelle payment,27.00<br>2026-02-20,OPENAI OPENAI.COM CA,-45.40<br>2026-02-20,Payment to Chase card,-200.00<br>2026-02-23,ONEPAY CASHREWRD SYF PAYMNT,-51.61<br>2026-02-23,Payment to Chase card ending in 6502,-203.55<br>2026-02-23,ONEPAY CASHREWRD SYF PAYMNT,-25.92<br></code></pre></td></tr></table></figure><p>Total: -1161.40</p>]]></content>
     
     
     <categories>
@@ -911,10 +936,16 @@
     
     <categories>
       
-      <category>Environments</category>
+      <category>DevOps, SysAdmin</category>
       
     </categories>
     
+    
+    <tags>
+      
+      <tag>Reference</tag>
+      
+    </tags>
     
   </entry>
   
@@ -968,10 +999,16 @@
     
     <categories>
       
-      <category>Environments</category>
+      <category>DevOps, SysAdmin</category>
       
     </categories>
     
+    
+    <tags>
+      
+      <tag>Reference</tag>
+      
+    </tags>
     
   </entry>
   
