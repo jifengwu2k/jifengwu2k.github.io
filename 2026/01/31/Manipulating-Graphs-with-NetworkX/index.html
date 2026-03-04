@@ -216,7 +216,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          163 words
+          258 words
         
       </span>
     
@@ -227,7 +227,7 @@
         
         
         
-          2 mins
+          3 mins
         
       </span>
     
@@ -278,6 +278,23 @@
 <li><code>G.in_edges(node)</code> returns edges directed <em>into</em> <code>node</code></li>
 <li><code>G.out_edges(node)</code> returns edges directed <em>out of</em> <code>node</code></li>
 </ul>
+<h2 id="Visualizing-Graphs-with-PyGraphviz-and-Graphviz"><a href="#Visualizing-Graphs-with-PyGraphviz-and-Graphviz" class="headerlink" title="Visualizing Graphs with PyGraphviz and Graphviz"></a>Visualizing Graphs with PyGraphviz and Graphviz</h2><p>NetworkX can interface directly with PyGraphviz and Graphviz, popular software packages for graph visualization.</p>
+<h3 id="Installing-Graphviz-and-PyGraphviz"><a href="#Installing-Graphviz-and-PyGraphviz" class="headerlink" title="Installing Graphviz and PyGraphviz"></a>Installing Graphviz and PyGraphviz</h3><p>Before you can use these visualization features, you need to install both PyGraphviz and Graphviz. On most systems, the easiest way is:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda install -c conda-forge graphviz pygraphviz<br></code></pre></td></tr></table></figure>
+
+<h3 id="Rendering-Graphs-as-Images"><a href="#Rendering-Graphs-as-Images" class="headerlink" title="Rendering Graphs as Images"></a>Rendering Graphs as Images</h3><p>Once you have everything installed, you can easily convert a NetworkX graph into a Graphviz object and save it directly as an image (<code>PNG</code>, <code>PDF</code>, etc.):</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> networkx <span class="hljs-keyword">as</span> nx<br><br><span class="hljs-comment"># Create or load a graph</span><br>G = nx.DiGraph()<br>G.add_edges_from([(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>), (<span class="hljs-number">2</span>, <span class="hljs-number">1</span>), (<span class="hljs-number">2</span>, <span class="hljs-number">3</span>), (<span class="hljs-number">3</span>, <span class="hljs-number">1</span>)])<br><br><span class="hljs-comment"># Convert to a pygraphviz AGraph</span><br>A = nx.nx_agraph.to_agraph(G)<br><br><span class="hljs-comment"># Write to DOT format (optional, for inspection/sharing)</span><br>A.write(<span class="hljs-string">&quot;G.dot&quot;</span>)<br><br><span class="hljs-comment"># Render and save as a PNG image</span><br>A.draw(<span class="hljs-string">&quot;G.png&quot;</span>, prog=<span class="hljs-string">&quot;dot&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>nx.nx_agraph.to_agraph(G)</code> converts your NetworkX graph to a PyGraphviz (Graphviz) AGraph object.</li>
+<li><code>.write(&quot;G.dot&quot;)</code> saves the graph in DOT format (plain text for Graphviz).</li>
+<li><code>.draw(&quot;G.png&quot;, prog=&quot;dot&quot;)</code> renders the image using the Graphviz “dot” layout engine.</li>
+</ul>
+<p>You can open <code>G.png</code> in any image viewer to see the visualization.</p>
+<blockquote>
+<p><strong>Tip:</strong> Try changing the <code>prog</code> argument to other Graphviz layout engines like <code>&quot;neato&quot;</code> or <code>&quot;fdp&quot;</code> for different layouts.</p>
+</blockquote>
+<h3 id="Further-Customization"><a href="#Further-Customization" class="headerlink" title="Further Customization"></a>Further Customization</h3><p>You can customize node shapes, colors, and more using AGraph’s methods or by passing attributes on creation; see <a target="_blank" rel="noopener" href="https://pygraphviz.github.io/">the pygraphviz documentation</a> for more details.</p>
 <h2 id="Serializing-and-Deserializing-Graphs"><a href="#Serializing-and-Deserializing-Graphs" class="headerlink" title="Serializing and Deserializing Graphs"></a>Serializing and Deserializing Graphs</h2><p>When working with graphs, you may want to save (serialize) them to a file and load (deserialize) them later. There are two common approaches in NetworkX:</p>
 <h3 id="A-Using-JSON-Node-Link-Data"><a href="#A-Using-JSON-Node-Link-Data" class="headerlink" title="A. Using JSON (Node-Link Data)"></a>A. Using JSON (Node-Link Data)</h3><p><strong>Why?</strong>  </p>
 <ul>
