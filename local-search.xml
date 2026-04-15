@@ -4,6 +4,37 @@
   
   
   <entry>
+    <title>Kleene Algebra, NetKAT, and StacKAT</title>
+    <link href="/2026/04/15/Kleene-Algebra-NetKAT-and-StacKAT/"/>
+    <url>/2026/04/15/Kleene-Algebra-NetKAT-and-StacKAT/</url>
+    
+    <content type="html"><![CDATA[<h2 id="Kleene-Algebra"><a href="#Kleene-Algebra" class="headerlink" title="Kleene Algebra"></a>Kleene Algebra</h2><p>Kleene algebra is a neat way to describe and reason about <strong>regular patterns of behavior</strong> as <strong>regular expressions</strong> built from:</p><ul><li><code>0</code> (impossible behavior, always fails, etc.)</li><li><code>1</code> (do nothing, succeed immediately, etc.)</li><li><code>a</code> (one basic action, one input symbol, etc.)</li><li><code>e + f</code> (union, choice, etc.)</li><li><code>e · f</code> (concatenation, sequencing, etc.)</li><li><code>e*</code> (Kleene star, looping, etc.)</li></ul><p>When applied to different domains, <strong>different interpretations for <code>0</code>, <code>1</code>, <code>a</code>, <code>e + f</code>, <code>e · f</code>, <code>e*</code>, etc. exist</strong>, so long as they satisfy certain <strong>algebraic laws</strong>. These laws let us simplify expressions and prove that two expressions describe the same behavior. For example:</p><ul><li><code>1</code> does nothing<br>(<code>1·e = e = e·1</code>)</li><li><code>0</code> contributes no possible behavior</li><li>choice is associative, commutative, and idempotent<br>(<code>e + f = f + e</code>, <code>e + e = e</code>)</li><li>sequencing is associative<br>(<code>(e·f)·g = e·(f·g)</code>)</li><li>sequencing distributes over choice</li></ul><h2 id="NetKAT"><a href="#NetKAT" class="headerlink" title="NetKAT"></a>NetKAT</h2><p>NetKAT is a domain-specific language for specifying and verifying network behavior. Formally, a NetKAT program is the following Kleene algebra:</p><p>$$<br>e ::&#x3D; 0 \mid 1 \mid e_1 + e_2 \mid e_1 \cdot e_2 \mid e^{*} \mid f &#x3D; v \mid f \leftarrow v<br>$$</p><p>where:</p><ul><li>$0$: Drop all packets</li><li>$1$: Forward all packets</li><li>$e_1 + e_2$: Send packet through $e_1$ and $e_2$</li><li>$e_1 \cdot e_2$: Send packet through $e_1$ then $e_2$</li><li>$e^{*}$: Perform $e$ any number of times</li><li>$f &#x3D; v$: Forward packets with field $f &#x3D; v$</li><li>$f \leftarrow v$: Set packets’ field $f$ to $v$</li></ul><p>NetKAT represents packets as <strong>finite records</strong> from fields to values. It is too simple to model general-purpose imperative programs written in languages like Python or C. But it turns out to be an ideal model for the kind of computation that arises in <strong>high-speed network data planes</strong>. Network devices like routers, switches, firewalls, etc., process packets using efficient pipelines that classify packets using predicates formulated in terms of constant values ($f &#x3D; v$) and modify packets using actions that assign packet headers to possibly new constant values ($f \leftarrow v$).</p><h2 id="StacKAT"><a href="#StacKAT" class="headerlink" title="StacKAT"></a>StacKAT</h2><p>NetKAT’s restriction to finite records precludes modeling a variety of behaviors that arise in practice. First, on real-world devices, packets are not represented as finite records, but as sequences of bytes. When a packet enters a switch it must be parsed to “extract” the relevant headers into local variables. Likewise, when a packet exits a switch, the local variables must be serialized back into bytes. By convention, the unparsed portion of the packet is carried along as the payload. To <strong>faithfully model packet parsing and serialization in all the various forms used on different devices</strong>, NetKAT’s finite records are insufficient.</p><p>Second, <strong>certain network protocols are not finite state</strong>. In source routing schemes, the packet not only stores its IPv4 destination address, but encodes the entire forwarding path in a stack. Each router pops an element off the stack and forwards the packet to the corresponding next hop. As paths can in principle be arbitrarily long, the stack cannot be encoded using a finite record. Dually, protocols that collect telemetry push records onto a stack to log observations about how the packet was processed at each hop on the end-to-end path. In similar fashion, tunneling protocols prepend a new set of headers to the packet, encapsulating the original headers in the payload, and use the newly added headers to route through a subnetwork. When the packet ultimately leaves the subnetwork, the new headers are removed and the original headers are restored from the payload.</p><p>StacKAT extends NetKAT:</p><ul><li>It models packets as comprising both a finite record mapping fields to values as well as a <strong>stack of values</strong> $s$ representing the unparsed portion of the packet.</li><li>It adds the following constructs to NetKAT’s Kleene algebra:<ul><li>$\operatorname{push}(v)$: Push $v$ onto stack</li><li>$\operatorname{pop}(v)$: Test and pop top of stack if it equals $v$</li></ul></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Research Notes</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>computer-science</tag>
+      
+      <tag>reference</tag>
+      
+      <tag>systems</tag>
+      
+      <tag>programming-languages</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>《经济学的思维方式》第一章读书摘录</title>
     <link href="/2026/04/14/%E7%BB%8F%E6%B5%8E%E5%AD%A6%E7%9A%84%E6%80%9D%E7%BB%B4%E6%96%B9%E5%BC%8F-%E7%AC%AC%E4%B8%80%E7%AB%A0%E8%AF%BB%E4%B9%A6%E6%91%98%E5%BD%95/"/>
     <url>/2026/04/14/%E7%BB%8F%E6%B5%8E%E5%AD%A6%E7%9A%84%E6%80%9D%E7%BB%B4%E6%96%B9%E5%BC%8F-%E7%AC%AC%E4%B8%80%E7%AB%A0%E8%AF%BB%E4%B9%A6%E6%91%98%E5%BD%95/</url>

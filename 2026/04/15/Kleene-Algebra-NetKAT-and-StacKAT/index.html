@@ -19,23 +19,25 @@
   <meta name="author" content="Jifeng Wu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="《经济学的思维方式》第一章读书摘录">
+    <meta name="description" content="A short overview of Kleene algebra and how NetKAT and StacKAT use it to model network behavior.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《经济学的思维方式》第一章读书摘录">
-<meta property="og:url" content="https://jifengwu2k.github.io/2026/04/14/%E7%BB%8F%E6%B5%8E%E5%AD%A6%E7%9A%84%E6%80%9D%E7%BB%B4%E6%96%B9%E5%BC%8F-%E7%AC%AC%E4%B8%80%E7%AB%A0%E8%AF%BB%E4%B9%A6%E6%91%98%E5%BD%95/index.html">
+<meta property="og:title" content="Kleene Algebra, NetKAT, and StacKAT">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/04/15/Kleene-Algebra-NetKAT-and-StacKAT/index.html">
 <meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
-<meta property="og:description" content="《经济学的思维方式》第一章读书摘录">
+<meta property="og:description" content="A short overview of Kleene algebra and how NetKAT and StacKAT use it to model network behavior.">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-04-14T07:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-14T07:00:00.000Z">
+<meta property="article:published_time" content="2026-04-15T07:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-15T07:00:00.000Z">
 <meta property="article:author" content="Jifeng Wu">
-<meta property="article:tag" content="finance">
-<meta property="article:tag" content="quotes">
+<meta property="article:tag" content="computer-science">
+<meta property="article:tag" content="programming-languages">
+<meta property="article:tag" content="reference">
+<meta property="article:tag" content="systems">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>《经济学的思维方式》第一章读书摘录 - Jifeng Wu&#39;s Personal Website</title>
+  <title>Kleene Algebra, NetKAT, and StacKAT - Jifeng Wu&#39;s Personal Website</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -304,7 +306,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">《经济学的思维方式》第一章读书摘录</span>
+            <span id="subtitle">Kleene Algebra, NetKAT, and StacKAT</span>
           
         </div>
 
@@ -320,8 +322,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-04-14 00:00" pubdate>
-          April 14, 2026
+        <time datetime="2026-04-15 00:00" pubdate>
+          April 15, 2026
         </time>
       </span>
     
@@ -332,7 +334,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2k words
+          3.2k words
         
       </span>
     
@@ -343,7 +345,7 @@
         
         
         
-          17 mins
+          28 mins
         
       </span>
     
@@ -382,75 +384,52 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">《经济学的思维方式》第一章读书摘录</h1>
+            <h1 id="seo-header">Kleene Algebra, NetKAT, and StacKAT</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="秩序如何自发形成：优化、稀缺、选择"><a href="#秩序如何自发形成：优化、稀缺、选择" class="headerlink" title="秩序如何自发形成：优化、稀缺、选择"></a>秩序如何自发形成：优化、稀缺、选择</h2><blockquote>
-<p>有人会问：“作为人们各自逐利行为的副产品而非有意设计的结果，这类<strong>有序的形态</strong>是如何产生的呢？”正是这类问题的提出，激发了经济学的思维方式。</p>
-</blockquote>
-<blockquote>
-<p>在斯密生活的时代，大多数受过教育的人都相信，只有统治者的<strong>精心筹划</strong>才能使一个社会免于退化到混乱与贫困。斯密不同意当时这种公认的流行观点。</p>
-</blockquote>
-<blockquote>
-<p>但是毫无疑问，经济学理论试图解释这个世界时，其假设就是社会现象都是人们<strong>选择</strong>的结果，特别是<strong>无意的</strong>结果。</p>
-</blockquote>
-<blockquote>
-<p>经济学的思维方式会帮助我们认清楚<strong>优化</strong>过程，即<strong>稀缺性</strong>约束之下的<strong>选择</strong>行为。城市交通的例子能同时说明这两个方面：当上班族规划行驶路线，考虑何时并线，决定绿灯变黄灯时是加速还是减速时，他们是在进行优化或者说做出选择，即在特定的情形下做出他们认为最好的决定。</p>
-</blockquote>
-<blockquote>
-<p>但是人都是要死的，所以<strong>时间</strong>对于所有人来说都是<strong>稀缺</strong>资源，钱多得不知怎么花的人也需要<strong>优化</strong>。</p>
-</blockquote>
-<blockquote>
-<p>经济学家假设人们在行事之前，心中有一个目的，即比较所有可行选择的期望<strong>收益</strong>和<strong>成本</strong>，并从错误中吸取教训，避免再犯。</p>
-</blockquote>
-<hr>
-<h2 id="只有个体在选择"><a href="#只有个体在选择" class="headerlink" title="只有个体在选择"></a>只有个体在选择</h2><blockquote>
-<p>经济学理论重视个体，这一点与关注选择密切相关，在这点上我们的日常语言常常会犯错误。因为实际上只有<strong>个体</strong>进行选择，所以经济学家在试图剖析企业、政府、国家等集体的决策时，总是落实在其中个人的选择上。</p>
-</blockquote>
-<blockquote>
-<p>实际上，经济学研究人们的选择及其无意的结果——未预期到的副作用。高峰期的交通和国际贸易都能用经济学的思维方式来研究，非营利性组织、关注社会的慈善机构以及政府机关也可以。如果我们已经找到一种方法来解释沃尔玛和通用汽车这些公司中人的行为，为什么不能将其用于美国国税局和农业部呢？像社会团体一样，政府的各个部门也都是由<strong>个人</strong>组成的，而这些个人基于他们期望的<strong>收益</strong>和<strong>成本</strong>进行选择。</p>
-</blockquote>
-<hr>
-<h2 id="群体互动、社会协作、游戏规则"><a href="#群体互动、社会协作、游戏规则" class="headerlink" title="群体互动、社会协作、游戏规则"></a>群体互动、社会协作、游戏规则</h2><blockquote>
-<p>如果说个体经济行为的核心问题是稀缺性，那么<strong>群体互动</strong>的核心问题，就是个体计划的多种多样甚至互不兼容。</p>
-</blockquote>
-<blockquote>
-<p>经济学理论主张，你的选择和计划会改变他人可供选择的机会，人们在交互中所产生的<strong>净收益</strong>会不断变化，社会协作就是对其持续相互调整的过程。</p>
-</blockquote>
-<blockquote>
-<p>存在一个<strong>相互调整</strong>的过程，持续调节个人行为产生的不断变动的净收益。人们对于每条车道的净收益都很敏感，随时准备离开较慢的车道，进入较快的车道。这样，原来较慢的车道就会变快，而原来较快的车道则相应变慢，直到所有车道的车速相当；或者更准确地说，直到没有人认为能从改变车道中获得净收益为止。</p>
-</blockquote>
-<blockquote>
-<p>个体基于他们期望的净收益进行选择，他们的行为又或多或少地改变了他人心中衡量的相对收益和成本。</p>
-</blockquote>
-<blockquote>
-<p>人们追求各自目标和决策并相互协调，所依赖的方式和手段即经济系统，是由“<strong>游戏规则</strong>”塑造的。</p>
-</blockquote>
-<blockquote>
-<p>大部分社会互动是由参与者了解并遵守的规则引导和协调的。当规则有争议、不一致或是不清楚时，游戏就倾向于崩溃。</p>
-</blockquote>
-<hr>
-<h2 id="产权"><a href="#产权" class="headerlink" title="产权"></a>产权</h2><blockquote>
-<p>在大多数人日常参与的社会互动中，<strong>产权</strong>是相应游戏规则中的一大部分，具有重要的地位。此外，在自愿的前提下，私有产权可以和其他商品或服务的类似产权进行交换。根据经济学的思维方式看来，你买一辆车或者一包食品，都是产权的交换。现在，你获得了车或零食等物品的所有权，卖方则获得了现金的所有权。</p>
-</blockquote>
-<blockquote>
-<p>正是通过准确地决定何物在何种情况下属于何人，私有产权为社会成员提供了可靠的<strong>信息</strong>和<strong>激励</strong>。但是一个产权足够明确的体制不可能一夜之间形成，而几乎必然是一个随时间演化的过程，其间法律、习俗、道德、技术、日常实践相互作用，直至建立起一种可靠的模式。</p>
-</blockquote>
-<blockquote>
-<p>根据经济学的思维方式，清晰界定并严格执行的产权确实能够促进现存稀缺资源的有效使用。明确的产权还能直接促使人们努力发现<strong>新资源</strong>、引进<strong>新技术</strong>以降低成本、开发新的才能和技巧。</p>
-</blockquote>
-<hr>
-<h2 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h2><blockquote>
-<p>“人们基于他们期望的收益和成本进行选择”这一假设，并没有暗示以上任何一项。一切都取决于人们把什么东西看作收益和成本，以及他们以怎样的相对价值衡量这些收益和成本。经济学理论不否认<strong>慷慨</strong>、<strong>公益精神</strong>及其他<strong>美德</strong>的现实性或重要性。经济学家如果真的否认事实，那他们就成弱智了。事实上，亚当·斯密关于美德同样写过一整本书。</p>
-</blockquote>
-<blockquote>
-<p>与之相比，难道我们的很多行为不是更多地出自理性之外<strong>下意识的欲望</strong>和<strong>未经权衡的冲动</strong>吗？每个行为一定是为达到某个目的的手段吗？一定是对于一个期望界定的目标的追求吗？尽管经济学家并未声称人们什么都知道，也并未说人们从来不犯错误，但经济学的思维方式确实<strong>假设</strong>人们的行为是在比较了收益和成本之后做出的。这强调了人类行为的<strong>工具理性</strong>，并有意<strong>忽略了</strong>一些事实，即很多重要的活动，比如一次热烈的谈话，或一场友好的网球赛，并不是为了达到其他什么目的而采取的手段。</p>
-</blockquote>
-<blockquote>
-<p>然而，仅靠经济理论本身并<strong>不能</strong>回答任何有趣或重要的<strong>社会问题</strong>，认识到这一点很重要。经济学的思维方式要补充<strong>其他领域的知识</strong>：历史、文化、政治、心理学以及塑造人们价值观和行为的社会制度。仅仅学习经济分析的技术本身，要比<strong>合理并富有说服力地</strong>将其运用于无限复杂的实际社会问题容易得多，后者是一种艺术的掌握。最好的经济学家和经济学学生不是纯粹的技术匠人，而是能把经济学的思维方式运用自如。</p>
-</blockquote>
+                <h2 id="Kleene-Algebra"><a href="#Kleene-Algebra" class="headerlink" title="Kleene Algebra"></a>Kleene Algebra</h2><p>Kleene algebra is a neat way to describe and reason about <strong>regular patterns of behavior</strong> as <strong>regular expressions</strong> built from:</p>
+<ul>
+<li><code>0</code> (impossible behavior, always fails, etc.)</li>
+<li><code>1</code> (do nothing, succeed immediately, etc.)</li>
+<li><code>a</code> (one basic action, one input symbol, etc.)</li>
+<li><code>e + f</code> (union, choice, etc.)</li>
+<li><code>e · f</code> (concatenation, sequencing, etc.)</li>
+<li><code>e*</code> (Kleene star, looping, etc.)</li>
+</ul>
+<p>When applied to different domains, <strong>different interpretations for <code>0</code>, <code>1</code>, <code>a</code>, <code>e + f</code>, <code>e · f</code>, <code>e*</code>, etc. exist</strong>, so long as they satisfy certain <strong>algebraic laws</strong>. These laws let us simplify expressions and prove that two expressions describe the same behavior. For example:</p>
+<ul>
+<li><code>1</code> does nothing<br>(<code>1·e = e = e·1</code>)</li>
+<li><code>0</code> contributes no possible behavior</li>
+<li>choice is associative, commutative, and idempotent<br>(<code>e + f = f + e</code>, <code>e + e = e</code>)</li>
+<li>sequencing is associative<br>(<code>(e·f)·g = e·(f·g)</code>)</li>
+<li>sequencing distributes over choice</li>
+</ul>
+<h2 id="NetKAT"><a href="#NetKAT" class="headerlink" title="NetKAT"></a>NetKAT</h2><p>NetKAT is a domain-specific language for specifying and verifying network behavior. Formally, a NetKAT program is the following Kleene algebra:</p>
+<p>$$<br>e ::&#x3D; 0 \mid 1 \mid e_1 + e_2 \mid e_1 \cdot e_2 \mid e^{*} \mid f &#x3D; v \mid f \leftarrow v<br>$$</p>
+<p>where:</p>
+<ul>
+<li>$0$: Drop all packets</li>
+<li>$1$: Forward all packets</li>
+<li>$e_1 + e_2$: Send packet through $e_1$ and $e_2$</li>
+<li>$e_1 \cdot e_2$: Send packet through $e_1$ then $e_2$</li>
+<li>$e^{*}$: Perform $e$ any number of times</li>
+<li>$f &#x3D; v$: Forward packets with field $f &#x3D; v$</li>
+<li>$f \leftarrow v$: Set packets’ field $f$ to $v$</li>
+</ul>
+<p>NetKAT represents packets as <strong>finite records</strong> from fields to values. It is too simple to model general-purpose imperative programs written in languages like Python or C. But it turns out to be an ideal model for the kind of computation that arises in <strong>high-speed network data planes</strong>. Network devices like routers, switches, firewalls, etc., process packets using efficient pipelines that classify packets using predicates formulated in terms of constant values ($f &#x3D; v$) and modify packets using actions that assign packet headers to possibly new constant values ($f \leftarrow v$).</p>
+<h2 id="StacKAT"><a href="#StacKAT" class="headerlink" title="StacKAT"></a>StacKAT</h2><p>NetKAT’s restriction to finite records precludes modeling a variety of behaviors that arise in practice. First, on real-world devices, packets are not represented as finite records, but as sequences of bytes. When a packet enters a switch it must be parsed to “extract” the relevant headers into local variables. Likewise, when a packet exits a switch, the local variables must be serialized back into bytes. By convention, the unparsed portion of the packet is carried along as the payload. To <strong>faithfully model packet parsing and serialization in all the various forms used on different devices</strong>, NetKAT’s finite records are insufficient.</p>
+<p>Second, <strong>certain network protocols are not finite state</strong>. In source routing schemes, the packet not only stores its IPv4 destination address, but encodes the entire forwarding path in a stack. Each router pops an element off the stack and forwards the packet to the corresponding next hop. As paths can in principle be arbitrarily long, the stack cannot be encoded using a finite record. Dually, protocols that collect telemetry push records onto a stack to log observations about how the packet was processed at each hop on the end-to-end path. In similar fashion, tunneling protocols prepend a new set of headers to the packet, encapsulating the original headers in the payload, and use the newly added headers to route through a subnetwork. When the packet ultimately leaves the subnetwork, the new headers are removed and the original headers are restored from the payload.</p>
+<p>StacKAT extends NetKAT:</p>
+<ul>
+<li>It models packets as comprising both a finite record mapping fields to values as well as a <strong>stack of values</strong> $s$ representing the unparsed portion of the packet.</li>
+<li>It adds the following constructs to NetKAT’s Kleene algebra:<ul>
+<li>$\operatorname{push}(v)$: Push $v$ onto stack</li>
+<li>$\operatorname{pop}(v)$: Test and pop top of stack if it equals $v$</li>
+</ul>
+</li>
+</ul>
 
                 
               </div>
@@ -484,9 +463,13 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/finance/" class="print-no-link">#finance</a>
+        <a href="/tags/computer-science/" class="print-no-link">#computer-science</a>
       
-        <a href="/tags/quotes/" class="print-no-link">#quotes</a>
+        <a href="/tags/reference/" class="print-no-link">#reference</a>
+      
+        <a href="/tags/systems/" class="print-no-link">#systems</a>
+      
+        <a href="/tags/programming-languages/" class="print-no-link">#programming-languages</a>
       
     </div>
   
@@ -498,8 +481,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>《经济学的思维方式》第一章读书摘录</div>
-      <div>https://jifengwu2k.github.io/2026/04/14/经济学的思维方式-第一章读书摘录/</div>
+      <div>Kleene Algebra, NetKAT, and StacKAT</div>
+      <div>https://jifengwu2k.github.io/2026/04/15/Kleene-Algebra-NetKAT-and-StacKAT/</div>
     </div>
     <div class="license-meta">
       
@@ -511,7 +494,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>April 14, 2026</div>
+          <div>April 15, 2026</div>
         </div>
       
       
@@ -543,18 +526,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/04/15/Kleene-Algebra-NetKAT-and-StacKAT/" title="Kleene Algebra, NetKAT, and StacKAT">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Kleene Algebra, NetKAT, and StacKAT</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/04/12/GitHub-Portfolio/" title="GitHub Portfolio">
-                        <span class="hidden-mobile">GitHub Portfolio</span>
+                      <a href="/2026/04/14/%E7%BB%8F%E6%B5%8E%E5%AD%A6%E7%9A%84%E6%80%9D%E7%BB%B4%E6%96%B9%E5%BC%8F-%E7%AC%AC%E4%B8%80%E7%AB%A0%E8%AF%BB%E4%B9%A6%E6%91%98%E5%BD%95/" title="《经济学的思维方式》第一章读书摘录">
+                        <span class="hidden-mobile">《经济学的思维方式》第一章读书摘录</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
