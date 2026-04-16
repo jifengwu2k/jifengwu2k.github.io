@@ -19,24 +19,25 @@
   <meta name="author" content="Jifeng Wu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="When juggling multiple data science or machine learning projects, maintaining isolated, reproducible environments is crucial. conda has emerged as the de facto standard in Python for managing such env">
+    <meta name="description" content="I published pyssa on Zenodo, a software documentation record for an executable, source-oriented, stable intermediate representation for Python.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Managing Development Environments with Conda">
-<meta property="og:url" content="https://jifengwu2k.github.io/2025/07/10/Managing-Development-Environments-with-Conda/index.html">
+<meta property="og:title" content="pyssa: An Executable, Source-Oriented, Stable Intermediate Representation for Python">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/04/16/pyssa-An-Executable-Source-Oriented-Stable-Intermediate-Representation-for-Python/index.html">
 <meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
-<meta property="og:description" content="When juggling multiple data science or machine learning projects, maintaining isolated, reproducible environments is crucial. conda has emerged as the de facto standard in Python for managing such env">
+<meta property="og:description" content="I published pyssa on Zenodo, a software documentation record for an executable, source-oriented, stable intermediate representation for Python.">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-07-10T07:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-05T18:19:52.745Z">
+<meta property="article:published_time" content="2026-04-16T07:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-16T07:00:00.000Z">
 <meta property="article:author" content="Jifeng Wu">
-<meta property="article:tag" content="conda">
-<meta property="article:tag" content="reference">
-<meta property="article:tag" content="systems">
+<meta property="article:tag" content="programming-languages">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="records">
+<meta property="article:tag" content="software-engineering">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Managing Development Environments with Conda - Jifeng Wu&#39;s Personal Website</title>
+  <title>pyssa: An Executable, Source-Oriented, Stable Intermediate Representation for Python - Jifeng Wu&#39;s Personal Website</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -305,7 +306,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Managing Development Environments with Conda</span>
+            <span id="subtitle">pyssa: An Executable, Source-Oriented, Stable Intermediate Representation for Python</span>
           
         </div>
 
@@ -321,8 +322,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-07-10 00:00" pubdate>
-          July 10, 2025
+        <time datetime="2026-04-16 00:00" pubdate>
+          April 16, 2026
         </time>
       </span>
     
@@ -333,7 +334,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.8k words
+          2k words
         
       </span>
     
@@ -344,7 +345,7 @@
         
         
         
-          24 mins
+          17 mins
         
       </span>
     
@@ -383,60 +384,41 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Managing Development Environments with Conda</h1>
+            <h1 id="seo-header">pyssa: An Executable, Source-Oriented, Stable Intermediate Representation for Python</h1>
             
             
               <div class="markdown-body">
                 
-                <p>When juggling multiple data science or machine learning projects, maintaining isolated, reproducible environments is crucial. <strong>conda</strong> has emerged as the <em>de facto standard</em> in Python for managing such environments. But <em>why</em> should you use conda over alternatives like <code>venv</code>, <code>poetry</code>, <code>pipenv</code>, system package managers like <code>apt</code>, or container tools like Docker? Let’s find out - and get you set up!</p>
-<h2 id="Why-Conda"><a href="#Why-Conda" class="headerlink" title="Why Conda?"></a>Why Conda?</h2><p>Conda offers several key advantages:</p>
+                <p>I have published <strong>pyssa</strong> on Zenodo:</p>
 <ul>
-<li>Beyond Python Packages: Unlike <code>venv</code>, <code>pipenv</code>, or <code>poetry</code>, conda handles both Python packages <em>and</em> complex system-level dependencies, such as CUDA toolkits for GPU acceleration, C&#x2F;C++ compiler toolchains, and other command-line utilities.</li>
-<li>No Admin Required: With system-wide package managers like <code>apt</code>, you’ll often need root privileges to install software. In comparison, Conda lets you install everything in user-space.</li>
-<li>Better than Docker for Rapid Iteration: While Docker excels at packaging for production, it often means verbose Dockerfiles, long build times, and a less pleasant development experience. Conda offers a lightweight, rapid way to set up and switch between environments on your local machine.</li>
+<li>Zenodo record: <a target="_blank" rel="noopener" href="https://zenodo.org/records/19601901">https://zenodo.org/records/19601901</a></li>
+<li>DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.5281/zenodo.19601901">https://doi.org/10.5281/zenodo.19601901</a></li>
+<li>All-versions DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.5281/zenodo.19601900">https://doi.org/10.5281/zenodo.19601900</a></li>
+<li>GitHub repository: <a target="_blank" rel="noopener" href="https://github.com/jifengwu2k/pyssa">https://github.com/jifengwu2k/pyssa</a></li>
 </ul>
-<h2 id="Installing-Conda-Miniconda"><a href="#Installing-Conda-Miniconda" class="headerlink" title="Installing Conda (Miniconda)"></a>Installing Conda (Miniconda)</h2><p>The preferred way to get started is with Miniconda, a minimal conda installer. Here’s a step-by-step guide:</p>
-<p>Create an Installation Directory:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p ~/miniconda3<br></code></pre></td></tr></table></figure>
-
-<p>Download the Miniconda Installer:</p>
+<p><strong>pyssa</strong> is an experiment in designing an intermediate representation for Python that tries to avoid a common tradeoff in Python tooling.</p>
+<p>Today, Python analysis and transformation workflows are often pushed toward one of two input formats:</p>
 <ul>
-<li>Linux x86_64: <code>wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh</code></li>
-<li>Linux aarch64: <code>wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh -O ~/miniconda3/miniconda.sh</code></li>
-<li>Linux s390x: <code>wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-s390x.sh -O ~/miniconda3/miniconda.sh</code></li>
-<li>Linux ppc64le: <code>wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-ppc64le.sh -O ~/miniconda3/miniconda.sh</code></li>
-<li>Linux x86: <code>wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86.sh -O ~/miniconda3/miniconda.sh</code></li>
-<li>Linux armv7l: <code>wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-armv7l.sh -O ~/miniconda3/miniconda.sh</code></li>
-<li>macOS arm64: <code>curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh -o ~/miniconda3/miniconda.sh</code></li>
-<li>macOS x86_64: <code>curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ~/miniconda3/miniconda.sh</code></li>
-<li>macOS x86: <code>curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86.sh -o ~/miniconda3/miniconda.sh</code></li>
+<li><strong>Python AST</strong>, which preserves source structure well and is relatively stable, but does not directly present executable control flow.</li>
+<li><strong>Python bytecode</strong>, which is executable, but does not preserve source in the way many source-oriented tools want and also inherits implementation details that are not always desirable as the basis for analysis and transformation.</li>
 </ul>
-<p>Run the Installer</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3 &amp;&amp; <span class="hljs-built_in">rm</span> ~/miniconda3/miniconda.sh <br></code></pre></td></tr></table></figure>
-
-<p>What does this do?</p>
+<p>pyssa takes a different path. It lowers Python source into a <strong>region-based, explicit control-flow IR</strong> that remains close to the source program while also being directly executable.</p>
+<h2 id="What-the-current-prototype-already-does"><a href="#What-the-current-prototype-already-does" class="headerlink" title="What the current prototype already does"></a>What the current prototype already does</h2><p>The current prototype already supports:</p>
 <ul>
-<li><code>-b</code>: Run in batch (no interactive prompts)</li>
-<li><code>-u</code>: Unpack the installer</li>
-<li><code>-p ~/miniconda3</code>: Install into this directory</li>
-<li><code>&amp;&amp; rm ...</code>: Clean up the installer file</li>
+<li>lowering from Python source;</li>
+<li>execution through an interpreter; and</li>
+<li>validation against CPython for a substantial subset of Python.</li>
 </ul>
-<h2 id="Activate-Conda"><a href="#Activate-Conda" class="headerlink" title="Activate Conda"></a>Activate Conda</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">source</span> ~/miniconda3/bin/activate<br></code></pre></td></tr></table></figure>
-
-<p>By default, you’ll need to run this every time you log into your shell. If you want to automatically execute this every time you log into your shell, run:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda init --all<br></code></pre></td></tr></table></figure>
-
-<p>To cancel, run:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda init --all --reverse<br></code></pre></td></tr></table></figure>
-
-<h2 id="Managing-Conda-Environments"><a href="#Managing-Conda-Environments" class="headerlink" title="Managing Conda Environments"></a>Managing Conda Environments</h2><p>List all environments:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda <span class="hljs-built_in">env</span> list<br></code></pre></td></tr></table></figure>
-
-<p>Remove an environment:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda <span class="hljs-built_in">env</span> remove --name ENV_NAME<br></code></pre></td></tr></table></figure>
-
-<p>Replace <code>ENV_NAME</code> with the actual name (e.g., <code>myenv</code>). This will delete the environment and all its files.</p>
-
+<p>My goal is to explore whether this kind of IR can become a more stable substrate for future Python program analysis and transformation workflows.</p>
+<h2 id="Why-I-find-this-direction-interesting"><a href="#Why-I-find-this-direction-interesting" class="headerlink" title="Why I find this direction interesting"></a>Why I find this direction interesting</h2><p>For Python tooling, source fidelity and executability are both useful, but they are often available only in separate representations. I am interested in the space between them:</p>
+<ul>
+<li>something more executable than ASTs,</li>
+<li>more source-oriented than bytecode,</li>
+<li>and more stable than representations tied too closely to changing interpreter internals.</li>
+</ul>
+<p>That is the design space pyssa is trying to explore.</p>
+<p>This Zenodo record archives a concise documentation snapshot of the project. The actively developed prototype remains on GitHub.</p>
+<h2 id="Citation"><a href="#Citation" class="headerlink" title="Citation"></a>Citation</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bibtex">@misc&#123;wu_2026_19601901,<br>  author       = &#123;Wu, Jifeng&#125;,<br>  title        = &#123;pyssa: An Executable, Source-Oriented, Stable<br>                   Intermediate Representation for Python<br>                  &#125;,<br>  month        = apr,<br>  year         = 2026,<br>  publisher    = &#123;Zenodo&#125;,<br>  doi          = &#123;10.5281/zenodo.19601901&#125;,<br>  url          = &#123;https://doi.org/10.5281/zenodo.19601901&#125;,<br>&#125;<br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -454,7 +436,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Systems/" class="category-chain-item">Systems</a>
+  <a href="/categories/Programming/" class="category-chain-item">Programming</a>
   
   
 
@@ -469,11 +451,13 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/reference/" class="print-no-link">#reference</a>
+        <a href="/tags/records/" class="print-no-link">#records</a>
       
-        <a href="/tags/systems/" class="print-no-link">#systems</a>
+        <a href="/tags/programming-languages/" class="print-no-link">#programming-languages</a>
       
-        <a href="/tags/conda/" class="print-no-link">#conda</a>
+        <a href="/tags/python/" class="print-no-link">#python</a>
+      
+        <a href="/tags/software-engineering/" class="print-no-link">#software-engineering</a>
       
     </div>
   
@@ -485,8 +469,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Managing Development Environments with Conda</div>
-      <div>https://jifengwu2k.github.io/2025/07/10/Managing-Development-Environments-with-Conda/</div>
+      <div>pyssa: An Executable, Source-Oriented, Stable Intermediate Representation for Python</div>
+      <div>https://jifengwu2k.github.io/2026/04/16/pyssa-An-Executable-Source-Oriented-Stable-Intermediate-Representation-for-Python/</div>
     </div>
     <div class="license-meta">
       
@@ -498,7 +482,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>July 10, 2025</div>
+          <div>April 16, 2026</div>
         </div>
       
       
@@ -530,18 +514,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/07/24/Creating-Custom-Data-Structures-from-Abstract-Containers-in-collections-abc/" title="Creating Custom Data Structures from Abstract Containers in `collections.abc`">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Creating Custom Data Structures from Abstract Containers in `collections.abc`</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/06/30/%E7%94%A8%E6%B1%89%E8%AF%AD%E6%8B%BC%E9%9F%B3%E8%A7%A3%E8%AF%BB%E5%9B%BD%E9%99%85%E9%9F%B3%E6%A0%87%EF%BC%8C%E5%BF%AB%E9%80%9F%E8%AF%BB%E5%87%BA%E4%BB%BB%E4%BD%95%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8F%91%E9%9F%B3/" title="用汉语拼音解读国际音标，快速读出任何语言的发音">
-                        <span class="hidden-mobile">用汉语拼音解读国际音标，快速读出任何语言的发音</span>
+                      <a href="/2026/04/15/Kleene-Algebra-NetKAT-and-StacKAT/" title="Kleene Algebra, NetKAT, StacKAT, GKAT, CF-GKAT">
+                        <span class="hidden-mobile">Kleene Algebra, NetKAT, StacKAT, GKAT, CF-GKAT</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

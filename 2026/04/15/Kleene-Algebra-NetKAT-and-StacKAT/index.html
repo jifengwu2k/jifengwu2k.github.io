@@ -21,7 +21,7 @@
   
     <meta name="description" content="A short overview of Kleene algebra and how NetKAT and StacKAT use it to model network behavior.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kleene Algebra, NetKAT, and StacKAT">
+<meta property="og:title" content="Kleene Algebra, NetKAT, StacKAT, GKAT, CF-GKAT">
 <meta property="og:url" content="https://jifengwu2k.github.io/2026/04/15/Kleene-Algebra-NetKAT-and-StacKAT/index.html">
 <meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
 <meta property="og:description" content="A short overview of Kleene algebra and how NetKAT and StacKAT use it to model network behavior.">
@@ -37,7 +37,7 @@
   
   
   
-  <title>Kleene Algebra, NetKAT, and StacKAT - Jifeng Wu&#39;s Personal Website</title>
+  <title>Kleene Algebra, NetKAT, StacKAT, GKAT, CF-GKAT - Jifeng Wu&#39;s Personal Website</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -306,7 +306,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Kleene Algebra, NetKAT, and StacKAT</span>
+            <span id="subtitle">Kleene Algebra, NetKAT, StacKAT, GKAT, CF-GKAT</span>
           
         </div>
 
@@ -334,7 +334,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.2k words
+          5.6k words
         
       </span>
     
@@ -345,7 +345,7 @@
         
         
         
-          28 mins
+          47 mins
         
       </span>
     
@@ -384,7 +384,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Kleene Algebra, NetKAT, and StacKAT</h1>
+            <h1 id="seo-header">Kleene Algebra, NetKAT, StacKAT, GKAT, CF-GKAT</h1>
             
             
               <div class="markdown-body">
@@ -429,6 +429,38 @@
 <li>$\operatorname{pop}(v)$: Test and pop top of stack if it equals $v$</li>
 </ul>
 </li>
+</ul>
+<h2 id="GKAT-and-CF-GKAT"><a href="#GKAT-and-CF-GKAT" class="headerlink" title="GKAT and CF-GKAT"></a>GKAT and CF-GKAT</h2><p>Guarded Kleene Algebra with Tests (GKAT) is a Kleene algebra which has been widely applied for <strong>modeling and verification</strong> in different domains. The syntax of GKAT largely mimics that of the imperative programs, except it abstracts away the meaning of the <strong>primitive actions and tests</strong> of the program to enable a rich variety of semantics. Formally, GKAT expressions over a finite set of primitive tests $T$ and a finite set of primitive actions $\Sigma$ is defined as follows:</p>
+<p>$$<br>\mathrm{GKAT} \ni e,f,g ::&#x3D; b \in  \mathrm{BExp} \mid p \in \Sigma \mid e ; f \mid e +_b f \mid e^{(b)}<br>$$</p>
+<p>$$<br>\mathrm{BExp} \ni b,c ::&#x3D; 0 \mid 1 \mid t \in T \mid b \land c \mid b \lor c \mid \bar{b}<br>$$</p>
+<p>where:</p>
+<ul>
+<li>$b \in \mathrm{BExp}$: Assertion<ul>
+<li>$0$: false</li>
+<li>$1$: true</li>
+<li>$t \in T$: Primitive</li>
+<li>$b \land c$: Conjunction</li>
+<li>$b \lor c$: Disjunction</li>
+<li>$\bar{b}$: Negation</li>
+</ul>
+</li>
+<li>$p \in \Sigma$: Primitive</li>
+<li>$e ; f$: Sequencing</li>
+<li>$e +_b f$: If-statement</li>
+<li>$e^{(b)}$ (or <code>while b do e</code>): While-loop</li>
+</ul>
+<p><strong>Control-flow GKAT (CF-GKAT)</strong> augments GKAT with <strong>non-local control-flow structures</strong>, like goto and break, and indicator variables; providing a comprehensive framework to validate control-flow transformations.</p>
+<p>Similar to GKAT, the syntax of CF-GKAT is also two sorted, with the addition of common control-flow structures like indicator variable, break, continue, return, and goto’s. Formally, CF-GKAT expressions are defined over a finite set of <strong>indicator variables</strong> $x \in X$, a finite set of <strong>indicator values</strong> $i \in I$, and a finite set of <strong>labels</strong> $l \in L$:</p>
+<p>$$<br>\mathrm{CF\text{-}GKAT} \ni e,f ::&#x3D; b \in \mathrm{BExp}^I \mid p \in \Sigma \mid x :&#x3D; i \mid e \triangleleft f \mid e ; f \mid e +_b f \mid e^{(b)} \mid \texttt{break} \mid \texttt{continue} \mid \texttt{return} \mid \texttt{goto } l \mid \texttt{label } l<br>$$</p>
+<p>$$<br>\mathrm{BExp}_T^I \ni b,c ::&#x3D; 0 \mid 1 \mid t \in T \mid x &#x3D; i \mid b \lor c \mid b \land c \mid \bar{b}<br>$$</p>
+<p>The <strong>unfolding operator</strong> $e \triangleleft f$ is an expression for <strong>loop unfolding</strong>. In GCAT, it is common to assume that the loop $e^{(b)}$ can be unfolded into an if-statement: $e^{(b)} \equiv e ; e^{(b)} +_{b} 1$.</p>
+<p>However, <strong>this identity no longer holds in CF-GKAT with the addition of <code>break</code> and <code>continue</code></strong>. Therefore, we introduce the unfolding operator $\triangleleft$, which satisfies the equality $e^{(b)} \equiv e \triangleleft e^{(b)} +_{b} 1$ by properly handling the <code>break</code> and <code>continue</code> within $e$.</p>
+<p>For a CF-GKAT expression $e$ to be a CF-GKAT program (or well-formed expressions), we enforce the following constraint:</p>
+<ul>
+<li>Each <code>label l</code> appears at most once in the program $e$.</li>
+<li>If <code>goto l</code> appears in $e$, then so does <code>label l</code>.</li>
+<li><code>break</code> or <code>continue</code> can only appear in loop, or the left side of the unfolding operator $\triangleleft$.</li>
+<li>All programs end with return, i.e. a program must be either <code>return</code> or of the form $f ; \texttt{return}$.</li>
 </ul>
 
                 
@@ -481,7 +513,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Kleene Algebra, NetKAT, and StacKAT</div>
+      <div>Kleene Algebra, NetKAT, StacKAT, GKAT, CF-GKAT</div>
       <div>https://jifengwu2k.github.io/2026/04/15/Kleene-Algebra-NetKAT-and-StacKAT/</div>
     </div>
     <div class="license-meta">
@@ -525,6 +557,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2026/04/16/pyssa-An-Executable-Source-Oriented-Stable-Intermediate-Representation-for-Python/" title="pyssa: An Executable, Source-Oriented, Stable Intermediate Representation for Python">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">pyssa: An Executable, Source-Oriented, Stable Intermediate Representation for Python</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
