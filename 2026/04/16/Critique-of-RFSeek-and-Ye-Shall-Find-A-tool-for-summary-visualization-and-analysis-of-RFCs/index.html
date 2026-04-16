@@ -19,25 +19,26 @@
   <meta name="author" content="Jifeng Wu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="A short overview of Kleene algebra and how NetKAT and StacKAT use it to model network behavior.">
+    <meta name="description" content="A critique of RFSeek, arguing that provenance-linked RFC visualization is valuable but that the underlying methodology remains closer to a retrieval-augmented prompting pipeline than to an agentic, ve">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kleene Algebra, NetKAT, StacKAT, GKAT, CF-GKAT">
-<meta property="og:url" content="https://jifengwu2k.github.io/2026/04/15/Kleene-Algebra-NetKAT-and-StacKAT/index.html">
+<meta property="og:title" content="Critique of &quot;RFSeek and Ye Shall Find: A tool for summary visualization and analysis of RFCs&quot;">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/04/16/Critique-of-RFSeek-and-Ye-Shall-Find-A-tool-for-summary-visualization-and-analysis-of-RFCs/index.html">
 <meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
-<meta property="og:description" content="A short overview of Kleene algebra and how NetKAT and StacKAT use it to model network behavior.">
+<meta property="og:description" content="A critique of RFSeek, arguing that provenance-linked RFC visualization is valuable but that the underlying methodology remains closer to a retrieval-augmented prompting pipeline than to an agentic, ve">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-04-15T07:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-15T07:00:00.000Z">
+<meta property="article:published_time" content="2026-04-16T07:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-16T07:00:00.000Z">
 <meta property="article:author" content="Jifeng Wu">
-<meta property="article:tag" content="computer-science">
-<meta property="article:tag" content="programming-languages">
-<meta property="article:tag" content="reference">
+<meta property="article:tag" content="llm">
+<meta property="article:tag" content="paper-reading">
+<meta property="article:tag" content="software-engineering">
 <meta property="article:tag" content="systems">
+<meta property="article:tag" content="visualization">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Kleene Algebra, NetKAT, StacKAT, GKAT, CF-GKAT - Jifeng Wu&#39;s Personal Website</title>
+  <title>Critique of &#34;RFSeek and Ye Shall Find: A tool for summary visualization and analysis of RFCs&#34; - Jifeng Wu&#39;s Personal Website</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -306,7 +307,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Kleene Algebra, NetKAT, StacKAT, GKAT, CF-GKAT</span>
+            <span id="subtitle">Critique of "RFSeek and Ye Shall Find: A tool for summary visualization and analysis of RFCs"</span>
           
         </div>
 
@@ -322,8 +323,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-04-15 00:00" pubdate>
-          April 15, 2026
+        <time datetime="2026-04-16 00:00" pubdate>
+          April 16, 2026
         </time>
       </span>
     
@@ -334,7 +335,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.6k words
+          4.1k words
         
       </span>
     
@@ -345,7 +346,7 @@
         
         
         
-          47 mins
+          35 mins
         
       </span>
     
@@ -384,84 +385,37 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Kleene Algebra, NetKAT, StacKAT, GKAT, CF-GKAT</h1>
+            <h1 id="seo-header">Critique of &#34;RFSeek and Ye Shall Find: A tool for summary visualization and analysis of RFCs&#34;</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="Kleene-Algebra"><a href="#Kleene-Algebra" class="headerlink" title="Kleene Algebra"></a>Kleene Algebra</h2><p>Kleene algebra is a neat way to describe and reason about <strong>regular patterns of behavior</strong> as <strong>regular expressions</strong> built from:</p>
+                <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2509.10216"><em>RFSeek and Ye Shall Find</em></a> addresses a real and important problem: RFCs are long, prose-heavy, internally cross-referential, and often underspecify operational behavior in their official diagrams. The paper’s strongest contribution is its emphasis on <strong>provenance-aware visualization</strong>: extracted transitions are linked back to RFC text, which makes the output more auditable than prior diagram-recovery approaches. This is valuable.</p>
+<p>That said, from a 2026 perspective, the paper’s underlying methodology feels more like a <strong>carefully engineered prompting pipeline</strong> than a modern protocol-analysis system.</p>
+<h2 id="The-methodology-is-largely-prompt-engineering-not-agentic-analysis"><a href="#The-methodology-is-largely-prompt-engineering-not-agentic-analysis" class="headerlink" title="The methodology is largely prompt engineering, not agentic analysis"></a>The methodology is largely prompt engineering, not agentic analysis</h2><p>Although the paper presents a multi-stage workflow, the core method is still a fixed sequence of LLM calls: partition the RFC, retrieve related passages, summarize chunks, extract transitions from summaries, and then ground transitions back to source text. The authors’ own methodological discussion focuses primarily on <strong>prompt variants</strong>, such as whether to use targeted summaries, whether to include diagrams, and how to phrase the extraction request.</p>
+<p>This is a reasonable 2024-2025 design, but in 2026 it reads as limited. The system does not appear to use an <strong>agentic workflow</strong> in which the model can decide what to inspect next, follow unresolved cross-references, challenge its own conclusions, or revisit earlier extractions after discovering contradictions. As a result, RFSeek looks more like a static LLM orchestration pipeline than a true reasoning system for protocol understanding.</p>
+<h2 id="Provenance-is-a-useful-feature-but-it-is-not-operationalized-strongly-enough"><a href="#Provenance-is-a-useful-feature-but-it-is-not-operationalized-strongly-enough" class="headerlink" title="Provenance is a useful feature, but it is not operationalized strongly enough"></a>Provenance is a useful feature, but it is not operationalized strongly enough</h2><p>One of RFSeek’s main claims is that every edge can be traced back to RFC text. This is a meaningful contribution. However, the paper treats provenance mostly as <strong>linked supporting passages</strong>, not as a <strong>first-class, checkable object</strong>.</p>
+<p>In other words, provenance is shown, but not deeply verified. The paper does not present a framework for testing whether:</p>
 <ul>
-<li><code>0</code> (impossible behavior, always fails, etc.)</li>
-<li><code>1</code> (do nothing, succeed immediately, etc.)</li>
-<li><code>a</code> (one basic action, one input symbol, etc.)</li>
-<li><code>e + f</code> (union, choice, etc.)</li>
-<li><code>e · f</code> (concatenation, sequencing, etc.)</li>
-<li><code>e*</code> (Kleene star, looping, etc.)</li>
+<li>the cited passages actually entail the extracted transition,</li>
+<li>the transition is explicit versus inferred,</li>
+<li>the explanation overstates what the RFC says,</li>
+<li>there is counterevidence elsewhere,</li>
+<li>or the provenance should be downgraded to ambiguous or weakly supported.</li>
 </ul>
-<p>When applied to different domains, <strong>different interpretations for <code>0</code>, <code>1</code>, <code>a</code>, <code>e + f</code>, <code>e · f</code>, <code>e*</code>, etc. exist</strong>, so long as they satisfy certain <strong>algebraic laws</strong>. These laws let us simplify expressions and prove that two expressions describe the same behavior. For example:</p>
+<p>This is especially important because the system also includes inferred transitions and synthesized logic. Once the method moves beyond direct extraction into interpretation, provenance needs to become more than citation display; it should become an explicit bridge between natural language evidence and structured claims, with its own validation criteria.</p>
+<h2 id="The-output-is-a-visualization-not-a-runnable-or-verifiable-artifact"><a href="#The-output-is-a-visualization-not-a-runnable-or-verifiable-artifact" class="headerlink" title="The output is a visualization, not a runnable or verifiable artifact"></a>The output is a visualization, not a runnable or verifiable artifact</h2><p>The paper’s end product is an interactive diagram. That is helpful for human exploration, but it is also a methodological limitation. Diagrams are inspectable, yet not strongly testable. They do not naturally support structural validation, trace replay, or formal analysis.</p>
+<p>A stronger design would have the system produce a canonical machine-readable artifact—e.g. an evidence-carrying FSM or executable transition model—from which the visualization is derived. That would enable a genuine <strong>Karpathy-style refinement loop</strong>: generate a candidate model, run validators, inspect failures, repair the model, and repeat. Without such a loop, the paper remains dependent on qualitative plausibility and case-study interpretation rather than artifact-centered verification.</p>
+<h2 id="What-a-stronger-2026-version-would-look-like"><a href="#What-a-stronger-2026-version-would-look-like" class="headerlink" title="What a stronger 2026 version would look like"></a>What a stronger 2026 version would look like</h2><p>The paper’s ideas remain valuable, but the methodology would be more compelling if reframed around:</p>
 <ul>
-<li><code>1</code> does nothing<br>(<code>1·e = e = e·1</code>)</li>
-<li><code>0</code> contributes no possible behavior</li>
-<li>choice is associative, commutative, and idempotent<br>(<code>e + f = f + e</code>, <code>e + e = e</code>)</li>
-<li>sequencing is associative<br>(<code>(e·f)·g = e·(f·g)</code>)</li>
-<li>sequencing distributes over choice</li>
+<li>an <strong>agentic workflow</strong> rather than a fixed prompt sequence,</li>
+<li><strong>on-demand retrieval and structural navigation</strong> rather than global upfront chunking,</li>
+<li>a <strong>canonical editable artifact</strong> rather than a visualization-first output,</li>
+<li>a <strong>“Karpathy-loop style refinement cycle”</strong> in which the model produces a structured FSM, runs deterministic and semantic checks, and repairs failures, and</li>
+<li><strong>first-class provenance objects</strong> that encode evidence, support type, justification, and ambiguity status, rather than just source links.</li>
 </ul>
-<h2 id="NetKAT"><a href="#NetKAT" class="headerlink" title="NetKAT"></a>NetKAT</h2><p>NetKAT is a domain-specific language for specifying and verifying network behavior. Formally, a NetKAT program is the following Kleene algebra:</p>
-<p>$$<br>e ::&#x3D; 0 \mid 1 \mid e_1 + e_2 \mid e_1 \cdot e_2 \mid e^{*} \mid f &#x3D; v \mid f \leftarrow v<br>$$</p>
-<p>where:</p>
-<ul>
-<li>$0$: Drop all packets</li>
-<li>$1$: Forward all packets</li>
-<li>$e_1 + e_2$: Send packet through $e_1$ and $e_2$</li>
-<li>$e_1 \cdot e_2$: Send packet through $e_1$ then $e_2$</li>
-<li>$e^{*}$: Perform $e$ any number of times</li>
-<li>$f &#x3D; v$: Forward packets with field $f &#x3D; v$</li>
-<li>$f \leftarrow v$: Set packets’ field $f$ to $v$</li>
-</ul>
-<p>NetKAT represents packets as <strong>finite records</strong> from fields to values. It is too simple to model general-purpose imperative programs written in languages like Python or C. But it turns out to be an ideal model for the kind of computation that arises in <strong>high-speed network data planes</strong>. Network devices like routers, switches, firewalls, etc., process packets using efficient pipelines that classify packets using predicates formulated in terms of constant values ($f &#x3D; v$) and modify packets using actions that assign packet headers to possibly new constant values ($f \leftarrow v$).</p>
-<h2 id="StacKAT"><a href="#StacKAT" class="headerlink" title="StacKAT"></a>StacKAT</h2><p>NetKAT’s restriction to finite records precludes modeling a variety of behaviors that arise in practice. First, on real-world devices, packets are not represented as finite records, but as sequences of bytes. When a packet enters a switch it must be parsed to “extract” the relevant headers into local variables. Likewise, when a packet exits a switch, the local variables must be serialized back into bytes. By convention, the unparsed portion of the packet is carried along as the payload. To <strong>faithfully model packet parsing and serialization in all the various forms used on different devices</strong>, NetKAT’s finite records are insufficient.</p>
-<p>Second, <strong>certain network protocols are not finite state</strong>. In source routing schemes, the packet not only stores its IPv4 destination address, but encodes the entire forwarding path in a stack. Each router pops an element off the stack and forwards the packet to the corresponding next hop. As paths can in principle be arbitrarily long, the stack cannot be encoded using a finite record. Dually, protocols that collect telemetry push records onto a stack to log observations about how the packet was processed at each hop on the end-to-end path. In similar fashion, tunneling protocols prepend a new set of headers to the packet, encapsulating the original headers in the payload, and use the newly added headers to route through a subnetwork. When the packet ultimately leaves the subnetwork, the new headers are removed and the original headers are restored from the payload.</p>
-<p>StacKAT extends NetKAT:</p>
-<ul>
-<li>It models packets as comprising both a finite record mapping fields to values as well as a <strong>stack of values</strong> $s$ representing the unparsed portion of the packet.</li>
-<li>It adds the following constructs to NetKAT’s Kleene algebra:<ul>
-<li>$\operatorname{push}(v)$: Push $v$ onto stack</li>
-<li>$\operatorname{pop}(v)$: Test and pop top of stack if it equals $v$</li>
-</ul>
-</li>
-</ul>
-<h2 id="GKAT-and-CF-GKAT"><a href="#GKAT-and-CF-GKAT" class="headerlink" title="GKAT and CF-GKAT"></a>GKAT and CF-GKAT</h2><p>Guarded Kleene Algebra with Tests (GKAT) is a Kleene algebra which has been widely applied for <strong>modeling and verification</strong> in different domains. The syntax of GKAT largely mimics that of the imperative programs, except it abstracts away the meaning of the <strong>primitive actions and tests</strong> of the program to enable a rich variety of semantics. Formally, GKAT expressions over a finite set of primitive tests $T$ and a finite set of primitive actions $\Sigma$ is defined as follows:</p>
-<p>$$<br>\mathrm{GKAT} \ni e,f,g ::&#x3D; b \in  \mathrm{BExp} \mid p \in \Sigma \mid e ; f \mid e +_b f \mid e^{(b)}<br>$$</p>
-<p>$$<br>\mathrm{BExp} \ni b,c ::&#x3D; 0 \mid 1 \mid t \in T \mid b \land c \mid b \lor c \mid \bar{b}<br>$$</p>
-<p>where:</p>
-<ul>
-<li>$b \in \mathrm{BExp}$: Assertion<ul>
-<li>$0$: false</li>
-<li>$1$: true</li>
-<li>$t \in T$: Primitive</li>
-<li>$b \land c$: Conjunction</li>
-<li>$b \lor c$: Disjunction</li>
-<li>$\bar{b}$: Negation</li>
-</ul>
-</li>
-<li>$p \in \Sigma$: Primitive</li>
-<li>$e ; f$: Sequencing</li>
-<li>$e +_b f$: If-statement</li>
-<li>$e^{(b)}$ (or <code>while b do e</code>): While-loop</li>
-</ul>
-<p><strong>Control-flow GKAT (CF-GKAT)</strong> augments GKAT with <strong>non-local control-flow structures</strong>, like goto and break, and indicator variables; providing a comprehensive framework to validate control-flow transformations.</p>
-<p>Similar to GKAT, the syntax of CF-GKAT is also two sorted, with the addition of common control-flow structures like indicator variable, break, continue, return, and goto’s. Formally, CF-GKAT expressions are defined over a finite set of <strong>indicator variables</strong> $x \in X$, a finite set of <strong>indicator values</strong> $i \in I$, and a finite set of <strong>labels</strong> $l \in L$:</p>
-<p>$$<br>\mathrm{CF\text{-}GKAT} \ni e,f ::&#x3D; b \in \mathrm{BExp}^I \mid p \in \Sigma \mid x :&#x3D; i \mid e \triangleleft f \mid e ; f \mid e +_b f \mid e^{(b)} \mid \texttt{break} \mid \texttt{continue} \mid \texttt{return} \mid \texttt{goto } l \mid \texttt{label } l<br>$$</p>
-<p>$$<br>\mathrm{BExp}_T^I \ni b,c ::&#x3D; 0 \mid 1 \mid t \in T \mid x &#x3D; i \mid b \lor c \mid b \land c \mid \bar{b}<br>$$</p>
-<p>The <strong>unfolding operator</strong> $e \triangleleft f$ is an expression for <strong>loop unfolding</strong>. In GCAT, it is common to assume that the loop $e^{(b)}$ can be unfolded into an if-statement: $e^{(b)} \equiv e ; e^{(b)} +_{b} 1$.</p>
-<p>However, <strong>this identity no longer holds in CF-GKAT with the addition of <code>break</code> and <code>continue</code></strong>. Therefore, we introduce the unfolding operator $\triangleleft$, which satisfies the equality $e^{(b)} \equiv e \triangleleft e^{(b)} +_{b} 1$ by properly handling the <code>break</code> and <code>continue</code> within $e$.</p>
-<p>For a CF-GKAT expression $e$ to be a CF-GKAT program (or well-formed expressions), we enforce the following constraint:</p>
-<ul>
-<li>Each <code>label l</code> appears at most once in the program $e$.</li>
-<li>If <code>goto l</code> appears in $e$, then so does <code>label l</code>.</li>
-<li><code>break</code> or <code>continue</code> can only appear in loop, or the left side of the unfolding operator $\triangleleft$.</li>
-<li>All programs end with return, i.e. a program must be either <code>return</code> or of the form $f ; \texttt{return}$.</li>
-</ul>
+<p>In that form, the system would not only visualize RFC logic but also iteratively construct and verify it.</p>
+<h2 id="Overall-assessment"><a href="#Overall-assessment" class="headerlink" title="Overall assessment"></a>Overall assessment</h2><p>RFSeek is a thoughtful and useful step toward more transparent RFC understanding tools. Its provenance-linked summaries are a genuine improvement over black-box extraction approaches, and the case studies show the practical value of surfacing protocol behavior omitted from official diagrams. However, its core methodology is still best understood as a <strong>retrieval-augmented prompt pipeline</strong>, not as a modern agentic or verification-centered system. The next step for this line of work is not merely better prompting, but a shift toward <strong>artifact-based, tool-using, self-correcting protocol analysis</strong>.</p>
 
                 
               </div>
@@ -495,13 +449,15 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/computer-science/" class="print-no-link">#computer-science</a>
-      
-        <a href="/tags/reference/" class="print-no-link">#reference</a>
+        <a href="/tags/llm/" class="print-no-link">#llm</a>
       
         <a href="/tags/systems/" class="print-no-link">#systems</a>
       
-        <a href="/tags/programming-languages/" class="print-no-link">#programming-languages</a>
+        <a href="/tags/software-engineering/" class="print-no-link">#software-engineering</a>
+      
+        <a href="/tags/paper-reading/" class="print-no-link">#paper-reading</a>
+      
+        <a href="/tags/visualization/" class="print-no-link">#visualization</a>
       
     </div>
   
@@ -513,8 +469,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Kleene Algebra, NetKAT, StacKAT, GKAT, CF-GKAT</div>
-      <div>https://jifengwu2k.github.io/2026/04/15/Kleene-Algebra-NetKAT-and-StacKAT/</div>
+      <div>Critique of &#34;RFSeek and Ye Shall Find: A tool for summary visualization and analysis of RFCs&#34;</div>
+      <div>https://jifengwu2k.github.io/2026/04/16/Critique-of-RFSeek-and-Ye-Shall-Find-A-tool-for-summary-visualization-and-analysis-of-RFCs/</div>
     </div>
     <div class="license-meta">
       
@@ -526,7 +482,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>April 15, 2026</div>
+          <div>April 16, 2026</div>
         </div>
       
       
@@ -558,9 +514,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/04/16/Critique-of-RFSeek-and-Ye-Shall-Find-A-tool-for-summary-visualization-and-analysis-of-RFCs/" title="Critique of &#34;RFSeek and Ye Shall Find: A tool for summary visualization and analysis of RFCs&#34;">
+                      <a href="/2026/04/16/pyssa-An-Executable-Source-Oriented-Stable-Intermediate-Representation-for-Python/" title="pyssa: An Executable, Source-Oriented, Stable Intermediate Representation for Python">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Critique of &#34;RFSeek and Ye Shall Find: A tool for summary visualization and analysis of RFCs&#34;</span>
+                        <span class="hidden-mobile">pyssa: An Executable, Source-Oriented, Stable Intermediate Representation for Python</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -568,8 +524,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/04/14/%E7%BB%8F%E6%B5%8E%E5%AD%A6%E7%9A%84%E6%80%9D%E7%BB%B4%E6%96%B9%E5%BC%8F-%E7%AC%AC%E4%B8%80%E7%AB%A0%E8%AF%BB%E4%B9%A6%E6%91%98%E5%BD%95/" title="《经济学的思维方式》第一章读书摘录">
-                        <span class="hidden-mobile">《经济学的思维方式》第一章读书摘录</span>
+                      <a href="/2026/04/15/Kleene-Algebra-NetKAT-and-StacKAT/" title="Kleene Algebra, NetKAT, StacKAT, GKAT, CF-GKAT">
+                        <span class="hidden-mobile">Kleene Algebra, NetKAT, StacKAT, GKAT, CF-GKAT</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
