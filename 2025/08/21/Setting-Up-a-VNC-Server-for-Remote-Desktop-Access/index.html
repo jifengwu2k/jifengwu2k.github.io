@@ -21,13 +21,13 @@
   
     <meta name="description" content="While SSH is a staple tool and almost universally understood among Linux users, setting up VNC for remote desktop access - especially headlessly or with virtual framebuffers - remains mysterious to ma">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Setting Up a Headless VNC Server for Remote Desktop Access">
-<meta property="og:url" content="https://jifengwu2k.github.io/2025/08/21/Setting-Up-a-Headless-VNC-Server-for-Remote-Desktop-Access/index.html">
+<meta property="og:title" content="Setting Up a VNC Server for Remote Desktop Access">
+<meta property="og:url" content="https://jifengwu2k.github.io/2025/08/21/Setting-Up-a-VNC-Server-for-Remote-Desktop-Access/index.html">
 <meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
 <meta property="og:description" content="While SSH is a staple tool and almost universally understood among Linux users, setting up VNC for remote desktop access - especially headlessly or with virtual framebuffers - remains mysterious to ma">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-08-21T07:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-05T18:19:52.746Z">
+<meta property="article:modified_time" content="2026-04-17T05:17:42.951Z">
 <meta property="article:author" content="Jifeng Wu">
 <meta property="article:tag" content="reference">
 <meta property="article:tag" content="remote-desktop">
@@ -37,7 +37,7 @@
   
   
   
-  <title>Setting Up a Headless VNC Server for Remote Desktop Access - Jifeng Wu&#39;s Personal Website</title>
+  <title>Setting Up a VNC Server for Remote Desktop Access - Jifeng Wu&#39;s Personal Website</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -306,7 +306,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Setting Up a Headless VNC Server for Remote Desktop Access</span>
+            <span id="subtitle">Setting Up a VNC Server for Remote Desktop Access</span>
           
         </div>
 
@@ -334,7 +334,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.6k words
+          5.4k words
         
       </span>
     
@@ -345,7 +345,7 @@
         
         
         
-          47 mins
+          45 mins
         
       </span>
     
@@ -384,7 +384,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Setting Up a Headless VNC Server for Remote Desktop Access</h1>
+            <h1 id="seo-header">Setting Up a VNC Server for Remote Desktop Access</h1>
             
             
               <div class="markdown-body">
@@ -399,25 +399,49 @@
 <li><strong>Work-from-home</strong> mean you need to access graphical applications (like IDEs, simulators, and visualization tools) installed on remote lab or office machines.</li>
 <li><strong>Remote servers without physical monitors</strong> demand a headless-only setup - you can’t just “plug in a monitor and keyboard” to start a desktop session.</li>
 </ul>
-<p>In these scenarios, there is <strong>no substitute</strong> - the need is inelastic. You must have a reliable, secure way to run and manage desktops remotely. Frustratingly, most available documentation is scattered, outdated, or omits crucial details.</p>
-<p>That’s why this guide exists: to provide you with a <strong>direct, practical roadmap for setting up a robust remote desktop workflow</strong>, no matter where you work.</p>
-<h2 id="The-Three-Components-of-Headless-VNC"><a href="#The-Three-Components-of-Headless-VNC" class="headerlink" title="The Three Components of Headless VNC"></a>The Three Components of Headless VNC</h2><p>Three key components work together to present a remote desktop via VNC:</p>
-<h3 id="Xvfb-X-Virtual-Framebuffer"><a href="#Xvfb-X-Virtual-Framebuffer" class="headerlink" title="Xvfb (X Virtual Framebuffer)"></a>Xvfb (X Virtual Framebuffer)</h3><p>Xvfb is a “headless” X server that implements the X11 protocol and acts like a display server, but renders everything to memory instead of a physical monitor.</p>
-<h3 id="x11vnc"><a href="#x11vnc" class="headerlink" title="x11vnc"></a>x11vnc</h3><p>This utility acts as a bridge, allowing VNC clients to view and interact with an existing X server session. It:</p>
+<p>This post covers two common scenarios:</p>
 <ul>
-<li>Connects to the X server’s framebuffer (in this case, Xvfb’s in-memory screen)</li>
-<li>Reads pixels from the X server, and writes mouse&#x2F;keyboard events</li>
-<li>Presents those images to a VNC client over the network, and listens for events</li>
+<li><strong>Ubuntu Desktop VNC</strong> for sharing an already-running physical desktop session</li>
+<li><strong>Headless VNC</strong> for running a virtual desktop with no monitor attached</li>
 </ul>
-<h3 id="GUI-Applications"><a href="#GUI-Applications" class="headerlink" title="GUI Applications"></a>GUI Applications</h3><p>These render to Xvfb’s in-memory screen instead of a physical monitor via the <code>DISPLAY</code> environment variable.</p>
-<h2 id="Step-by-Step-Setup-Guide"><a href="#Step-by-Step-Setup-Guide" class="headerlink" title="Step-by-Step Setup Guide"></a>Step-by-Step Setup Guide</h2><h3 id="Prerequisites-Remote-Host"><a href="#Prerequisites-Remote-Host" class="headerlink" title="Prerequisites (Remote Host)"></a>Prerequisites (Remote Host)</h3><p>First, install the necessary packages on the <strong>remote host</strong>:</p>
+<h2 id="Ubuntu-Desktop-VNC-Setup-Guide"><a href="#Ubuntu-Desktop-VNC-Setup-Guide" class="headerlink" title="Ubuntu Desktop VNC Setup Guide"></a>Ubuntu Desktop VNC Setup Guide</h2><p>This guide shows how to set up <strong>real VNC access</strong> on <strong>Ubuntu Desktop</strong>.</p>
+<h3 id="Install-Required-Packages"><a href="#Install-Required-Packages" class="headerlink" title="Install Required Packages"></a>Install Required Packages</h3><p>Open a terminal and run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> apt update<br><span class="hljs-built_in">sudo</span> apt install x11vnc<br></code></pre></td></tr></table></figure>
+
+<h3 id="Identify-the-Display"><a href="#Identify-the-Display" class="headerlink" title="Identify the Display"></a>Identify the Display</h3><p>For a normal Ubuntu Desktop session, the display is usually <code>:0</code>.</p>
+<p>You can check with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> <span class="hljs-variable">$DISPLAY</span><br></code></pre></td></tr></table></figure>
+
+<p>If you are logged into the desktop normally, it will often be:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">:0<br></code></pre></td></tr></table></figure>
+
+<h3 id="Start-the-VNC-Server"><a href="#Start-the-VNC-Server" class="headerlink" title="Start the VNC Server"></a>Start the VNC Server</h3><p>Run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">x11vnc -display :0 -rfbport 5900 -localhost -forever -shared<br></code></pre></td></tr></table></figure>
+
+<p>This command:</p>
+<ul>
+<li>Connects to the existing desktop session at display <code>:0</code></li>
+<li>Listens for VNC connections on port 5900</li>
+<li>Restricts connections to localhost only (for security, VNC is not encrypted)<ul>
+<li><strong>Never expose VNC directly to the public Internet!</strong></li>
+</ul>
+</li>
+<li>With <code>-forever</code>, x11vnc won’t exit after the last client disconnects</li>
+<li>With <code>-shared</code>, multiple viewers can connect if needed</li>
+</ul>
+<p>After running the command:</p>
+<ul>
+<li>It may print informational or warning messages depending on the environment.</li>
+<li>But it should <strong>NOT</strong> exit after running for a while. If it exits after running for a while, there’s a problem to solve before moving on.</li>
+</ul>
+<h2 id="Headless-VNC-Setup-Guide"><a href="#Headless-VNC-Setup-Guide" class="headerlink" title="Headless VNC Setup Guide"></a>Headless VNC Setup Guide</h2><h3 id="Install-Required-Packages-1"><a href="#Install-Required-Packages-1" class="headerlink" title="Install Required Packages"></a>Install Required Packages</h3><p>First, install the necessary packages on the <strong>remote host</strong>:</p>
 <ul>
 <li><code>xvfb</code></li>
 <li><code>x11vnc</code></li>
 <li><code>xterm</code> (for demonstration purposes in this tutorial)</li>
 </ul>
 <p><strong>We would have to run <code>xvfb</code>, <code>x11vnc</code>, and <code>xterm</code> concurrently.</strong> For this purpose, I recommend using <code>tmux</code> (or any other comparable tool) to manage multiple terminal windows and persistent sessions.</p>
-<h3 id="Start-the-Virtual-Display-Remote-Host"><a href="#Start-the-Virtual-Display-Remote-Host" class="headerlink" title="Start the Virtual Display (Remote Host)"></a>Start the Virtual Display (Remote Host)</h3><p>In your first terminal window on the remote host, start Xvfb:</p>
+<h3 id="Start-the-Virtual-Display"><a href="#Start-the-Virtual-Display" class="headerlink" title="Start the Virtual Display"></a>Start the Virtual Display</h3><p>In your first terminal window on the remote host, start Xvfb:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">Xvfb :1 -screen 0 800x600x16<br></code></pre></td></tr></table></figure>
 
 <p>This creates a virtual X11 display number <code>:1</code> (using TCP port 6001) with resolution <code>800x600</code> and 16-bit color depth.</p>
@@ -426,7 +450,7 @@
 <li>Port 6001 already in use (try a different display number like <code>:2</code>)</li>
 <li>Permission issues with <code>/tmp/.X11-unix</code> directory. The <code>/tmp/.X11-unix</code> directory must be readable and writable. <strong>In some environments like WSL, this directory might be read-only, which will prevent Xvfb from starting properly.</strong></li>
 </ul>
-<h3 id="Launch-the-VNC-Server-Remote-Host"><a href="#Launch-the-VNC-Server-Remote-Host" class="headerlink" title="Launch the VNC Server (Remote Host)"></a>Launch the VNC Server (Remote Host)</h3><p>In a second terminal window on the remote host, start x11vnc:</p>
+<h3 id="Start-the-VNC-Server-1"><a href="#Start-the-VNC-Server-1" class="headerlink" title="Start the VNC Server"></a>Start the VNC Server</h3><p>In a second terminal window on the remote host, start x11vnc:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">x11vnc -display :1 -rfbport 5901 -localhost -forever<br></code></pre></td></tr></table></figure>
 
 <p>This command:</p>
@@ -441,33 +465,12 @@
 </ul>
 <p>After running the command:</p>
 <ul>
-<li>It may report <strong>authentication or password-related errors</strong> (which is <strong>acceptable</strong>).</li>
+<li>It may print informational or warning messages depending on the environment.</li>
 <li>But it should <strong>NOT</strong> exit after running for a while. If it exits after running for a while, there’s a problem to solve before moving on.</li>
 </ul>
-<h3 id="Secure-Access-with-SSH-Tunneling-Local-Machine"><a href="#Secure-Access-with-SSH-Tunneling-Local-Machine" class="headerlink" title="Secure Access with SSH Tunneling (Local Machine)"></a>Secure Access with SSH Tunneling (Local Machine)</h3><p>VNC is not encrypted, so we’ll use SSH tunneling on your <strong>local machine</strong> for security.</p>
-<p>You can either use basic SSH port forwarding (which may be confusing), or <a target="_blank" rel="noopener" href="https://github.com/jifengwu2k/port-tunnel-manager">set up the <code>pull_remote_port.sh</code> wrapper</a> on your <strong>local machine</strong> to pull the remote host’s port 5901 to <code>localhost:5901</code>. After <strong>cloning its GitHub repository and completing its prerequisites</strong>, run:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">bash pull_remote_port.sh [-p &lt;ssh_port&gt;] -u &lt;remote_user&gt; -h &lt;remote_host&gt; -r 5901 -l 5901<br></code></pre></td></tr></table></figure>
-
-<p>This makes the remote host’s VNC port available on your local machine via a secure SSH tunnel.</p>
-<h3 id="Test-with-a-Simple-Application-Remote-Host"><a href="#Test-with-a-Simple-Application-Remote-Host" class="headerlink" title="Test with a Simple Application (Remote Host)"></a>Test with a Simple Application (Remote Host)</h3><p>In a third terminal window on the <strong>remote host</strong>, launch a test application:</p>
+<h3 id="Test-with-a-Simple-Application"><a href="#Test-with-a-Simple-Application" class="headerlink" title="Test with a Simple Application"></a>Test with a Simple Application</h3><p>In a third terminal window on the <strong>remote host</strong>, launch a test application:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># The `DISPLAY=:1` environment variable must be set</span><br><span class="hljs-comment"># For all GUI apps you wish to appear in the VNC session</span><br><span class="hljs-built_in">export</span> DISPLAY=:1<br>xterm<br></code></pre></td></tr></table></figure>
 
-<p>Now connect to your VNC server on your <strong>local machine</strong> using a VNC client (like TigerVNC, RealVNC, or Remmina) pointing to <code>localhost:5901</code>. You should see the xterm window.</p>
-<h3 id="Using-Desktop-Environments-Remote-Host"><a href="#Using-Desktop-Environments-Remote-Host" class="headerlink" title="Using Desktop Environments (Remote Host)"></a>Using Desktop Environments (Remote Host)</h3><p>For a full desktop experience rather than just single applications, you can install a desktop environment.</p>
-<h4 id="Lightweight-Options"><a href="#Lightweight-Options" class="headerlink" title="Lightweight Options"></a>Lightweight Options</h4><ul>
-<li>Openbox</li>
-<li>Fluxbox</li>
-<li>IceWM</li>
-<li>WindowMaker</li>
-</ul>
-<h4 id="Full-Desktop-Environments"><a href="#Full-Desktop-Environments" class="headerlink" title="Full Desktop Environments"></a>Full Desktop Environments</h4><ul>
-<li>GNOME</li>
-<li>KDE Plasma</li>
-<li>MATE</li>
-<li>Cinnamon</li>
-<li>LXDE</li>
-<li>LXQt</li>
-</ul>
 <h3 id="Important-Caveat-Single-Instance-Applications"><a href="#Important-Caveat-Single-Instance-Applications" class="headerlink" title="Important Caveat: Single-Instance Applications"></a>Important Caveat: Single-Instance Applications</h3><p>Many desktop applications are designed to run <strong>only one instance per user account</strong>:</p>
 <ul>
 <li>Browsers: Firefox, Chrome&#x2F;Chromium</li>
@@ -482,8 +485,29 @@
 <li>Ensure applications aren’t already running on your main desktop before launching them in your VNC session.</li>
 <li>Or use a different user account for VNC access.</li>
 </ul>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Setting up a headless VNC server might seem complex at first, but by understanding the three components (Xvfb, x11vnc, and your GUI applications) and following this recipe, you can create a reliable remote desktop solution. Remember to always use SSH tunneling for security and be mindful of single-instance applications.</p>
-<p>With this setup, you can enjoy full graphical desktop access to your remote Linux machines, opening up possibilities for remote administration, development, and troubleshooting.</p>
+<h2 id="Secure-Access-with-SSH-Tunneling"><a href="#Secure-Access-with-SSH-Tunneling" class="headerlink" title="Secure Access with SSH Tunneling"></a>Secure Access with SSH Tunneling</h2><p>VNC is not encrypted, and in both setups <code>x11vnc</code> is configured to listen on <code>localhost</code> only, so SSH tunneling is the recommended access method for <strong>both</strong> setups in this post:</p>
+<ul>
+<li><strong>Ubuntu Desktop</strong>: forward remote port <code>5900</code> to local port <code>5900</code></li>
+<li><strong>Headless VNC</strong>: forward remote port <code>5901</code> to local port <code>5901</code></li>
+</ul>
+<p>You can either use basic SSH port forwarding (which may be confusing), or <a target="_blank" rel="noopener" href="https://github.com/jifengwu2k/port-tunnel-manager">set up the <code>pull_remote_port.sh</code> wrapper</a> on your <strong>local machine</strong> to pull the remote VNC port to <code>localhost</code>.</p>
+<p>After <strong>cloning its GitHub repository and completing its prerequisites</strong>, run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">bash pull_remote_port.sh [-p &lt;ssh_port&gt;] -u &lt;remote_user&gt; -h &lt;remote_host&gt; -r &lt;remote_vnc_port&gt; -l &lt;local_port&gt;<br></code></pre></td></tr></table></figure>
+
+<p>Examples:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># Ubuntu Desktop</span><br>bash pull_remote_port.sh -u &lt;remote_user&gt; -h &lt;remote_host&gt; -r 5900 -l 5900<br><br><span class="hljs-comment"># Headless VNC</span><br>bash pull_remote_port.sh -u &lt;remote_user&gt; -h &lt;remote_host&gt; -r 5901 -l 5901<br></code></pre></td></tr></table></figure>
+
+<p>This makes the remote host’s VNC port available on your local machine via a secure SSH tunnel. After setting up the port forwarding, point your VNC viewer to the corresponding local address:</p>
+<ul>
+<li><code>localhost:5900</code> for Ubuntu Desktop</li>
+<li><code>localhost:5901</code> for Headless VNC</li>
+</ul>
+<p>Common VNC clients:</p>
+<ul>
+<li>TigerVNC Viewer</li>
+<li>RealVNC Viewer</li>
+<li>Remmina</li>
+</ul>
 
                 
               </div>
@@ -535,8 +559,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Setting Up a Headless VNC Server for Remote Desktop Access</div>
-      <div>https://jifengwu2k.github.io/2025/08/21/Setting-Up-a-Headless-VNC-Server-for-Remote-Desktop-Access/</div>
+      <div>Setting Up a VNC Server for Remote Desktop Access</div>
+      <div>https://jifengwu2k.github.io/2025/08/21/Setting-Up-a-VNC-Server-for-Remote-Desktop-Access/</div>
     </div>
     <div class="license-meta">
       
