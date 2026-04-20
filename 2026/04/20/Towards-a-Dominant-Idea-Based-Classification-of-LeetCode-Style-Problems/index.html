@@ -19,25 +19,24 @@
   <meta name="author" content="Jifeng Wu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Using MLIR as a C++ Library with a Relocatable Install">
+    <meta name="description" content="I published a proposal on Zenodo arguing that LeetCode-style problems can be understood more clearly through their dominant idea - the smallest insight that most directly explains why the intended sol">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Using MLIR as a C++ Library with a Relocatable Install">
-<meta property="og:url" content="https://jifengwu2k.github.io/2026/04/19/Using-MLIR-as-a-C++-Library-with-a-Relocatable-Install/index.html">
+<meta property="og:title" content="Towards a Dominant Idea-Based Classification of LeetCode-Style Problems">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/04/20/Towards-a-Dominant-Idea-Based-Classification-of-LeetCode-Style-Problems/index.html">
 <meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
-<meta property="og:description" content="Using MLIR as a C++ Library with a Relocatable Install">
+<meta property="og:description" content="I published a proposal on Zenodo arguing that LeetCode-style problems can be understood more clearly through their dominant idea - the smallest insight that most directly explains why the intended sol">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-04-19T07:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-19T07:00:00.000Z">
+<meta property="article:published_time" content="2026-04-20T07:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-20T07:00:00.000Z">
 <meta property="article:author" content="Jifeng Wu">
-<meta property="article:tag" content="build-systems">
-<meta property="article:tag" content="c++">
-<meta property="article:tag" content="reference">
-<meta property="article:tag" content="systems">
+<meta property="article:tag" content="computer-science">
+<meta property="article:tag" content="data-structures">
+<meta property="article:tag" content="essay">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Using MLIR as a C++ Library with a Relocatable Install - Jifeng Wu&#39;s Personal Website</title>
+  <title>Towards a Dominant Idea-Based Classification of LeetCode-Style Problems - Jifeng Wu&#39;s Personal Website</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -306,7 +305,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Using MLIR as a C++ Library with a Relocatable Install</span>
+            <span id="subtitle">Towards a Dominant Idea-Based Classification of LeetCode-Style Problems</span>
           
         </div>
 
@@ -322,8 +321,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-04-19 00:00" pubdate>
-          April 19, 2026
+        <time datetime="2026-04-20 00:00" pubdate>
+          April 20, 2026
         </time>
       </span>
     
@@ -334,7 +333,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.1k words
+          2k words
         
       </span>
     
@@ -345,7 +344,7 @@
         
         
         
-          18 mins
+          17 mins
         
       </span>
     
@@ -384,56 +383,26 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Using MLIR as a C++ Library with a Relocatable Install</h1>
+            <h1 id="seo-header">Towards a Dominant Idea-Based Classification of LeetCode-Style Problems</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h2><p>MLIR is widely used as reusable compiler infrastructure, but the practical workflow for consuming it as a C++ library is often less explicit than the workflow for building it in-tree. In practice, many users do not merely want to compile MLIR itself; they want to produce a stable SDK for external projects.</p>
-<p>MLIR exposes both build-tree and install-tree CMake package configurations. The build tree is primarily an internal artifact for compilation, testing, and iterative development. It commonly contains absolute paths, generated intermediates, and configuration files intended for that particular build location. By contrast, the install tree is the artifact intended for downstream consumption. For users who wish to link against MLIR as a library, preserve a reusable package, archive it, copy it to another machine, or point multiple external projects at the same dependency prefix, the install tree is the correct deliverable.</p>
-<p>The purpose of this document is therefore to give a concise, end-to-end workflow for producing a relocatable MLIR installation specifically for downstream library use.</p>
-<h2 id="Workflow"><a href="#Workflow" class="headerlink" title="Workflow"></a>Workflow</h2><h3 id="1-Configure"><a href="#1-Configure" class="headerlink" title="1. Configure"></a>1. Configure</h3><p>From the LLVM monorepo root:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">cmake -S llvm -B build -G Ninja \<br>  -DLLVM_ENABLE_PROJECTS=<span class="hljs-string">&quot;mlir&quot;</span> \<br>  -DCMAKE_BUILD_TYPE=Release \<br>  -DCMAKE_INSTALL_PREFIX=<span class="hljs-string">&quot;<span class="hljs-variable">$PWD</span>/install&quot;</span><br></code></pre></td></tr></table></figure>
-
-<p>Notes:</p>
+                <p>I have published <strong>Towards a Dominant Idea-Based Classification of LeetCode-Style Problems</strong> on Zenodo:</p>
 <ul>
-<li><code>-S llvm</code> uses <code>llvm</code> as the CMake source root</li>
-<li><code>-B build</code> creates a separate build directory</li>
-<li><code>-G Ninja</code> generates Ninja files</li>
-<li><code>-DCMAKE_INSTALL_PREFIX=...</code> defines the install location</li>
+<li>Zenodo record: <a target="_blank" rel="noopener" href="https://zenodo.org/records/19671868">https://zenodo.org/records/19671868</a></li>
+<li>DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.5281/zenodo.19671868">https://doi.org/10.5281/zenodo.19671868</a></li>
 </ul>
-<h3 id="2-Build-with-Ninja"><a href="#2-Build-with-Ninja" class="headerlink" title="2. Build with Ninja"></a>2. Build with Ninja</h3><p>Use Ninja directly, with whatever flags you want:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ninja -C build<br></code></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="3-Install"><a href="#3-Install" class="headerlink" title="3. Install"></a>3. Install</h3><p>Install into the chosen prefix:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ninja -C build -v install<br></code></pre></td></tr></table></figure>
-
-<p>This creates the installed tree under:</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">install/<br></code></pre></td></tr></table></figure>
-
-<p>This installed tree is the artifact you should use as your MLIR SDK.</p>
-<hr>
-<h3 id="4-Verify-the-install-tree"><a href="#4-Verify-the-install-tree" class="headerlink" title="4. Verify the install tree"></a>4. Verify the install tree</h3><p>Before deleting the build directory, verify that the install contains what you need.</p>
-<p>Check the main install contents:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">ls</span> install/include<br><span class="hljs-built_in">ls</span> install/lib<br><span class="hljs-built_in">ls</span> install/bin<br></code></pre></td></tr></table></figure>
-
-<p>Confirm these exist:</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">install/lib/cmake/LLVMConfig.cmake<br>install/lib/cmake/mlir/MLIRConfig.cmake<br></code></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="5-Delete-the-build-directory"><a href="#5-Delete-the-build-directory" class="headerlink" title="5. Delete the build directory"></a>5. Delete the build directory</h3><p>If your explicit goal is to <strong>use MLIR as a library</strong>, and the install tree is complete, then you can delete the build directory:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">rm</span> -rf build<br></code></pre></td></tr></table></figure>
-
-<p>This is normally safe for downstream library use.</p>
-<hr>
-<h3 id="6-Keep-only-the-install-directory"><a href="#6-Keep-only-the-install-directory" class="headerlink" title="6. Keep only the install directory"></a>6. Keep only the install directory</h3><p>After that, keep only the install tree, for example:</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">install/<br></code></pre></td></tr></table></figure>
-
-<p>You can also move it elsewhere:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mv</span> install /tmp/llvm-mlir-sdk<br></code></pre></td></tr></table></figure>
-
-<p>That installed prefix is what your downstream projects should use.</p>
+<p>LeetCode-style problems are usually taught through familiar labels such as dynamic programming, greedy algorithms, sliding window, binary search, backtracking, graph traversal, and so on. Those labels are often useful in practice, but they do not always explain the real intellectual center of a problem.</p>
+<p>This proposal argues for a complementary classification based on the <strong>dominant idea</strong>: the smallest insight that most directly explains why the intended solution works and, in many cases, why that solution is naturally discovered.</p>
+<p>The goal is <strong>not</strong> to replace standard interview labels. Rather, it is to recover a more reasoning-centered description of the space of problems. I think this matters for at least two reasons.</p>
+<p>First, it may help students describe more honestly what makes interview-style problems feel strange. Many people have solid backgrounds in standard computer science, yet still find LeetCode unusually discontinuous from what they previously learned. One reason may be that the usual labels name techniques, formats, or implementation patterns, while the real difficulty often lies in noticing a narrower governing idea.</p>
+<p>Second, it may provide a starting point for future methodological work on reasoning and transfer. If we want to study how people recognize problem structure, transfer insights across superficially different tasks, or fail to do so, then a dominant-idea-oriented vocabulary may be more revealing than conventional coarse labels alone.</p>
+<p>This document is exploratory, but I intend it as a durable and revisable starting point.</p>
+<h2 id="Suggested-citation"><a href="#Suggested-citation" class="headerlink" title="Suggested citation"></a>Suggested citation</h2><blockquote>
+<p>Wu, J. (2026). <em>Towards a Dominant Idea-Based Classification of LeetCode-Style Problems</em>. Zenodo. <a target="_blank" rel="noopener" href="https://doi.org/10.5281/zenodo.19671868">https://doi.org/10.5281/zenodo.19671868</a></p>
+</blockquote>
+<h2 id="BibTeX"><a href="#BibTeX" class="headerlink" title="BibTeX"></a>BibTeX</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bibtex">@misc&#123;wu_2026_19671868,<br>  author       = &#123;Wu, Jifeng&#125;,<br>  title        = &#123;Towards a Dominant Idea-Based Classification of LeetCode-Style Problems&#125;,<br>  month        = apr,<br>  year         = 2026,<br>  publisher    = &#123;Zenodo&#125;,<br>  doi          = &#123;10.5281/zenodo.19671868&#125;,<br>  url          = &#123;https://doi.org/10.5281/zenodo.19671868&#125;,<br>&#125;<br></code></pre></td></tr></table></figure>
 
                 
               </div>
@@ -452,7 +421,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Systems/" class="category-chain-item">Systems</a>
+  <a href="/categories/Programming/" class="category-chain-item">Programming</a>
   
   
 
@@ -467,13 +436,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/reference/" class="print-no-link">#reference</a>
+        <a href="/tags/essay/" class="print-no-link">#essay</a>
       
-        <a href="/tags/systems/" class="print-no-link">#systems</a>
+        <a href="/tags/computer-science/" class="print-no-link">#computer-science</a>
       
-        <a href="/tags/c/" class="print-no-link">#c++</a>
-      
-        <a href="/tags/build-systems/" class="print-no-link">#build-systems</a>
+        <a href="/tags/data-structures/" class="print-no-link">#data-structures</a>
       
     </div>
   
@@ -485,8 +452,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Using MLIR as a C++ Library with a Relocatable Install</div>
-      <div>https://jifengwu2k.github.io/2026/04/19/Using-MLIR-as-a-C++-Library-with-a-Relocatable-Install/</div>
+      <div>Towards a Dominant Idea-Based Classification of LeetCode-Style Problems</div>
+      <div>https://jifengwu2k.github.io/2026/04/20/Towards-a-Dominant-Idea-Based-Classification-of-LeetCode-Style-Problems/</div>
     </div>
     <div class="license-meta">
       
@@ -498,7 +465,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>April 19, 2026</div>
+          <div>April 20, 2026</div>
         </div>
       
       
@@ -530,18 +497,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/04/20/Towards-a-Dominant-Idea-Based-Classification-of-LeetCode-Style-Problems/" title="Towards a Dominant Idea-Based Classification of LeetCode-Style Problems">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Towards a Dominant Idea-Based Classification of LeetCode-Style Problems</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/04/18/Docker-and-Podman-Containers-as-Lightweight-VMs-for-Interactive-Work/" title="Docker and Podman Containers as Lightweight VMs for Interactive Work">
-                        <span class="hidden-mobile">Docker and Podman Containers as Lightweight VMs for Interactive Work</span>
+                      <a href="/2026/04/19/Using-MLIR-as-a-C++-Library-with-a-Relocatable-Install/" title="Using MLIR as a C++ Library with a Relocatable Install">
+                        <span class="hidden-mobile">Using MLIR as a C++ Library with a Relocatable Install</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

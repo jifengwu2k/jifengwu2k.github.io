@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>Towards a Dominant Idea-Based Classification of LeetCode-Style Problems</title>
+    <link href="/2026/04/20/Towards-a-Dominant-Idea-Based-Classification-of-LeetCode-Style-Problems/"/>
+    <url>/2026/04/20/Towards-a-Dominant-Idea-Based-Classification-of-LeetCode-Style-Problems/</url>
+    
+    <content type="html"><![CDATA[<p>I have published <strong>Towards a Dominant Idea-Based Classification of LeetCode-Style Problems</strong> on Zenodo:</p><ul><li>Zenodo record: <a href="https://zenodo.org/records/19671868">https://zenodo.org/records/19671868</a></li><li>DOI: <a href="https://doi.org/10.5281/zenodo.19671868">https://doi.org/10.5281/zenodo.19671868</a></li></ul><p>LeetCode-style problems are usually taught through familiar labels such as dynamic programming, greedy algorithms, sliding window, binary search, backtracking, graph traversal, and so on. Those labels are often useful in practice, but they do not always explain the real intellectual center of a problem.</p><p>This proposal argues for a complementary classification based on the <strong>dominant idea</strong>: the smallest insight that most directly explains why the intended solution works and, in many cases, why that solution is naturally discovered.</p><p>The goal is <strong>not</strong> to replace standard interview labels. Rather, it is to recover a more reasoning-centered description of the space of problems. I think this matters for at least two reasons.</p><p>First, it may help students describe more honestly what makes interview-style problems feel strange. Many people have solid backgrounds in standard computer science, yet still find LeetCode unusually discontinuous from what they previously learned. One reason may be that the usual labels name techniques, formats, or implementation patterns, while the real difficulty often lies in noticing a narrower governing idea.</p><p>Second, it may provide a starting point for future methodological work on reasoning and transfer. If we want to study how people recognize problem structure, transfer insights across superficially different tasks, or fail to do so, then a dominant-idea-oriented vocabulary may be more revealing than conventional coarse labels alone.</p><p>This document is exploratory, but I intend it as a durable and revisable starting point.</p><h2 id="Suggested-citation"><a href="#Suggested-citation" class="headerlink" title="Suggested citation"></a>Suggested citation</h2><blockquote><p>Wu, J. (2026). <em>Towards a Dominant Idea-Based Classification of LeetCode-Style Problems</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.19671868">https://doi.org/10.5281/zenodo.19671868</a></p></blockquote><h2 id="BibTeX"><a href="#BibTeX" class="headerlink" title="BibTeX"></a>BibTeX</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bibtex">@misc&#123;wu_2026_19671868,<br>  author       = &#123;Wu, Jifeng&#125;,<br>  title        = &#123;Towards a Dominant Idea-Based Classification of LeetCode-Style Problems&#125;,<br>  month        = apr,<br>  year         = 2026,<br>  publisher    = &#123;Zenodo&#125;,<br>  doi          = &#123;10.5281/zenodo.19671868&#125;,<br>  url          = &#123;https://doi.org/10.5281/zenodo.19671868&#125;,<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>Programming</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>essay</tag>
+      
+      <tag>computer-science</tag>
+      
+      <tag>data-structures</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Using MLIR as a C++ Library with a Relocatable Install</title>
     <link href="/2026/04/19/Using-MLIR-as-a-C++-Library-with-a-Relocatable-Install/"/>
     <url>/2026/04/19/Using-MLIR-as-a-C++-Library-with-a-Relocatable-Install/</url>
