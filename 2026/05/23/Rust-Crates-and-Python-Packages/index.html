@@ -1,0 +1,1125 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="A side-by-side comparison of Rust&#39;s crate system and Python&#39;s package system — covering project structure, visibility, distribution, version resolution, import paths, and publishing.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rust Crates and Python Packages">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/05/23/Rust-Crates-and-Python-Packages/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="A side-by-side comparison of Rust&#39;s crate system and Python&#39;s package system — covering project structure, visibility, distribution, version resolution, import paths, and publishing.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-05-23T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-23T23:58:31.431Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta property="article:tag" content="programming-languages">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="reference">
+<meta property="article:tag" content="rust">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Rust Crates and Python Packages - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Home</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>Categories</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Tags</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>About</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/links/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-link-fill"></i>
+                  <span>Links</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Search</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Light"
+               data-label-dark="Dark">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dark</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Rust Crates and Python Packages</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-05-23 00:00" pubdate>
+          May 23, 2026
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.1k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          43 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Rust Crates and Python Packages</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="What-Is-a-Crate"><a href="#What-Is-a-Crate" class="headerlink" title="What Is a Crate?"></a>What Is a Crate?</h2><p>A <strong>crate</strong> is Rust’s unit of distribution. Think of it as the Rust equivalent of a Python package.</p>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Python</th>
+<th>Rust</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unit of distribution</td>
+<td>Package</td>
+<td>Crate</td>
+</tr>
+<tr>
+<td>Registry</td>
+<td><a target="_blank" rel="noopener" href="https://pypi.org/">pypi.org</a></td>
+<td><a target="_blank" rel="noopener" href="https://crates.io/">crates.io</a></td>
+</tr>
+<tr>
+<td>Discovery</td>
+<td><code>pip search</code> &#x2F; PyPI website</td>
+<td><code>cargo search</code> &#x2F; crates.io</td>
+</tr>
+<tr>
+<td>Manifest</td>
+<td><code>pyproject.toml</code></td>
+<td><code>Cargo.toml</code></td>
+</tr>
+<tr>
+<td>Library entry point</td>
+<td><code>__init__.py</code></td>
+<td><code>src/lib.rs</code></td>
+</tr>
+<tr>
+<td>Binary entry point</td>
+<td>Console scripts &#x2F; <code>__main__.py</code></td>
+<td><code>src/main.rs</code></td>
+</tr>
+<tr>
+<td>CLI tool (publish)</td>
+<td><code>twine upload</code></td>
+<td><code>cargo publish</code></td>
+</tr>
+</tbody></table>
+<h2 id="Project-Structure-—-Side-by-Side"><a href="#Project-Structure-—-Side-by-Side" class="headerlink" title="Project Structure — Side by Side"></a>Project Structure — Side by Side</h2><p>Here is the same small library</p>
+<h3 id="Python-Package"><a href="#Python-Package" class="headerlink" title="Python Package"></a>Python Package</h3><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs nix">my_project<span class="hljs-symbol">/</span><br>├── pyproject.toml            <span class="hljs-comment"># (0) manifest — next to the package</span><br>└── my_pkg<span class="hljs-symbol">/</span><br>    ├── __init__.py           <span class="hljs-comment"># (1) package root</span><br>    ├── config.py             <span class="hljs-comment"># (2)</span><br>    ├── database<span class="hljs-symbol">/</span><br>    │   ├── __init__.py       <span class="hljs-comment"># (3)</span><br>    │   ├── connection.py     <span class="hljs-comment"># (4)</span><br>    │   └── models.py         <span class="hljs-comment"># (5)</span><br>    └── network<span class="hljs-symbol">/</span><br>        ├── __init__.py       <span class="hljs-comment"># (6)</span><br>        └── server.py         <span class="hljs-comment"># (7)</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs toml"><span class="hljs-comment"># ===== (0) my_project/pyproject.toml =====</span><br><span class="hljs-section">[project]</span><br><span class="hljs-attr">name</span> = <span class="hljs-string">&quot;my_pkg&quot;</span><br><span class="hljs-attr">version</span> = <span class="hljs-string">&quot;0.1.0&quot;</span><br><span class="hljs-attr">dependencies</span> = [<span class="hljs-string">&quot;requests&gt;=2&quot;</span>]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># ===== (1) my_project/my_pkg/__init__.py =====</span><br><span class="hljs-keyword">from</span> .config <span class="hljs-keyword">import</span> Settings<br><span class="hljs-keyword">from</span> .database <span class="hljs-keyword">import</span> connect<br><span class="hljs-keyword">from</span> .network.server <span class="hljs-keyword">import</span> serve<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># ===== (3) my_project/my_pkg/database/__init__.py =====</span><br><span class="hljs-keyword">from</span> .connection <span class="hljs-keyword">import</span> connect<br><span class="hljs-keyword">from</span> .models <span class="hljs-keyword">import</span> User<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># ===== (6) my_project/my_pkg/network/__init__.py =====</span><br><span class="hljs-keyword">from</span> .server <span class="hljs-keyword">import</span> serve<br></code></pre></td></tr></table></figure>
+
+<p><strong>Usage:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> my_pkg <span class="hljs-keyword">import</span> Settings, connect, serve<br><span class="hljs-comment"># or</span><br><span class="hljs-keyword">from</span> my_pkg.database.models <span class="hljs-keyword">import</span> User<br></code></pre></td></tr></table></figure>
+
+<h3 id="Rust-Crate"><a href="#Rust-Crate" class="headerlink" title="Rust Crate"></a>Rust Crate</h3><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs nix">my_crate<span class="hljs-symbol">/</span><br>├── Cargo.toml                <span class="hljs-comment"># (0) manifest — next to src/</span><br>└── src<span class="hljs-symbol">/</span><br>    ├── lib.rs                <span class="hljs-comment"># (1) crate root</span><br>    ├── config.rs             <span class="hljs-comment"># (2)</span><br>    ├── database<span class="hljs-symbol">/</span><br>    │   ├── mod.rs            <span class="hljs-comment"># (3)</span><br>    │   ├── connection.rs     <span class="hljs-comment"># (4)</span><br>    │   └── models.rs         <span class="hljs-comment"># (5)</span><br>    └── network<span class="hljs-symbol">/</span><br>        ├── mod.rs            <span class="hljs-comment"># (6)</span><br>        └── server.rs         <span class="hljs-comment"># (7)</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs toml"><span class="hljs-comment"># ===== (0) my_crate/Cargo.toml =====</span><br><span class="hljs-section">[package]</span><br><span class="hljs-attr">name</span> = <span class="hljs-string">&quot;my_crate&quot;</span><br><span class="hljs-attr">version</span> = <span class="hljs-string">&quot;0.1.0&quot;</span><br><span class="hljs-attr">edition</span> = <span class="hljs-string">&quot;2021&quot;</span><br><br><span class="hljs-section">[dependencies]</span><br><span class="hljs-attr">serde</span> = &#123; version = <span class="hljs-string">&quot;1&quot;</span>, features = [<span class="hljs-string">&quot;derive&quot;</span>] &#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-comment">// ===== (1) my_crate/src/lib.rs =====</span><br><span class="hljs-keyword">mod</span> config;        <span class="hljs-comment">// declare child — REQUIRED, or config.rs is dead</span><br><span class="hljs-keyword">mod</span> database;      <span class="hljs-comment">// declare child — REQUIRED, or database/ is dead</span><br><span class="hljs-keyword">mod</span> network;       <span class="hljs-comment">// declare child — REQUIRED, or network/ is dead</span><br><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">use</span> config::Settings;<br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">use</span> database::connection::connect;<br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">use</span> network::server::serve;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-comment">// ===== (3) my_crate/src/database/mod.rs =====</span><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">mod</span> connection;   <span class="hljs-comment">// declare child — REQUIRED</span><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">mod</span> models;       <span class="hljs-comment">// declare child — REQUIRED</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-comment">// ===== (6) my_crate/src/network/mod.rs =====</span><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">mod</span> server;       <span class="hljs-comment">// declare child — REQUIRED</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>Usage:</strong></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> my_crate::&#123;Settings, connect, serve&#125;;<br><span class="hljs-comment">// or</span><br><span class="hljs-keyword">use</span> my_crate::database::models::User;<br></code></pre></td></tr></table></figure>
+
+<h2 id="Visibility-pub-Everything-Private-by-Default"><a href="#Visibility-pub-Everything-Private-by-Default" class="headerlink" title="Visibility: pub (Everything Private by Default)"></a>Visibility: <code>pub</code> (Everything Private by Default)</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>Python</th>
+<th>Rust</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Default visibility</td>
+<td>Public (convention: <code>_prefix</code> for “private”)</td>
+<td><strong>Private</strong> (keyword: <code>pub</code> to expose)</td>
+</tr>
+<tr>
+<td>Export a function</td>
+<td><code>def foo():</code> — nothing extra needed</td>
+<td><code>pub fn foo()</code></td>
+</tr>
+<tr>
+<td>Export a class&#x2F;struct</td>
+<td><code>class Foo:</code> — nothing extra needed</td>
+<td><code>pub struct Foo</code></td>
+</tr>
+<tr>
+<td>Export a field</td>
+<td>All fields public</td>
+<td><code>pub field: Type</code> — field-by-field opt-in</td>
+</tr>
+</tbody></table>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-comment">// lib.rs</span><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">greet</span>() &#123;&#125;           <span class="hljs-comment">// ✅ external crates can use this</span><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">helper</span>() &#123;&#125;              <span class="hljs-comment">// ❌ crate-internal only</span><br><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">Config</span> &#123;<br>    <span class="hljs-keyword">pub</span> host: <span class="hljs-type">String</span>,       <span class="hljs-comment">// ✅ external code can read/write</span><br>    port: <span class="hljs-type">u16</span>,              <span class="hljs-comment">// ❌ private — inaccessible from outside</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="Distribution-Source-Not-Wheels"><a href="#Distribution-Source-Not-Wheels" class="headerlink" title="Distribution: Source, Not Wheels"></a>Distribution: Source, Not Wheels</h2><p>Crates are published and distributed as <strong>source code</strong> (<code>.rs</code> files). Cargo downloads the source and compiles it on your machine.</p>
+<table>
+<thead>
+<tr>
+<th>Python</th>
+<th>Rust</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Wheels (<code>.whl</code>) — pre-compiled binaries (optional C extensions)</td>
+<td>Everything compiles from source</td>
+</tr>
+<tr>
+<td><code>pip install</code> fetches best wheel, falls back to source tarball</td>
+<td><code>cargo build</code> always compiles from source</td>
+</tr>
+<tr>
+<td>Dynamic linking common for native code</td>
+<td>Static linking is the default</td>
+</tr>
+</tbody></table>
+<p>This is like C++ templates (which must be in headers to compile everywhere), except in Rust it is the <em>default</em> for everything. The upside: trivial cross-compilation and no ABI issues. The downside: longer initial compile times.</p>
+<h2 id="Version-Resolution-—-The-Killer-Feature"><a href="#Version-Resolution-—-The-Killer-Feature" class="headerlink" title="Version Resolution — The Killer Feature"></a>Version Resolution — The Killer Feature</h2><p>Rust’s approach to dependency conflicts is fundamentally different from Python’s.</p>
+<h3 id="Python-Flat-Namespace"><a href="#Python-Flat-Namespace" class="headerlink" title="Python: Flat Namespace"></a>Python: Flat Namespace</h3><figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs txt">requests==2.28.0<br>some-lib → requests==2.31.0<br># 💥 pip: &quot;conflict!&quot; — you must resolve by hand<br></code></pre></td></tr></table></figure>
+
+<p><code>site-packages/</code> is flat. Only one version of <code>requests</code> can exist. Conflicts are your problem.</p>
+<h3 id="Rust-Multi-Version-Coexistence"><a href="#Rust-Multi-Version-Coexistence" class="headerlink" title="Rust: Multi-Version Coexistence"></a>Rust: Multi-Version Coexistence</h3><table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Cargo’s behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Same major version (e.g., <code>serde 1.0.180</code> and <code>serde 1.0.210</code>)</td>
+<td>Picks the <strong>highest</strong> compatible version. Compiled once.</td>
+</tr>
+<tr>
+<td>Different major versions (e.g., <code>serde 0.9</code> and <code>serde 1.0</code>)</td>
+<td>Compiles <strong>both</strong> into the binary. No conflict, no error.</td>
+</tr>
+<tr>
+<td>Irresolvable (no version satisfies all constraints)</td>
+<td>Clear build error. Extremely rare in practice.</td>
+</tr>
+</tbody></table>
+<h2 id="Import-Paths"><a href="#Import-Paths" class="headerlink" title="Import Paths"></a>Import Paths</h2><table>
+<thead>
+<tr>
+<th>Python</th>
+<th>Rust</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>from pkg.db.models import User</code></td>
+<td><code>use crate::db::models::User;</code></td>
+</tr>
+<tr>
+<td><code>from . import sibling</code></td>
+<td><code>use super::sibling;</code></td>
+</tr>
+<tr>
+<td><code>.</code> path separator</td>
+<td><code>::</code> path separator</td>
+</tr>
+<tr>
+<td>Package-root-relative by default</td>
+<td>Module-relative by default (<code>crate::</code> for absolute)</td>
+</tr>
+</tbody></table>
+<p><strong>Important:</strong> In Rust, a bare path like <code>use database::connect;</code> is resolved relative to the <em>current module</em>, not the crate root. Always use <code>crate::</code> for absolute paths:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-comment">// Inside database/mod.rs</span><br><span class="hljs-keyword">use</span> models::User;             <span class="hljs-comment">// relative → crate::database::models (correct: sibling)</span><br><span class="hljs-keyword">use</span> crate::config::Settings;  <span class="hljs-comment">// absolute → crate::config (unambiguous)</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="Publishing-a-Crate"><a href="#Publishing-a-Crate" class="headerlink" title="Publishing a Crate"></a>Publishing a Crate</h2><table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Python</th>
+<th>Rust</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Register</td>
+<td>PyPI account</td>
+<td>crates.io account (login with GitHub)</td>
+</tr>
+<tr>
+<td>API token</td>
+<td>PyPI token</td>
+<td>crates.io token → <code>cargo login</code></td>
+</tr>
+<tr>
+<td>Package</td>
+<td><code>python -m build</code></td>
+<td><code>cargo package</code></td>
+</tr>
+<tr>
+<td>Dry run</td>
+<td>—</td>
+<td><code>cargo publish --dry-run</code></td>
+</tr>
+<tr>
+<td>Upload</td>
+<td><code>twine upload dist/*</code></td>
+<td><code>cargo publish</code></td>
+</tr>
+<tr>
+<td>Immutability</td>
+<td>Versions are immutable</td>
+<td>Versions are immutable (can only yank)</td>
+</tr>
+</tbody></table>
+<p>Required metadata in <code>Cargo.toml</code>:</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs toml"><span class="hljs-section">[package]</span><br><span class="hljs-attr">name</span> = <span class="hljs-string">&quot;my-crate&quot;</span><br><span class="hljs-attr">version</span> = <span class="hljs-string">&quot;0.1.0&quot;</span><br><span class="hljs-attr">edition</span> = <span class="hljs-string">&quot;2021&quot;</span><br><span class="hljs-attr">description</span> = <span class="hljs-string">&quot;A short description of what it does&quot;</span><br><span class="hljs-attr">license</span> = <span class="hljs-string">&quot;MIT OR Apache-2.0&quot;</span><br><span class="hljs-attr">repository</span> = <span class="hljs-string">&quot;https://github.com/you/my-crate&quot;</span><br><span class="hljs-attr">readme</span> = <span class="hljs-string">&quot;README.md&quot;</span><br><span class="hljs-attr">keywords</span> = [<span class="hljs-string">&quot;some&quot;</span>, <span class="hljs-string">&quot;relevant&quot;</span>, <span class="hljs-string">&quot;tags&quot;</span>]<br><span class="hljs-attr">categories</span> = [<span class="hljs-string">&quot;category-slug&quot;</span>]<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Programming/" class="category-chain-item">Programming</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/reference/" class="print-no-link">#reference</a>
+      
+        <a href="/tags/python/" class="print-no-link">#python</a>
+      
+        <a href="/tags/programming-languages/" class="print-no-link">#programming-languages</a>
+      
+        <a href="/tags/rust/" class="print-no-link">#rust</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Rust Crates and Python Packages</div>
+      <div>https://jifengwu2k.github.io/2026/05/23/Rust-Crates-and-Python-Packages/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>May 23, 2026</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/05/19/Local-CUDA-vLLM-Setup-for-Python-Only-Development/" title="Local CUDA vLLM Setup for Python-Only Development Using a Precompiled Wheel">
+                        <span class="hidden-mobile">Local CUDA vLLM Setup for Python-Only Development Using a Precompiled Wheel</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'jifengwu2k/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

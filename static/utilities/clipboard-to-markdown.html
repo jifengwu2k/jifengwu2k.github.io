@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Clipboard to Markdown</title>
+    <script src="https://cdn.jsdelivr.net/npm/turndown/dist/turndown.min.js"></script>
+    <script>
+      const turndownService = new window.TurndownService();
+
+      async function getMarkdownFromClipboard() {
+        if (navigator.clipboard.read) {
+          const items = await navigator.clipboard.read();
+          for (const item of items) {
+            if (item.types.includes("text/html")) {
+              const blob = await item.getType("text/html");
+              const html = await blob.text();
+              return turndownService.turndown(html);
+            }
+          }
+        }
+        // Fall back to plain text
+        return await navigator.clipboard.readText();
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Clipboard to Markdown</h1>
+
+    <button id="appendButton">Append (Markdown from clipboard)</button>
+    <button id="clearButton">Clear</button>
+    <button id="undoButton">Undo</button>
+    <button id="writeButton">Write (Markdown to clipboard)</button>
+
+    <hr />
+
+    <pre id="content"></pre>
+  
+    <script>
+      const appendButton = document.getElementById("appendButton");
+      const clearButton = document.getElementById("clearButton");
+      const undoButton = document.getElementById("undoButton");
+      const writeButton = document.getElementById("writeButton");
+      const content = document.getElementById("content");
+
+      // Keep stack of each markdown block
+      let stack = [];
+
+      // Show all markdowns in <pre>
+      function renderAll() {
+        content.textContent = stack.join('\n\n');
+      }
+
+      appendButton.onclick = async () => {
+        try {
+          const markdown = await getMarkdownFromClipboard();
+          const trimmedMarkdown = markdown.trim();
+          if (trimmedMarkdown) {
+            stack.push(trimmedMarkdown);
+            renderAll();
+          }
+        } catch (e) {
+          alert(e);
+        }
+      };
+
+      clearButton.onclick = () => {
+        stack = [];
+        renderAll();
+      };
+
+      undoButton.onclick = () => {
+        if (stack.length > 0) stack.pop();
+        renderAll();
+      };
+
+      writeButton.onclick = async () => {
+        const toWrite = stack.join('\n\n');
+        if (!toWrite) return;
+        try {
+          await navigator.clipboard.writeText(toWrite);
+          alert('Written Markdown to clipboard.');
+        } catch (e) {
+          alert(e);
+        }
+      };
+
+      // Initial render
+      renderAll();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1012 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="An introduction to type theory concepts using Python, C++, and layman&#39;s terms.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Type Theory Concepts: A to Z">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/05/13/Type-Theory-Concepts/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="An introduction to type theory concepts using Python, C++, and layman&#39;s terms.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-05-13T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-13T04:00:00.000Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta property="article:tag" content="programming-languages">
+<meta property="article:tag" content="reference">
+<meta property="article:tag" content="type-theory">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Type Theory Concepts: A to Z - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Home</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>Categories</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Tags</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>About</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/links/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-link-fill"></i>
+                  <span>Links</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Search</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Light"
+               data-label-dark="Dark">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dark</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Type Theory Concepts: A to Z</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-05-13 00:00" pubdate>
+          May 13, 2026
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.2k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          77 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Type Theory Concepts: A to Z</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Type theory is the study of <em>what values can flow where</em> — it’s the formal backbone behind every type checker you’ve used, from Python’s <code>mypy</code> to Rust’s borrow checker to C++20 concepts. If you’ve ever wondered what inference rules actually mean, how a compiler decides your code is well-typed, or what “operational semantics” really refers to, this post is for you.</p>
+<p>We’ll walk through key concepts in alphabetical order, grounding each in Python or C++ code so you can map the formalism to something concrete.</p>
+<h2 id="Bidirectional-Type-Checking-and-Inference-Example"><a href="#Bidirectional-Type-Checking-and-Inference-Example" class="headerlink" title="Bidirectional Type Checking and Inference Example"></a>Bidirectional Type Checking and Inference Example</h2><p>At the heart of many modern type checkers is <strong>bidirectional type checking</strong> — a two-mode algorithm where <code>check</code> verifies that an expression has a given type, and <code>infer</code> discovers the type from the expression itself. They call each other recursively. Observe:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> dataclasses <span class="hljs-keyword">import</span> dataclass<br><br><br><span class="hljs-comment"># ---- Expression forms ----</span><br><br><span class="hljs-meta">@dataclass(<span class="hljs-params">frozen=<span class="hljs-literal">True</span></span>)</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Expression</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;Base class for all expression forms.&quot;&quot;&quot;</span><br><br><br><span class="hljs-meta">@dataclass(<span class="hljs-params">frozen=<span class="hljs-literal">True</span></span>)</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Variable</span>(<span class="hljs-title class_ inherited__">Expression</span>):<br>    name: <span class="hljs-built_in">str</span><br><br><br><span class="hljs-meta">@dataclass(<span class="hljs-params">frozen=<span class="hljs-literal">True</span></span>)</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Lambda</span>(<span class="hljs-title class_ inherited__">Expression</span>):<br>    param: <span class="hljs-built_in">str</span><br>    body: Expression<br><br><br><span class="hljs-meta">@dataclass(<span class="hljs-params">frozen=<span class="hljs-literal">True</span></span>)</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Apply</span>(<span class="hljs-title class_ inherited__">Expression</span>):<br>    func: Expression<br>    arg: Expression<br><br><br><span class="hljs-meta">@dataclass(<span class="hljs-params">frozen=<span class="hljs-literal">True</span></span>)</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Literal</span>(<span class="hljs-title class_ inherited__">Expression</span>):<br>    value: <span class="hljs-built_in">int</span><br><br><br><span class="hljs-meta">@dataclass(<span class="hljs-params">frozen=<span class="hljs-literal">True</span></span>)</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Add</span>(<span class="hljs-title class_ inherited__">Expression</span>):<br>    left: Expression<br>    right: Expression<br><br><br><span class="hljs-comment"># ---- Type forms ----</span><br><br><span class="hljs-meta">@dataclass(<span class="hljs-params">frozen=<span class="hljs-literal">True</span></span>)</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Type</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;Base class for all type forms.&quot;&quot;&quot;</span><br><br><br><span class="hljs-meta">@dataclass(<span class="hljs-params">frozen=<span class="hljs-literal">True</span></span>)</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">IntType</span>(<span class="hljs-title class_ inherited__">Type</span>):<br>    <span class="hljs-keyword">pass</span><br><br><br><span class="hljs-meta">@dataclass(<span class="hljs-params">frozen=<span class="hljs-literal">True</span></span>)</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">FunctionType</span>(<span class="hljs-title class_ inherited__">Type</span>):<br>    param: <span class="hljs-type">Type</span><br>    ret: <span class="hljs-type">Type</span><br><br><br>Context = <span class="hljs-built_in">dict</span>[<span class="hljs-built_in">str</span>, <span class="hljs-type">Type</span>]<br><br><br><span class="hljs-comment"># ---- Bidirectional type checker ----</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">check</span>(<span class="hljs-params">ctx: Context, expr: Expression, expected: <span class="hljs-type">Type</span></span>) -&gt; <span class="hljs-literal">None</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;Verify that expr has type `expected` in context `ctx`. Raise TypeError if not.&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">match</span> expr:<br>        <span class="hljs-keyword">case</span> <span class="hljs-type">Literal</span>():<br>            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">isinstance</span>(expected, IntType):<br>                <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">f&quot;literal has type Int, not <span class="hljs-subst">&#123;expected&#125;</span>&quot;</span>)<br><br>        <span class="hljs-keyword">case</span> Variable(name):<br>            <span class="hljs-keyword">if</span> name <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> ctx:<br>                <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">f&quot;unbound variable: <span class="hljs-subst">&#123;name&#125;</span>&quot;</span>)<br>            actual = ctx[name]<br>            <span class="hljs-keyword">if</span> actual != expected:<br>                <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">f&quot;<span class="hljs-subst">&#123;name&#125;</span>: <span class="hljs-subst">&#123;actual&#125;</span>, expected <span class="hljs-subst">&#123;expected&#125;</span>&quot;</span>)<br><br>        <span class="hljs-keyword">case</span> Lambda(param, body):<br>            <span class="hljs-comment"># Must be a function type</span><br>            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">isinstance</span>(expected, FunctionType):<br>                <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">f&quot;lambda has function type, not <span class="hljs-subst">&#123;expected&#125;</span>&quot;</span>)<br>            <span class="hljs-comment"># Check body under extended context</span><br>            new_ctx = &#123;**ctx, param: expected.param&#125;<br>            check(new_ctx, body, expected.ret)<br><br>        <span class="hljs-keyword">case</span> Apply(func, arg):<br>            <span class="hljs-comment"># Infer the function type, then check the argument</span><br>            func_ty = infer(ctx, func)<br>            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">isinstance</span>(func_ty, FunctionType):<br>                <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">f&quot;applying non-function of type <span class="hljs-subst">&#123;func_ty&#125;</span>&quot;</span>)<br>            check(ctx, arg, func_ty.param)<br>            <span class="hljs-keyword">if</span> func_ty.ret != expected:<br>                <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">f&quot;application returns <span class="hljs-subst">&#123;func_ty.ret&#125;</span>, expected <span class="hljs-subst">&#123;expected&#125;</span>&quot;</span>)<br><br>        <span class="hljs-keyword">case</span> Add(e1, e2):<br>            check(ctx, e1, IntType())<br>            check(ctx, e2, IntType())<br>            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">isinstance</span>(expected, IntType):<br>                <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">f&quot;addition has type Int, not <span class="hljs-subst">&#123;expected&#125;</span>&quot;</span>)<br><br>        <span class="hljs-keyword">case</span> _:<br>            <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">f&quot;cannot check <span class="hljs-subst">&#123;expr&#125;</span>&quot;</span>)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">infer</span>(<span class="hljs-params">ctx: Context, expr: Expression</span>) -&gt; <span class="hljs-type">Type</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;Infer the type of `expr` in context `ctx`.&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">match</span> expr:<br>        <span class="hljs-keyword">case</span> <span class="hljs-type">Literal</span>():<br>            <span class="hljs-keyword">return</span> IntType()<br>        <span class="hljs-keyword">case</span> Variable(name):<br>            <span class="hljs-keyword">if</span> name <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> ctx:<br>                <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">f&quot;unbound variable: <span class="hljs-subst">&#123;name&#125;</span>&quot;</span>)<br>            <span class="hljs-keyword">return</span> ctx[name]<br>        <span class="hljs-keyword">case</span> Lambda():<br>            <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">&quot;cannot infer lambda type without annotation&quot;</span>)<br>        <span class="hljs-keyword">case</span> Apply(func, arg):<br>            func_ty = infer(ctx, func)<br>            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">isinstance</span>(func_ty, FunctionType):<br>                <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">f&quot;applying non-function of type <span class="hljs-subst">&#123;func_ty&#125;</span>&quot;</span>)<br>            check(ctx, arg, func_ty.param)<br>            <span class="hljs-keyword">return</span> func_ty.ret<br>        <span class="hljs-keyword">case</span> Add(e1, e2):<br>            check(ctx, e1, IntType())<br>            check(ctx, e2, IntType())<br>            <span class="hljs-keyword">return</span> IntType()<br>        <span class="hljs-keyword">case</span> _:<br>            <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">f&quot;cannot infer type of <span class="hljs-subst">&#123;expr&#125;</span>&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="Fixed-point-Combinator"><a href="#Fixed-point-Combinator" class="headerlink" title="Fixed-point Combinator"></a>Fixed-point Combinator</h2><p>A lambda expression <code>f</code> that can’t refer to itself by name can still express recursion through a <strong>fixed-point combinator</strong>: a function <code>g</code> that operates on another function, such that <code>g(f)</code> behaves like <code>f(g(f), ...)</code>, effectively tying the recursive knot. In C++, this maps to a template struct that passes <code>*this</code> into a lambda as the recursive self-reference, and the compiler optimizes it to zero overhead.</p>
+<p>See <a href="/2023/03/01/Type-Theoretic-Constructs-in-CXX/#Fixed-point-Combinators-Tying-the-Recursive-Knot-and-Recursive-Lambda-Expressions">Fixed-point Combinators, Tying the Recursive Knot, and Recursive Lambda Expressions</a> for the full implementation with LLVM IR.</p>
+<h2 id="Inference-Rules"><a href="#Inference-Rules" class="headerlink" title="Inference Rules"></a>Inference Rules</h2><p>$$<br>\frac{\text{Premise}_1 \quad \text{Premise}_2 \quad \ldots \quad \text{Premise}_n}<br>{\text{Conclusion}}<br>;\text{RuleName}<br>$$</p>
+<ul>
+<li>Premises above the bar must be satisfied for the conclusion to hold</li>
+<li>The rule name labels the rule</li>
+<li>Side conditions are written next to the rule or in parentheses</li>
+<li>A rule with no premises (an axiom) is written with just the conclusion</li>
+</ul>
+<p><strong>Notation:</strong> $\Gamma \vdash e : \tau$ reads “under context $\Gamma$, expression $e$ has type $\tau$.” $\Gamma$ is a mapping from variable names to types — the set of variables currently in scope. $\tau$ (tau) is a type.</p>
+<h2 id="Operational-Semantics"><a href="#Operational-Semantics" class="headerlink" title="Operational Semantics"></a>Operational Semantics</h2><p>You write:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">apply_twice</span>(<span class="hljs-params">f, x</span>):<br>    <span class="hljs-keyword">return</span> f(f(x))<br><br>result = apply_twice(<span class="hljs-keyword">lambda</span> n: n + <span class="hljs-number">1</span>, <span class="hljs-number">5</span>)<br></code></pre></td></tr></table></figure>
+
+<p>You know this returns <code>7</code>. But <em>how</em> does it compute? What are the exact, step-by-step rules? If we wrote them down precisely enough that a machine could follow them, we’d have an <strong>operational semantics</strong>.</p>
+<h3 id="Small-Step-Operational-Semantics"><a href="#Small-Step-Operational-Semantics" class="headerlink" title="Small-Step Operational Semantics"></a>Small-Step Operational Semantics</h3><p>The core idea of <strong>small-step operational semantics</strong>: describe evaluation as a sequence of single reductions:</p>
+<p>$$<br>\text{expression} \to \text{expression} \to \text{expression} \to \cdots \to \text{value}<br>$$</p>
+<p>Each $\to$ is one atomic step. A <strong>value</strong> is an expression that cannot reduce further (a final result).</p>
+<p>$$<br>e \to e’<br>$$</p>
+<p>reads: <strong>“expression $e$ reduces to expression $e’$ in one step.”</strong></p>
+<h3 id="Big-Step-Operational-Semantics"><a href="#Big-Step-Operational-Semantics" class="headerlink" title="Big-Step Operational Semantics"></a>Big-Step Operational Semantics</h3><p>The notation $e \Downarrow v$ means <strong>“$e$ evaluates to value $v$”</strong> — not in one step, but in as many steps as needed.</p>
+<p>Now that you can read inference rules and understand how evaluation proceeds, we turn to the type-level side: how do type systems support polymorphism?</p>
+<h2 id="Type-Abstractions"><a href="#Type-Abstractions" class="headerlink" title="Type Abstractions"></a>Type Abstractions</h2><p><strong>Type abstractions</strong> let you write a function once and use it at many types. In C++ this is <code>template &lt;typename X&gt; auto id(X x) { return x; }</code> — a single definition that works for <code>int</code>, <code>string</code>, or any other type. Instantiating it at a concrete type (<code>id&lt;int&gt;</code>) is called a <em>type application</em>. The compiler inlines these aggressively — a <code>double_&lt;int&gt;([](int x) { return 2 * x; })</code> call compiles down to a single <code>shl</code> instruction.</p>
+<p>See <a href="/2023/03/01/Type-Theoretic-Constructs-in-CXX/#Type-Abstractions-and-Template-Functions">Type Abstractions and Template Functions</a> for the full implementation with LLVM IR.</p>
+<h2 id="Type-Classes"><a href="#Type-Classes" class="headerlink" title="Type Classes"></a>Type Classes</h2><p><strong>Type classes</strong> answer “I want to say this type supports equality without inheritance.” C++20 <strong>concepts</strong> implement this for templates: you declare a predicate like <code>template &lt;typename T&gt; concept Eq = requires (T t) { { t == t } -&gt; std::same_as&lt;bool&gt;; };</code> and the compiler enforces it <em>at the template interface</em>, not deep in the instantiation. The error message improves from a cryptic iterator-subtraction failure to a clear “concept not satisfied.”</p>
+<p>See <a href="/2023/03/01/Type-Theoretic-Constructs-in-CXX/#Type-Classes-and-Concepts-in-C">Type Classes and Concepts in C++</a> for the full comparison, including Haskell-to-C++ concept mappings.</p>
+<p>You’ve now seen inference rules up close, and you know how type abstractions and type classes generalize code over types. It’s time to put it all together: what does it mean to <em>design</em> a type system?</p>
+<h2 id="Type-Systems"><a href="#Type-Systems" class="headerlink" title="Type Systems"></a>Type Systems</h2><h3 id="Invariants"><a href="#Invariants" class="headerlink" title="Invariants"></a>Invariants</h3><p>What guarantee do you want the type system to provide?</p>
+<blockquote>
+<p><strong>“A file handle must be closed exactly once. After it’s closed, it can’t be used.”</strong></p>
+</blockquote>
+<blockquote>
+<p><strong>“Tensor dimensions must be compatible across operations. A matmul requires contracting dimensions to match.”</strong></p>
+</blockquote>
+<h3 id="Types"><a href="#Types" class="headerlink" title="Types"></a>Types</h3><p>For file handles: $\text{Owned File}$ (must be closed) and $\text{Closed}$ (can’t be used).</p>
+<p>For tensors: $\text{Tensor}[N, M, \text{float}]$ (type parameterized by dimension values).</p>
+<h3 id="Introduction-Rules"><a href="#Introduction-Rules" class="headerlink" title="Introduction Rules"></a>Introduction Rules</h3><p>How do values of each type come into existence?</p>
+<p>$$<br>\frac{}<br>{\Gamma \vdash open(path) : \text{Owned File}}<br>$$</p>
+<p>$$<br>\frac{\Gamma \vdash f : \text{Owned File} \text{ or } \text{Borrowed File}}<br>{\Gamma \vdash borrow(f) : \text{Borrowed File}}<br>$$</p>
+<p>$$<br>\frac{\Gamma \vdash a : \text{Tensor}[M, K, \text{float}] \qquad \Gamma \vdash b : \text{Tensor}[K, N, \text{float}]}<br>{\Gamma \vdash matmul(a, b) : \text{Tensor}[M, N, \text{float}]}<br>$$</p>
+<h3 id="Elimination-Rules"><a href="#Elimination-Rules" class="headerlink" title="Elimination Rules"></a>Elimination Rules</h3><p>How are values of each type used?</p>
+<p>$$<br>\frac{\Gamma \vdash f : \text{Owned File}}<br>{\Gamma \vdash close(f) : \text{Unit}}<br>\qquad\text{($f$ consumed, becomes unavailable)}<br>$$</p>
+<p>$$<br>\frac{\Gamma \vdash f : \text{Borrowed File}}<br>{\Gamma \vdash read(f) : (\text{Borrowed File}, \text{str})}<br>\qquad\text{(borrowed handle returned for continued use)}<br>$$</p>
+<p>$$<br>\frac{\Gamma \vdash a : \text{Tensor}[N, M, \text{float}] \qquad \Gamma \vdash i : \text{Index}[N] \qquad \Gamma \vdash j : \text{Index}[M]}<br>{\Gamma \vdash a[i, j] : \text{float}}<br>$$</p>
+<h3 id="Metatheories"><a href="#Metatheories" class="headerlink" title="Metatheories"></a>Metatheories</h3><p>What would you prove about this system?</p>
+<blockquote>
+<p><em>If $\Gamma \vdash e : T$ and $e \to e’$, then $\Gamma \vdash e’ : T$ (preservation).</em></p>
+</blockquote>
+<blockquote>
+<p><em>If $\Gamma \vdash e : \text{Owned File}$, then in any complete evaluation, $close(e)$ is called exactly once.</em></p>
+</blockquote>
+<h3 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h3><p>Construct programs that <em>should</em> type-check and programs that <em>shouldn’t</em>. Walk through the rules for each.</p>
+<p><strong>Well-typed:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">f = <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;data.txt&quot;</span>)          <span class="hljs-comment"># f : Owned File</span><br>data = read(borrow(f))        <span class="hljs-comment"># f still Owned File, data : str</span><br>close(f)                      <span class="hljs-comment"># f consumed, Unit</span><br><span class="hljs-comment"># f can&#x27;t be used here — type error</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>Ill-typed (file never closed):</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">f = <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;data.txt&quot;</span>)<br>data = read(borrow(f))<br><span class="hljs-keyword">return</span> data                   <span class="hljs-comment"># TYPE ERROR: Owned File f not consumed</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>Ill-typed (file used after close):</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">f = <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;data.txt&quot;</span>)<br>close(f)                      <span class="hljs-comment"># f consumed</span><br>data = read(borrow(f))        <span class="hljs-comment"># TYPE ERROR: f no longer available</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="Design-Spaces"><a href="#Design-Spaces" class="headerlink" title="Design Spaces"></a>Design Spaces</h3><p>Every type system is a point in a design space with these axes:</p>
+<table>
+<thead>
+<tr>
+<th>Axis</th>
+<th>Range</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Correctness</strong></td>
+<td>Prevent all errors $\to$ Prevent some</td>
+<td>OCaml (all) vs. C (some)</td>
+</tr>
+<tr>
+<td><strong>Annotation burden</strong></td>
+<td>Fully annotated $\to$ Fully inferred</td>
+<td>Java (verbose) vs. OCaml (mostly inferred)</td>
+</tr>
+<tr>
+<td><strong>Expressiveness</strong></td>
+<td>Reject more safe programs $\to$ Accept more</td>
+<td>Simple types vs. dependent types</td>
+</tr>
+<tr>
+<td><strong>Decidability</strong></td>
+<td>Always terminates $\to$ May diverge</td>
+<td>OCaml&#x2F;Haskell inference vs. dependent types</td>
+</tr>
+<tr>
+<td><strong>Complexity</strong></td>
+<td>Simple rules $\to$ Complex metatheory</td>
+<td>Simple type systems vs. Rust’s borrow checker</td>
+</tr>
+</tbody></table>
+<p>Great type systems find a <strong>sweet spot</strong> on these axes for their intended use case.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Programming/" class="category-chain-item">Programming</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/reference/" class="print-no-link">#reference</a>
+      
+        <a href="/tags/programming-languages/" class="print-no-link">#programming-languages</a>
+      
+        <a href="/tags/type-theory/" class="print-no-link">#type-theory</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Type Theory Concepts: A to Z</div>
+      <div>https://jifengwu2k.github.io/2026/05/13/Type-Theory-Concepts/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>May 13, 2026</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/05/14/Compile-NEFF-Executables-from-NKI-Kernels/" title="Compile NEFF Executables from NKI Kernels">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Compile NEFF Executables from NKI Kernels</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/05/13/What-is-S3/" title="What is S3?">
+                        <span class="hidden-mobile">What is S3?</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'jifengwu2k/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

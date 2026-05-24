@@ -1,0 +1,1278 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="This project explored how to lower machine-learning-oriented IR into low-level compiler IR by building a small MLIR-based compiler. The tool reads StableHLO MLIR, applies a sequence of lowering and cl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Learning MLIR and HLO by Building a Tiny StableHLO-to-LLVM IR Compiler">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/04/26/Learning-MLIR-and-HLO-by-Building-a-Tiny-StableHLO-to-LLVM-IR-Compiler/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="This project explored how to lower machine-learning-oriented IR into low-level compiler IR by building a small MLIR-based compiler. The tool reads StableHLO MLIR, applies a sequence of lowering and cl">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-04-26T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-26T04:00:00.000Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta property="article:tag" content="build-systems">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="machine-learning">
+<meta property="article:tag" content="reference">
+<meta property="article:tag" content="systems">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Learning MLIR and HLO by Building a Tiny StableHLO-to-LLVM IR Compiler - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Home</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>Categories</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Tags</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>About</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/links/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-link-fill"></i>
+                  <span>Links</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Search</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Light"
+               data-label-dark="Dark">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dark</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Learning MLIR and HLO by Building a Tiny StableHLO-to-LLVM IR Compiler</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-04-26 00:00" pubdate>
+          April 26, 2026
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          16k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          132 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Learning MLIR and HLO by Building a Tiny StableHLO-to-LLVM IR Compiler</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>This project explored how to lower machine-learning-oriented IR into low-level compiler IR by building a small MLIR-based compiler. The tool reads StableHLO MLIR, applies a sequence of lowering and cleanup passes, lowers the result to the MLIR LLVM dialect, translates that module to standard textual LLVM IR, and prints the final <code>.ll</code>-style output.</p>
+<p>The work had three major outcomes:</p>
+<ul>
+<li>A <strong>validated local toolchain setup</strong> establishing that <code>StableHLO v1.13.9</code> is compatible with the local <code>LLVM-22.1.3-Linux-X64</code> installation, with a small patch to support a library-only StableHLO build.</li>
+<li>A <strong>working end-to-end prototype</strong> that accepts StableHLO input and produces textual LLVM IR.</li>
+<li>A <strong>practical workflow for agent-assisted compiler development</strong>, where coding agents helped accelerate documentation lookup, pass discovery, incremental code edits, rebuild-and-run cycles, and failure-driven replanning.</li>
+</ul>
+<p>This mini project was successful because it followed an incremental implementation strategy, verified IR at each stage, used realistic sample input to validate the lowering pipeline, and made effective use of coding agents to reduce the implementation-detail burden of working with MLIR and StableHLO.</p>
+<hr>
+<h2 id="Project-Goal"><a href="#Project-Goal" class="headerlink" title="Project Goal"></a>Project Goal</h2><p>The goal of the project was to become familiar with:</p>
+<ul>
+<li><strong>MLIR</strong> as a multi-level compiler infrastructure,</li>
+<li><strong>HLO-family IRs</strong>, especially <strong>StableHLO</strong>, and</li>
+<li>the path from a machine-learning frontend representation to low-level code generation.</li>
+</ul>
+<p>The intended deliverable was a compiler executable that:</p>
+<ul>
+<li>reads <strong>StableHLO source code</strong> from a file,</li>
+<li>parses it into MLIR,</li>
+<li>runs a sequence of lowering and canonicalization passes,</li>
+<li>lowers the program through progressively lower-level MLIR dialects,</li>
+<li>reaches the MLIR <strong>LLVM dialect</strong>,</li>
+<li>translates that module into textual <strong>LLVM IR</strong>, and</li>
+<li>emits the result as a <code>.ll</code> file.</li>
+</ul>
+<p>A representative CLI shape is:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">hlo-compiler input.mlir -o output.ll<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><h3 id="Lowering-in-MLIR"><a href="#Lowering-in-MLIR" class="headerlink" title="Lowering in MLIR"></a>Lowering in MLIR</h3><p>A useful way to understand MLIR lowering is as <strong>dialect elimination</strong>. Given a module containing a set of dialects, the task is to drive the program toward a target dialect set.</p>
+<p>For example:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">have: &#123;affine, scf, arith, memref, func&#125;<br>want: &#123;llvm&#125;<br></code></pre></td></tr></table></figure>
+
+<p>This naturally leads to questions such as:</p>
+<ul>
+<li>How do we eliminate <code>affine</code>?</li>
+<li>How do we eliminate <code>scf</code>?</li>
+<li>How do we eliminate <code>func</code>?</li>
+<li>How do we eliminate <code>arith</code>?</li>
+<li>How do we eliminate <code>memref</code>?</li>
+<li>How do we eliminate <code>cf</code> if it is introduced along the way?</li>
+</ul>
+<p>A typical candidate pass sequence might include:</p>
+<ul>
+<li><code>lower-affine</code></li>
+<li><code>scf-to-cf</code></li>
+<li><code>func-to-llvm</code></li>
+<li><code>arith-to-llvm</code></li>
+<li><code>memref-to-llvm</code></li>
+<li><code>cf-to-llvm</code></li>
+<li><code>reconcile-unrealized-casts</code></li>
+</ul>
+<p>MLIR does not provide a fully general automatic planner for this process. In practice, lowering is driven by knowledge of:</p>
+<ol>
+<li>Which dialects are currently present?</li>
+<li>Which dialects are desired?</li>
+<li>Which passes are available?</li>
+<li>The preconditions and postconditions of those passes.</li>
+</ol>
+<p>That makes the work highly iterative and well-suited to a Karpathy loop of planning, editing, building, running, and revising.</p>
+<h3 id="Where-StableHLO-Comes-From"><a href="#Where-StableHLO-Comes-From" class="headerlink" title="Where StableHLO Comes From"></a>Where StableHLO Comes From</h3><p>Machine learning frameworks such as <strong>JAX</strong> do not normally expose LLVM IR directly. Instead, they lower from frontend programs through higher-level compiler representations. For this project, the most useful interchange representation was <strong>StableHLO</strong> because it:</p>
+<ul>
+<li>is an MLIR dialect,</li>
+<li>preserves tensor-level semantics,</li>
+<li>supports portability and interchange, and</li>
+<li>remains much closer to the source computation than LLVM IR.</li>
+</ul>
+<p>A practical way to obtain StableHLO is to lower a <code>jax.jit</code>-compiled function and request compiler IR in the <code>stablehlo</code> dialect.</p>
+<p>Example:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> jax<br><span class="hljs-keyword">import</span> jax.numpy <span class="hljs-keyword">as</span> jnp<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">matmul_bias_relu</span>(<span class="hljs-params">x, w, b</span>):<br>    y = x @ w<br>    y = y + b<br>    y = jnp.maximum(y, <span class="hljs-number">0.0</span>)<br>    <span class="hljs-keyword">return</span> y<br><br>x = jnp.ones((<span class="hljs-number">4</span>, <span class="hljs-number">8</span>), dtype=jnp.float32)<br>w = jnp.ones((<span class="hljs-number">8</span>, <span class="hljs-number">16</span>), dtype=jnp.float32)<br>b = jnp.ones((<span class="hljs-number">16</span>,), dtype=jnp.float32)<br><br>lowered = jax.jit(matmul_bias_relu).lower(x, w, b)<br>stablehlo_module = lowered.compiler_ir(dialect=<span class="hljs-string">&quot;stablehlo&quot;</span>)<br><span class="hljs-built_in">print</span>(stablehlo_module)<br></code></pre></td></tr></table></figure>
+
+<p>Conceptually, this kind of program lowers to operations such as:</p>
+<ul>
+<li><code>stablehlo.dot_general</code> for matrix multiplication,</li>
+<li><code>stablehlo.broadcast_in_dim</code> for bias expansion,</li>
+<li><code>stablehlo.add</code> for bias addition,</li>
+<li><code>stablehlo.constant</code> for constants, and</li>
+<li><code>stablehlo.maximum</code> for ReLU.</li>
+</ul>
+<hr>
+<h2 id="Local-Environment-and-Compatibility-Findings"><a href="#Local-Environment-and-Compatibility-Findings" class="headerlink" title="Local Environment and Compatibility Findings"></a>Local Environment and Compatibility Findings</h2><p>The project used a <strong>hub-and-spoke</strong> dependency model:</p>
+<ul>
+<li>The fixed local LLVM installation served as the <strong>hub</strong>;</li>
+<li>Different StableHLO tags acted as <strong>spokes</strong>;</li>
+<li>Compatibility was determined empirically by configuring and building candidate versions.</li>
+</ul>
+<h3 id="Observed-Version-Boundary"><a href="#Observed-Version-Boundary" class="headerlink" title="Observed Version Boundary"></a>Observed Version Boundary</h3><p>The newest StableHLO tag verified to build successfully against the installed LLVM package was:</p>
+<ul>
+<li><strong><code>v1.13.9</code></strong></li>
+</ul>
+<p>Observed results:</p>
+<ul>
+<li><code>v1.13.7</code>, <code>v1.13.8</code>, and <code>v1.13.9</code> build successfully;</li>
+<li><code>v1.14.0</code> and newer tested tags fail against this LLVM installation due to <strong>MLIR API drift</strong>.</li>
+</ul>
+<p>The local checkout was moved to <code>v1.13.9</code>, patched for a library-only build, and installed successfully.</p>
+<hr>
+<h2 id="Packaging-Caveat"><a href="#Packaging-Caveat" class="headerlink" title="Packaging Caveat"></a>Packaging Caveat</h2><p>The LLVM install package includes MLIR headers, libraries, and CMake packages, but it does <strong>not</strong> provide the full test&#x2F;tool integration expected by StableHLO’s default build. In particular, the stock StableHLO build expects targets or tools such as:</p>
+<ul>
+<li><code>FileCheck</code></li>
+<li><code>not</code></li>
+<li>a usable <code>LLVM_EXTERNAL_LIT</code></li>
+</ul>
+<p>This matters for building the default tests, tools, and integration targets. It does <strong>not</strong> matter for a library-only build, provided those subdirectories are excluded from the build.</p>
+<hr>
+<h2 id="Minimal-Patch-for-a-Library-Only-StableHLO-Build"><a href="#Minimal-Patch-for-a-Library-Only-StableHLO-Build" class="headerlink" title="Minimal Patch for a Library-Only StableHLO Build"></a>Minimal Patch for a Library-Only StableHLO Build</h2><p>For this project, a library-only StableHLO build was sufficient. The minimal patch touched four files:</p>
+<ol>
+<li><code>CMakeLists.txt</code></li>
+<li><code>stablehlo/CMakeLists.txt</code></li>
+<li><code>stablehlo/conversions/linalg/CMakeLists.txt</code></li>
+<li><code>stablehlo/conversions/tosa/CMakeLists.txt</code></li>
+</ol>
+<h3 id="1-Top-Level-CMakeLists-txt"><a href="#1-Top-Level-CMakeLists-txt" class="headerlink" title="1. Top-Level CMakeLists.txt"></a>1. Top-Level <code>CMakeLists.txt</code></h3><p>Change:</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">add_subdirectory</span>(stablehlo)<br><span class="hljs-keyword">add_subdirectory</span>(examples)<br></code></pre></td></tr></table></figure>
+
+<p>To:</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">add_subdirectory</span>(stablehlo)<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-stablehlo-CMakeLists-txt"><a href="#2-stablehlo-CMakeLists-txt" class="headerlink" title="2. stablehlo/CMakeLists.txt"></a>2. <code>stablehlo/CMakeLists.txt</code></h3><p>Change:</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">add_subdirectory</span>(api)<br><span class="hljs-keyword">add_subdirectory</span>(conversions)<br><span class="hljs-keyword">add_subdirectory</span>(dialect)<br><span class="hljs-keyword">add_subdirectory</span>(integrations)<br><span class="hljs-keyword">add_subdirectory</span>(reference)<br><span class="hljs-keyword">add_subdirectory</span>(tests)<br><span class="hljs-keyword">add_subdirectory</span>(testdata)<br><span class="hljs-keyword">add_subdirectory</span>(tools)<br><span class="hljs-keyword">add_subdirectory</span>(transforms)<br></code></pre></td></tr></table></figure>
+
+<p>To:</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">add_subdirectory</span>(api)<br><span class="hljs-keyword">add_subdirectory</span>(conversions)<br><span class="hljs-keyword">add_subdirectory</span>(dialect)<br><span class="hljs-keyword">add_subdirectory</span>(transforms)<br></code></pre></td></tr></table></figure>
+
+<p>To install StableHLO headers as part of the library-only install, append:</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">install</span>(<br>  DIRECTORY<br>    <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/api<br>    <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/conversions<br>    <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/dialect<br>    <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/transforms<br>  DESTINATION <span class="hljs-keyword">include</span>/stablehlo<br>  FILES_MATCHING<br>    PATTERN <span class="hljs-string">&quot;*.h&quot;</span><br>)<br><br><span class="hljs-keyword">install</span>(<br>  DIRECTORY<br>    <span class="hljs-variable">$&#123;CMAKE_CURRENT_BINARY_DIR&#125;</span>/api<br>    <span class="hljs-variable">$&#123;CMAKE_CURRENT_BINARY_DIR&#125;</span>/conversions<br>    <span class="hljs-variable">$&#123;CMAKE_CURRENT_BINARY_DIR&#125;</span>/dialect<br>    <span class="hljs-variable">$&#123;CMAKE_CURRENT_BINARY_DIR&#125;</span>/transforms<br>  DESTINATION <span class="hljs-keyword">include</span>/stablehlo<br>  FILES_MATCHING<br>    PATTERN <span class="hljs-string">&quot;*.h.inc&quot;</span><br>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-stablehlo-conversions-linalg-CMakeLists-txt"><a href="#3-stablehlo-conversions-linalg-CMakeLists-txt" class="headerlink" title="3. stablehlo/conversions/linalg/CMakeLists.txt"></a>3. <code>stablehlo/conversions/linalg/CMakeLists.txt</code></h3><p>Remove:</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">add_subdirectory</span>(tests)<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-stablehlo-conversions-tosa-CMakeLists-txt"><a href="#4-stablehlo-conversions-tosa-CMakeLists-txt" class="headerlink" title="4. stablehlo/conversions/tosa/CMakeLists.txt"></a>4. <code>stablehlo/conversions/tosa/CMakeLists.txt</code></h3><p>Remove:</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">add_subdirectory</span>(tests)<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Building-and-Installing-StableHLO"><a href="#Building-and-Installing-StableHLO" class="headerlink" title="Building and Installing StableHLO"></a>Building and Installing StableHLO</h2><p>With the library-only patch applied, StableHLO can be configured, built, and installed as follows:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> STABLEHLO_SRC=...<br><span class="hljs-built_in">export</span> STABLEHLO_BUILD=...<br><span class="hljs-built_in">export</span> STABLEHLO_PREFIX=...<br><span class="hljs-built_in">export</span> LLVM_PREFIX=...<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">cmake -G Ninja -S <span class="hljs-string">&quot;<span class="hljs-variable">$STABLEHLO_SRC</span>&quot;</span> -B <span class="hljs-string">&quot;<span class="hljs-variable">$STABLEHLO_BUILD</span>&quot;</span> \<br>  -DMLIR_DIR=<span class="hljs-string">&quot;<span class="hljs-variable">$LLVM_PREFIX</span>/lib/cmake/mlir&quot;</span> \<br>  -DLLVM_DIR=<span class="hljs-string">&quot;<span class="hljs-variable">$LLVM_PREFIX</span>/lib/cmake/llvm&quot;</span> \<br>  -DSTABLEHLO_ENABLE_BINDINGS_PYTHON=OFF \<br>  -DCMAKE_BUILD_TYPE=Release<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">cmake --build <span class="hljs-string">&quot;<span class="hljs-variable">$STABLEHLO_BUILD</span>&quot;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">cmake --install <span class="hljs-string">&quot;<span class="hljs-variable">$STABLEHLO_BUILD</span>&quot;</span> --prefix <span class="hljs-string">&quot;<span class="hljs-variable">$STABLEHLO_PREFIX</span>&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="What-the-Install-Produces"><a href="#What-the-Install-Produces" class="headerlink" title="What the Install Produces"></a>What the Install Produces</h3><p>The install step provides:</p>
+<ul>
+<li>StableHLO static libraries in <code>$STABLEHLO_PREFIX/lib</code></li>
+<li>StableHLO source headers in <code>$STABLEHLO_PREFIX/include/stablehlo/...</code></li>
+<li>generated <code>.h.inc</code> headers in <code>$STABLEHLO_PREFIX/include/stablehlo/...</code></li>
+</ul>
+<p>The install step does <strong>not</strong> produce:</p>
+<ul>
+<li>a StableHLO CMake package config</li>
+</ul>
+<p>As a result, the install root is a usable <strong>headers + libraries prefix</strong>, but not a complete <code>find_package(StableHLO)</code> SDK.</p>
+<h3 id="Include-Paths-for-Downstream-Compilation"><a href="#Include-Paths-for-Downstream-Compilation" class="headerlink" title="Include Paths for Downstream Compilation"></a>Include Paths for Downstream Compilation</h3><p>A downstream application can compile against:</p>
+<ul>
+<li><code>-I$LLVM_PREFIX/include</code></li>
+<li><code>-I$STABLEHLO_PREFIX/include</code></li>
+</ul>
+<p>Example compile command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-variable">$CXX</span> -std=c++17 \<br>  -I<span class="hljs-string">&quot;<span class="hljs-variable">$LLVM_PREFIX</span>/include&quot;</span> \<br>  -I<span class="hljs-string">&quot;<span class="hljs-variable">$STABLEHLO_PREFIX</span>/include&quot;</span> \<br>  -D_GNU_SOURCE \<br>  -D_GLIBCXX_USE_CXX11_ABI=1 \<br>  -D__STDC_CONSTANT_MACROS \<br>  -D__STDC_FORMAT_MACROS \<br>  -D__STDC_LIMIT_MACROS \<br>  -c simple_stablehlo_app.cpp -o simple_stablehlo_app.cpp.o<br></code></pre></td></tr></table></figure>
+
+<p>Minimal source example:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;mlir/IR/DialectRegistry.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;mlir/IR/MLIRContext.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stablehlo/dialect/Register.h&quot;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>  mlir::DialectRegistry registry;<br>  mlir::stablehlo::<span class="hljs-built_in">registerAllDialects</span>(registry);<br>  <span class="hljs-function">mlir::MLIRContext <span class="hljs-title">ctx</span><span class="hljs-params">(registry)</span></span>;<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="Linking-Strategy"><a href="#Linking-Strategy" class="headerlink" title="Linking Strategy"></a>Linking Strategy</h3><p>For this setup, using raw compiler and linker commands was simpler than using downstream CMake because the installed StableHLO tree is not a full packaged SDK.</p>
+<p>A straightforward working link strategy is:</p>
+<ul>
+<li>include all StableHLO static archives,</li>
+<li>include all MLIR static archives,</li>
+<li>include all LLVM static archives,</li>
+<li>wrap them in a linker group so archive order does not matter.</li>
+</ul>
+<p>Example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-variable">$CXX</span> simple_stablehlo_app.cpp.o -o simple_stablehlo_app \<br>  -Wl,--start-group \<br>  <span class="hljs-string">&quot;<span class="hljs-variable">$STABLEHLO_PREFIX</span>&quot;</span>/lib/*.a \<br>  <span class="hljs-string">&quot;<span class="hljs-variable">$LLVM_PREFIX</span>&quot;</span>/lib/libMLIR*.a \<br>  <span class="hljs-string">&quot;<span class="hljs-variable">$LLVM_PREFIX</span>&quot;</span>/lib/libLLVM*.a \<br>  -Wl,--end-group \<br>  -lrt -ldl -lm \<br>  -lz \<br>  -lzstd<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Intended-Compiler-Pipeline"><a href="#Intended-Compiler-Pipeline" class="headerlink" title="Intended Compiler Pipeline"></a>Intended Compiler Pipeline</h2><p>The project was never intended to translate StableHLO directly into LLVM IR in a single step. The educational value comes from observing the intermediate representations and their transformations.</p>
+<p>A reasonable conceptual pipeline is:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs text">StableHLO<br>  -&gt; canonicalization / CSE<br>  -&gt; Linalg / Tensor / Arith<br>  -&gt; bufferization to MemRef<br>  -&gt; lowering structured ops to SCF loops<br>  -&gt; lowering to LLVM dialect<br>  -&gt; translation to LLVM IR (.ll)<br></code></pre></td></tr></table></figure>
+
+<h3 id="Stage-by-Stage-Interpretation"><a href="#Stage-by-Stage-Interpretation" class="headerlink" title="Stage-by-Stage Interpretation"></a>Stage-by-Stage Interpretation</h3><h4 id="StableHLO"><a href="#StableHLO" class="headerlink" title="StableHLO"></a>StableHLO</h4><p>StableHLO is the input language. It represents tensor-level computation and ML semantics, such as:</p>
+<ul>
+<li>broadcasts,</li>
+<li>reductions,</li>
+<li>dot products,</li>
+<li>reshapes, and</li>
+<li>elementwise operations.</li>
+</ul>
+<p>This form is useful for interchange but is still far from machine code.</p>
+<h4 id="Linalg-Tensor-Arith"><a href="#Linalg-Tensor-Arith" class="headerlink" title="Linalg &#x2F; Tensor &#x2F; Arith"></a>Linalg &#x2F; Tensor &#x2F; Arith</h4><p>At this level, computation becomes more explicit in MLIR terms.</p>
+<p>Typical mappings include:</p>
+<ul>
+<li><code>stablehlo.add</code> -&gt; <code>linalg.generic</code> or an equivalent structured op</li>
+<li><code>stablehlo.dot_general</code> -&gt; <code>linalg.matmul</code> or <code>linalg.generic</code></li>
+<li><code>stablehlo.maximum</code> -&gt; elementwise <code>linalg.generic</code> with <code>arith</code> inside</li>
+<li>shape-preserving tensor manipulations -&gt; <code>tensor</code> operations</li>
+</ul>
+<p>This stage expresses high-level tensor semantics as structured computations over tensors.</p>
+<h4 id="MemRef-Bufferization"><a href="#MemRef-Bufferization" class="headerlink" title="MemRef &#x2F; Bufferization"></a>MemRef &#x2F; Bufferization</h4><p>Bufferization converts tensor values into explicit storage objects.</p>
+<p>Before bufferization, tensors are SSA values. After bufferization, data is represented in memory through <code>memref</code> objects. This stage answers questions such as:</p>
+<ul>
+<li>where outputs live,</li>
+<li>what gets allocated,</li>
+<li>what can be updated in place, and</li>
+<li>how temporaries are stored.</li>
+</ul>
+<h4 id="SCF"><a href="#SCF" class="headerlink" title="SCF"></a>SCF</h4><p>Structured ops are lowered into explicit loop-based control flow.</p>
+<p>For example, elementwise tensor addition eventually becomes something conceptually like:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">for i ...<br>  for j ...<br>    out[i, j] = lhs[i, j] + rhs[i, j]<br></code></pre></td></tr></table></figure>
+
+<p>Matrix multiplication similarly becomes nested loops over indices.</p>
+<h4 id="LLVM-Dialect"><a href="#LLVM-Dialect" class="headerlink" title="LLVM Dialect"></a>LLVM Dialect</h4><p>This is the last MLIR stage before translation to standard LLVM IR. At this point:</p>
+<ul>
+<li>functions become <code>llvm.func</code>,</li>
+<li>memory is converted to LLVM-compatible representations,</li>
+<li>structured control flow is lowered to lower-level control flow, and</li>
+<li>arithmetic is converted into LLVM-compatible forms.</li>
+</ul>
+<h4 id="LLVM-IR-Source-ll"><a href="#LLVM-IR-Source-ll" class="headerlink" title="LLVM IR Source (.ll)"></a>LLVM IR Source (<code>.ll</code>)</h4><p>The final product is textual LLVM IR. This representation is easy to inspect, diff, save, and pass to downstream LLVM tools.</p>
+<hr>
+<h2 id="Implementation-Status"><a href="#Implementation-Status" class="headerlink" title="Implementation Status"></a>Implementation Status</h2><p>The current executable milestone was implemented in <code>simple_stablehlo_app.cpp</code>.</p>
+<p>The program now:</p>
+<ol>
+<li>accepts an input MLIR file path on the command line,</li>
+<li>registers core MLIR dialects,</li>
+<li>registers StableHLO dialects,</li>
+<li>registers the external <code>BufferizableOpInterface</code> models required by one-shot bufferization,</li>
+<li>registers the translation interfaces required to export MLIR to LLVM IR,</li>
+<li>parses the input into an <code>mlir::ModuleOp</code>,</li>
+<li>verifies the parsed module,</li>
+<li>runs <code>canonicalizer</code> and <code>cse</code>,</li>
+<li>runs <code>stablehlo-legalize-to-linalg</code>,</li>
+<li>runs <code>canonicalizer</code> and <code>cse</code> again,</li>
+<li>verifies and prints the intermediate Linalg&#x2F;Tensor&#x2F;Arith form,</li>
+<li>runs <code>one-shot-bufferize</code> with function-boundary bufferization enabled,</li>
+<li>runs <code>convert-bufferization-to-memref</code>,</li>
+<li>verifies and prints the MemRef-oriented form,</li>
+<li>runs <code>convert-linalg-to-loops</code>,</li>
+<li>verifies and prints the SCF-based form,</li>
+<li>runs <code>scf-to-cf</code>, <code>lower-affine</code>, <code>index-to-llvm</code>, <code>arith-to-llvm</code>, <code>memref-to-llvm</code>, <code>func-to-llvm</code>, <code>cf-to-llvm</code>, and <code>reconcile-unrealized-casts</code>,</li>
+<li>runs cleanup again,</li>
+<li>verifies and prints the LLVM dialect result, and</li>
+<li>translates that LLVM dialect module to standard textual LLVM IR and prints it.</li>
+</ol>
+<p>In short, the prototype now functions as a working:</p>
+<ul>
+<li>StableHLO reader,</li>
+<li>parser and verifier,</li>
+<li>StableHLO-to-Linalg lowering driver,</li>
+<li>one-shot bufferization driver,</li>
+<li>bufferization-to-MemRef conversion prototype,</li>
+<li>Linalg-to-loops prototype,</li>
+<li>LLVM-dialect lowering prototype,</li>
+<li>LLVM IR translation prototype, and</li>
+<li>multi-stage printer.</li>
+</ul>
+<p>It also performs basic CLI validation and reports errors if parsing, verification, or lowering fails.</p>
+<hr>
+<h2 id="Validation-and-Testing"><a href="#Validation-and-Testing" class="headerlink" title="Validation and Testing"></a>Validation and Testing</h2><p>The prototype was tested with:</p>
+<ul>
+<li><code>jit_matmul_bias_relu.mlir</code></li>
+</ul>
+<p>Example usage:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./simple_stablehlo_app input.mlir<br></code></pre></td></tr></table></figure>
+
+<h3 id="Test-Outcome"><a href="#Test-Outcome" class="headerlink" title="Test Outcome"></a>Test Outcome</h3><p>The test succeeded end-to-end:</p>
+<ul>
+<li>the file parsed successfully,</li>
+<li>the input module verified successfully,</li>
+<li>the StableHLO-to-Linalg cleanup and lowering pipeline ran successfully,</li>
+<li>the intermediate Linalg&#x2F;Tensor&#x2F;Arith module verified successfully,</li>
+<li>the one-shot bufferization plus bufferization-to-MemRef pipeline ran successfully,</li>
+<li>the MemRef-oriented module verified successfully,</li>
+<li>the Linalg-to-loops pipeline ran successfully,</li>
+<li>the SCF-based module verified successfully,</li>
+<li>the LLVM-dialect lowering pipeline ran successfully,</li>
+<li>the final LLVM dialect module verified successfully,</li>
+<li>the LLVM dialect module translated successfully to standard LLVM IR, and</li>
+<li>all printed stages were produced successfully.</li>
+</ul>
+<p>On <code>jit_matmul_bias_relu.mlir</code>, the tool completed four meaningful MLIR dialect transitions followed by a final LLVM IR export.</p>
+<p>The sample input was a useful smoke test because it exercised nontrivial tensor behavior:</p>
+<ul>
+<li>matrix multiplication,</li>
+<li>broadcast,</li>
+<li>elementwise addition,</li>
+<li>elementwise maximum, and</li>
+<li>constants.</li>
+</ul>
+<hr>
+<h2 id="Remaining-Work"><a href="#Remaining-Work" class="headerlink" title="Remaining Work"></a>Remaining Work</h2><p>Although the end-to-end LLVM IR path now works, several follow-on improvements remain:</p>
+<ul>
+<li>add output-file support such as <code>-o output.ll</code>,</li>
+<li>design a more polished CLI for stage selection and output control,</li>
+<li>separate debug-stage dumps from final <code>.ll</code> output,</li>
+<li>improve memory management beyond the current educational prototype if needed.</li>
+</ul>
+<h3 id="Recommended-Next-Step"><a href="#Recommended-Next-Step" class="headerlink" title="Recommended Next Step"></a>Recommended Next Step</h3><p>The next milestone should turn the current stdout-based prototype into a more compiler-like tool:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">StableHLO input<br>  -&gt; parse / lower / export to LLVM IR<br>  -&gt; write final textual LLVM IR to -o output.ll<br>  -&gt; optionally gate intermediate MLIR dumps behind debug flags<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Why-This-Mini-Project-Succeeded"><a href="#Why-This-Mini-Project-Succeeded" class="headerlink" title="Why This Mini Project Succeeded"></a>Why This Mini Project Succeeded</h2><p>This mini project succeeded because it combined a clear objective, incremental implementation, continuous validation, and effective use of coding agents.</p>
+<h3 id="1-Clear-Concrete-Scope"><a href="#1-Clear-Concrete-Scope" class="headerlink" title="1. Clear, Concrete Scope"></a>1. Clear, Concrete Scope</h3><p>The goal was not vaguely to “learn MLIR.” It was to build a small compiler executable that:</p>
+<ul>
+<li>reads StableHLO MLIR,</li>
+<li>lowers it through intermediate MLIR stages,</li>
+<li>reaches the MLIR LLVM dialect, and</li>
+<li>emits textual LLVM IR.</li>
+</ul>
+<p>That concrete scope kept the work focused and measurable.</p>
+<h3 id="2-Incremental-Milestones"><a href="#2-Incremental-Milestones" class="headerlink" title="2. Incremental Milestones"></a>2. Incremental Milestones</h3><p>The implementation progressed in small, testable steps:</p>
+<ol>
+<li>parse and verify StableHLO,</li>
+<li>canonicalize and CSE,</li>
+<li>lower StableHLO to Linalg&#x2F;Tensor&#x2F;Arith,</li>
+<li>bufferize to MemRef,</li>
+<li>lower Linalg to SCF loops,</li>
+<li>lower to the MLIR LLVM dialect,</li>
+<li>translate to textual LLVM IR.</li>
+</ol>
+<p>This reduced risk and made failures easier to diagnose.</p>
+<h3 id="3-Verification-at-Every-Stage"><a href="#3-Verification-at-Every-Stage" class="headerlink" title="3. Verification at Every Stage"></a>3. Verification at Every Stage</h3><p>The program consistently:</p>
+<ul>
+<li>parsed input,</li>
+<li>verified IR before transformations,</li>
+<li>ran passes,</li>
+<li>verified IR after transformations, and</li>
+<li>printed intermediate results.</li>
+</ul>
+<p>That discipline turned each milestone into a stable foundation for the next one.</p>
+<h3 id="4-Meaningful-Test-Input"><a href="#4-Meaningful-Test-Input" class="headerlink" title="4. Meaningful Test Input"></a>4. Meaningful Test Input</h3><p>Using <code>jit_matmul_bias_relu.mlir</code> as a smoke test ensured the pipeline was exercised on a realistic tensor computation rather than a trivial toy example.</p>
+<h3 id="5-Effective-Delegation-to-Coding-Agents"><a href="#5-Effective-Delegation-to-Coding-Agents" class="headerlink" title="5. Effective Delegation to Coding Agents"></a>5. Effective Delegation to Coding Agents</h3><p>Coding agents were especially useful for the repetitive and implementation-heavy parts of the work, including:</p>
+<ul>
+<li>reading MLIR and StableHLO documentation,</li>
+<li>identifying relevant passes and headers,</li>
+<li>mapping lowering ideas to concrete APIs,</li>
+<li>editing the C++ driver incrementally,</li>
+<li>rebuilding and rerunning after each change,</li>
+<li>inspecting failures and adjusting the pass pipeline, and</li>
+<li>updating the accompanying markdown documentation.</li>
+</ul>
+<p>This was valuable because MLIR is conceptually elegant but operationally detailed. Much of the difficulty lies not in the broad lowering idea, but in the implementation burden:</p>
+<ul>
+<li>which headers to include,</li>
+<li>which passes exist in the installed version,</li>
+<li>which interfaces must be registered,</li>
+<li>what order passes should run in, and</li>
+<li>what each stage expects as input.</li>
+</ul>
+<hr>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>This project achieved its central goal: building a small but functional MLIR-based compiler driver that lowers StableHLO to textual LLVM IR.</p>
+<p>Beyond the executable itself, the work also produced a practical understanding of:</p>
+<ul>
+<li>MLIR’s staged lowering model,</li>
+<li>StableHLO’s role as a portable tensor-level IR,</li>
+<li>one-shot bufferization and lower-level dialect conversion,</li>
+<li>how coding agents can accelerate iterative compiler engineering by handling documentation lookup, code edits, rebuilds, and failure-driven replanning, and</li>
+<li>the realities of version compatibility and packaging when working with LLVM&#x2F;MLIR-based projects.</li>
+</ul>
+<p>The prototype is already a useful educational compiler driver. With output-file support and a cleaner CLI, it can be turned into a more polished standalone tool.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Systems/" class="category-chain-item">Systems</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/reference/" class="print-no-link">#reference</a>
+      
+        <a href="/tags/systems/" class="print-no-link">#systems</a>
+      
+        <a href="/tags/c/" class="print-no-link">#c++</a>
+      
+        <a href="/tags/build-systems/" class="print-no-link">#build-systems</a>
+      
+        <a href="/tags/machine-learning/" class="print-no-link">#machine-learning</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Learning MLIR and HLO by Building a Tiny StableHLO-to-LLVM IR Compiler</div>
+      <div>https://jifengwu2k.github.io/2026/04/26/Learning-MLIR-and-HLO-by-Building-a-Tiny-StableHLO-to-LLVM-IR-Compiler/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>April 26, 2026</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/04/26/Important-Locations-on-Jailbroken-iOS/" title="Important Locations on Jailbroken iOS">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Important Locations on Jailbroken iOS</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/04/23/2026-04-Financial-Statement/" title="2026-04 Financial Statement">
+                        <span class="hidden-mobile">2026-04 Financial Statement</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'jifengwu2k/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
