@@ -1,0 +1,1003 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Every token a Transformer generates forces it to re-read the entire conversation so far. The KV cache is what makes this tractable — it stores the key and value projections of every past token so they">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How the KV Cache Works in HuggingFace Transformers">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/05/31/How-the-KV-Cache-Works-in-HuggingFace-Transformers/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="Every token a Transformer generates forces it to re-read the entire conversation so far. The KV cache is what makes this tractable — it stores the key and value projections of every past token so they">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-05-31T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-06-20T02:53:12.276Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta property="article:tag" content="inference">
+<meta property="article:tag" content="llm">
+<meta property="article:tag" content="reference">
+<meta property="article:tag" content="transformers">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>How the KV Cache Works in HuggingFace Transformers - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Home</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>Categories</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Tags</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>About</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/links/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-link-fill"></i>
+                  <span>Links</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Search</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Light"
+               data-label-dark="Dark">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dark</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">How the KV Cache Works in HuggingFace Transformers</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-05-31 00:00" pubdate>
+          May 31, 2026
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.9k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          58 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">How the KV Cache Works in HuggingFace Transformers</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Every token a Transformer generates forces it to re-read the entire conversation so far. The <strong>KV cache</strong> is what makes this tractable — it stores the key and value projections of every past token so they aren’t recomputed from scratch. HuggingFace models manage this through a <code>Cache</code> abstraction, and the default implementation, <code>DynamicCache</code>, is a clean example of the full mechanism: how the cache is created, how position IDs coordinate RoPE rotations and causal masking, how each attention layer reads and updates it, and how it’s threaded through the generation loop.</p>
+<p>This post walks through the KV cache system end-to-end, using Qwen3-0.6B as a concrete reference.</p>
+<hr>
+<h2 id="1-DynamicCache"><a href="#1-DynamicCache" class="headerlink" title="1. DynamicCache"></a>1. <code>DynamicCache</code></h2><p><code>DynamicCache</code> is the default KV cache and the central state object threaded through every HuggingFace generation loop. It is created once at the start and passed through every <code>model.forward()</code> call. All 28 decoder layers share the same <code>DynamicCache</code> instance; each layer accesses its own slot via <code>cache[layer_idx]</code>, which returns a <code>DynamicLayer</code>.</p>
+<h3 id="1-1-Cache-creation"><a href="#1-1-Cache-creation" class="headerlink" title="1.1 Cache creation"></a>1.1 Cache creation</h3><p>When <code>use_cache=True</code> and no <code>past_key_values</code> is passed, <code>Qwen3Model.forward</code> constructs a fresh cache:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># In Qwen3Model.forward():</span><br><span class="hljs-keyword">if</span> use_cache <span class="hljs-keyword">and</span> past_key_values <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>    past_key_values = DynamicCache(config=<span class="hljs-variable language_">self</span>.config)<br></code></pre></td></tr></table></figure>
+
+<p>At this point the cache is empty. Per-layer storage will be lazily initialised to:</p>
+<table>
+<thead>
+<tr>
+<th>What</th>
+<th>Shape</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Keys</td>
+<td><code>[batch, 8, total_seq_len, 64]</code></td>
+</tr>
+<tr>
+<td>Values</td>
+<td><code>[batch, 8, total_seq_len, 64]</code></td>
+</tr>
+</tbody></table>
+<p>For the full 28-layer model at sequence length <code>S</code> (bf16):</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">28 </span>layers × <span class="hljs-number">2</span> (K + V) × batch × <span class="hljs-number">8</span> heads × S × <span class="hljs-number">64</span> <span class="hljs-keyword">dim</span> × <span class="hljs-number">2</span> bytes = <span class="hljs-number">57</span>,<span class="hljs-number">344</span> × batch × S bytes<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-2-position-ids"><a href="#1-2-position-ids" class="headerlink" title="1.2 position_ids"></a>1.2 <code>position_ids</code></h3><p><code>position_ids</code> is a tensor of shape <code>[batch_size, seq_len]</code> that assigns an absolute integer position to every token.</p>
+<h4 id="Creation-in-Qwen3Model-forward"><a href="#Creation-in-Qwen3Model-forward" class="headerlink" title="Creation in Qwen3Model.forward"></a>Creation in <code>Qwen3Model.forward</code></h4><p>If the caller doesn’t supply <code>position_ids</code> (the common case), they are computed from the cache state:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">if</span> position_ids <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>    past_seen_tokens = past_key_values.get_seq_length() <span class="hljs-keyword">if</span> past_key_values <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">else</span> <span class="hljs-number">0</span><br>    position_ids = torch.arange(inputs_embeds.shape[<span class="hljs-number">1</span>], device=...) + past_seen_tokens<br>    position_ids = position_ids.unsqueeze(<span class="hljs-number">0</span>)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Prefill (first call, no cache):</strong> <code>past_seen_tokens = 0</code> → <code>position_ids = [[0, 1, 2, ..., prompt_len-1]]</code></li>
+<li><strong>Decode step 1:</strong> <code>past_seen_tokens = prompt_len</code> → <code>position_ids = [[prompt_len]]</code></li>
+<li><strong>Decode step N:</strong> <code>past_seen_tokens = prompt_len + N - 1</code> → <code>position_ids = [[prompt_len + N - 1]]</code></li>
+</ul>
+<h4 id="Before-the-layer-loop"><a href="#Before-the-layer-loop" class="headerlink" title="Before the layer loop"></a>Before the layer loop</h4><p>After <code>position_ids</code> is created, <code>Qwen3Model.forward</code> computes two things once, <em>before</em> entering the 28-layer loop. Both are reused unchanged by every attention layer.</p>
+<p><strong>RoPE position embeddings</strong> (consumes <code>position_ids</code>):</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">position_embeddings = <span class="hljs-variable language_">self</span>.rotary_emb(hidden_states, position_ids)<br></code></pre></td></tr></table></figure>
+
+<p>Inside <code>Qwen3RotaryEmbedding.forward</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># inv_freq:          [head_dim/2]  — fixed per-head-dimension inverse frequencies</span><br><span class="hljs-comment"># position_ids:      [batch, seq_len]</span><br><br>inv_freq_expanded = <span class="hljs-variable language_">self</span>.inv_freq[<span class="hljs-literal">None</span>, :, <span class="hljs-literal">None</span>].expand(batch, -<span class="hljs-number">1</span>, <span class="hljs-number">1</span>)    <span class="hljs-comment"># [batch, head_dim/2, 1]</span><br>position_ids_expanded = position_ids[:, <span class="hljs-literal">None</span>, :].<span class="hljs-built_in">float</span>()                 <span class="hljs-comment"># [batch, 1, seq_len]</span><br><br>freqs = (inv_freq_expanded @ position_ids_expanded).transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)      <span class="hljs-comment"># [batch, seq_len, head_dim/2]</span><br>emb = torch.cat((freqs, freqs), dim=-<span class="hljs-number">1</span>)                                  <span class="hljs-comment"># [batch, seq_len, head_dim]</span><br>cos = emb.cos() * <span class="hljs-variable language_">self</span>.attention_scaling<br>sin = emb.sin() * <span class="hljs-variable language_">self</span>.attention_scaling<br></code></pre></td></tr></table></figure>
+
+<p>Each position <code>p</code> produces a rotation angle <code>θ_p = p / base^(2i/d)</code> for head-dimension pair <code>2i</code> and <code>2i+1</code>. The result <code>(cos, sin)</code> has shape <code>[batch, seq_len, head_dim]</code>.</p>
+<p><strong>Causal mask</strong> (consumes <code>past_key_values</code> and <code>position_ids</code>):</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">mask_kwargs = &#123;<br>    ...,<br>    <span class="hljs-string">&quot;position_ids&quot;</span>: position_ids,<br>&#125;<br>causal_mask_mapping = &#123;<br>    <span class="hljs-string">&quot;full_attention&quot;</span>: create_causal_mask(**mask_kwargs),<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>create_causal_mask</code> uses <code>past_key_values</code> (for <code>kv_length</code> and <code>kv_offset</code>) together with <code>position_ids</code> to build an additive attention mask (0 for allowed, −∞ for forbidden). Each query position can only attend to key positions ≤ itself, and the mask spans the <em>full</em> cached key length, not just the current input slice.</p>
+<h3 id="1-3-Per-layer-attention-flow"><a href="#1-3-Per-layer-attention-flow" class="headerlink" title="1.3 Per-layer attention flow"></a>1.3 Per-layer attention flow</h3><p>Inside each of the 28 attention layers, the flow proceeds in four steps:</p>
+<ol>
+<li><p><strong>Project &amp; normalize:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">query_states = <span class="hljs-variable language_">self</span>.q_norm(<span class="hljs-variable language_">self</span>.q_proj(hidden_states).view(hidden_shape)).transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br>key_states   = <span class="hljs-variable language_">self</span>.k_norm(<span class="hljs-variable language_">self</span>.k_proj(hidden_states).view(hidden_shape)).transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br>value_states = <span class="hljs-variable language_">self</span>.v_proj(hidden_states).view(hidden_shape).transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br></code></pre></td></tr></table></figure>
+<p>Q, K, V are projected, reshaped to <code>[batch, num_heads, seq_len, head_dim]</code>, and Q and K are layer-normalised via <code>Qwen3RMSNorm</code> on the head dimension (a Qwen3-specific detail).</p>
+</li>
+<li><p><strong>Apply RoPE</strong> (consumes <code>position_embeddings</code> from §1.2):</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">cos, sin = position_embeddings<br>query_states, key_states = apply_rotary_pos_emb(query_states, key_states, cos, sin)<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Update cache</strong> (consumes <code>past_key_values</code>):</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">if</span> past_key_values <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>    key_states, value_states = past_key_values.update(key_states, value_states, <span class="hljs-variable language_">self</span>.layer_idx)<br></code></pre></td></tr></table></figure>
+<p>This calls <code>DynamicLayer.update()</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">update</span>(<span class="hljs-params">self, key_states, value_states, *args, **kwargs</span>):<br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-variable language_">self</span>.is_initialized:<br>        <span class="hljs-variable language_">self</span>.lazy_initialization(key_states, value_states)<br>    <span class="hljs-variable language_">self</span>.keys   = torch.cat([<span class="hljs-variable language_">self</span>.keys,   key_states],   dim=-<span class="hljs-number">2</span>)<br>    <span class="hljs-variable language_">self</span>.values = torch.cat([<span class="hljs-variable language_">self</span>.values, value_states], dim=-<span class="hljs-number">2</span>)<br>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.keys, <span class="hljs-variable language_">self</span>.values<br></code></pre></td></tr></table></figure>
+<p>The new KV tensors are <strong>concatenated along the sequence-length dimension</strong> (<code>dim=-2</code>). The returned <code>key_states</code> and <code>value_states</code> now contain <strong>all historical tokens</strong> plus the current token.</p>
+</li>
+<li><p><strong>Run attention</strong> (consumes the causal mask from §1.2 and the full cached K&#x2F;V from step 3):<br>Attention operates over the concatenated tensors, masked by the pre-computed causal mask (via <code>ALL_ATTENTION_FUNCTIONS</code>, which dispatches to Flash Attention, SDPA, or eager).</p>
+</li>
+</ol>
+<h3 id="1-4-Returning-the-cache"><a href="#1-4-Returning-the-cache" class="headerlink" title="1.4 Returning the cache"></a>1.4 Returning the cache</h3><p><code>Qwen3Model.forward</code> returns:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">BaseModelOutputWithPast(<br>    last_hidden_state=hidden_states,        <span class="hljs-comment"># [batch, seq_len, 1024]</span><br>    past_key_values=past_key_values <span class="hljs-keyword">if</span> use_cache <span class="hljs-keyword">else</span> <span class="hljs-literal">None</span>,<br>)<br></code></pre></td></tr></table></figure>
+
+<p><code>Qwen3ForCausalLM.forward</code> projects through <code>lm_head</code> and returns:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">CausalLMOutputWithPast(<br>    loss=loss,<br>    logits=logits,                          <span class="hljs-comment"># [batch, seq_len, 151936]</span><br>    past_key_values=outputs.past_key_values, <span class="hljs-comment"># DynamicCache with 28 updated layers</span><br>)<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-The-Cost-of-torch-cat"><a href="#2-The-Cost-of-torch-cat" class="headerlink" title="2. The Cost of torch.cat"></a>2. The Cost of <code>torch.cat</code></h2><p><code>DynamicCache</code> is correct and safe, but its core mechanism — <code>torch.cat</code> on every decode step — has a performance cost worth understanding.</p>
+<p>Each <code>DynamicLayer.update()</code> does:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-variable language_">self</span>.keys   = torch.cat([<span class="hljs-variable language_">self</span>.keys,   key_states],   dim=-<span class="hljs-number">2</span>)<br><span class="hljs-variable language_">self</span>.values = torch.cat([<span class="hljs-variable language_">self</span>.values, value_states], dim=-<span class="hljs-number">2</span>)<br></code></pre></td></tr></table></figure>
+
+<p>This <strong>allocates a brand-new tensor</strong>, <strong>copies the entire old buffer</strong> into it, then frees the old one. At sequence length 4096 with bf16:</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">28 </span>layers × <span class="hljs-number">2</span> (K+V) × <span class="hljs-number">4096</span> × <span class="hljs-number">8</span> heads × <span class="hljs-number">64</span> <span class="hljs-keyword">dim</span> × <span class="hljs-number">2</span> bytes = ~<span class="hljs-number">225</span> MB<br></code></pre></td></tr></table></figure>
+
+<p>That’s ~225 MB allocated, copied, and freed on every decode step. Additionally, because the tensor shape and memory address change on every step, <code>torch.compile</code> cannot statically trace the decode loop — no CUDA graphs, and the Python interpreter runs between every token.</p>
+<hr>
+<h2 id="3-StaticCache-—-a-Pre-Allocated-Alternative"><a href="#3-StaticCache-—-a-Pre-Allocated-Alternative" class="headerlink" title="3. StaticCache — a Pre-Allocated Alternative"></a>3. <code>StaticCache</code> — a Pre-Allocated Alternative</h2><p>For use cases that need <code>torch.compile</code> and CUDA graphs, HuggingFace provides <code>StaticCache</code>, a pre-allocated, zero-copy alternative.</p>
+<p>Instead of growing dynamically, <code>StaticCache</code> allocates one fixed-size slab per layer upfront and writes into it in-place with <code>index_copy_</code>:</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs gradle">DynamicCache (torch.cat):<br>  <span class="hljs-keyword">Step</span> <span class="hljs-number">0</span>:  []           → cat → [●●●●]        alloc <span class="hljs-number">4</span>, <span class="hljs-keyword">copy</span> <span class="hljs-number">0</span><br>  <span class="hljs-keyword">Step</span> <span class="hljs-number">1</span>:  [●●●●]       → cat → [●●●●●]       alloc <span class="hljs-number">5</span>, <span class="hljs-keyword">copy</span> <span class="hljs-number">4</span><br>  <span class="hljs-keyword">Step</span> N:  [●●...N]     → cat → [●●...N+<span class="hljs-number">1</span>]    alloc N+<span class="hljs-number">1</span>, <span class="hljs-keyword">copy</span> N<br><br>StaticCache (index_copy_):<br>  Setup:   [ _ _ _ _ _ _ _ _ ]     alloc once<br>  <span class="hljs-keyword">Step</span> <span class="hljs-number">0</span>:  [●●●● _ _ _ _ ]         in-place <span class="hljs-keyword">write</span><br>  <span class="hljs-keyword">Step</span> <span class="hljs-number">1</span>:  [●●●●● _ _ _ ]          in-place <span class="hljs-keyword">write</span><br></code></pre></td></tr></table></figure>
+
+<p>Because tensor pointers never change, <code>StaticCache</code> supports <code>torch.compile(fullgraph=True)</code> and CUDA graph capture. The trade-off is that <code>max_cache_len</code> must be known upfront — there is no auto-grow.</p>
+<p>Usage is a simple change:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> transformers <span class="hljs-keyword">import</span> StaticCache<br><br>past_key_values = StaticCache(<br>    config=model.config,<br>    max_cache_len=prompt_len + max_new_tokens,<br>)<br>output = model.generate(**inputs, past_key_values=past_key_values, max_new_tokens=<span class="hljs-number">50</span>)<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/AI-and-Machine-Learning/" class="category-chain-item">AI and Machine Learning</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/reference/" class="print-no-link">#reference</a>
+      
+        <a href="/tags/llm/" class="print-no-link">#llm</a>
+      
+        <a href="/tags/inference/" class="print-no-link">#inference</a>
+      
+        <a href="/tags/transformers/" class="print-no-link">#transformers</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>How the KV Cache Works in HuggingFace Transformers</div>
+      <div>https://jifengwu2k.github.io/2026/05/31/How-the-KV-Cache-Works-in-HuggingFace-Transformers/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>May 31, 2026</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/06/01/2026-05-Financial-Statement/" title="2026-05 Financial Statement">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">2026-05 Financial Statement</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/05/23/Rust-Crates-and-Python-Packages/" title="Rust Crates and Python Packages">
+                        <span class="hidden-mobile">Rust Crates and Python Packages</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'jifengwu2k/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

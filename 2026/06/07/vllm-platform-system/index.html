@@ -1,0 +1,1038 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="A deep dive into vLLM&#39;s plugin-based platform architecture, Python entry points, auto-detection pipeline, and how to add a new out-of-tree hardware platform.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vLLM Platform System">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/06/07/vllm-platform-system/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="A deep dive into vLLM&#39;s plugin-based platform architecture, Python entry points, auto-detection pipeline, and how to add a new out-of-tree hardware platform.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-06-07T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-06-07T04:00:00.000Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta property="article:tag" content="llm">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="reference">
+<meta property="article:tag" content="software-engineering">
+<meta property="article:tag" content="systems">
+<meta property="article:tag" content="vllm">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>vLLM Platform System - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Home</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>Categories</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Tags</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>About</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/links/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-link-fill"></i>
+                  <span>Links</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Search</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Light"
+               data-label-dark="Dark">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dark</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">vLLM Platform System</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-06-07 00:00" pubdate>
+          June 7, 2026
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.9k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          66 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">vLLM Platform System</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="vLLM-Platform-System"><a href="#vLLM-Platform-System" class="headerlink" title="vLLM Platform System"></a>vLLM Platform System</h1><h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>vLLM uses a <strong>plugin-based platform architecture</strong> that allows new hardware platforms to be supported <strong>without modifying vLLM core source code</strong>. A new platform integrates by:</p>
+<ol>
+<li>Subclassing the <code>Platform</code> base class and overriding key methods</li>
+<li>Publishing a Python package with a detector function as a <code>vllm.platform_plugins</code> entry point</li>
+</ol>
+<p>vLLM discovers and activates the platform at runtime through Python’s standard entry point system. Once activated, the <code>vllm.platforms.current_platform</code> platform singleton is used polymorphically by ~300 files of core vLLM code.</p>
+<hr>
+<h2 id="Python’s-Entry-Point-System"><a href="#Python’s-Entry-Point-System" class="headerlink" title="Python’s Entry Point System"></a>Python’s Entry Point System</h2><h3 id="What-Are-Entry-Points"><a href="#What-Are-Entry-Points" class="headerlink" title="What Are Entry Points?"></a>What Are Entry Points?</h3><p>Entry points are a Python packaging standard (PEP 621 &#x2F; <code>importlib.metadata</code>) that let a package <strong>advertise named hooks</strong>. Think of it as a <strong>runtime plugin registry</strong> built into the Python packaging system.</p>
+<h3 id="How-They-Work"><a href="#How-They-Work" class="headerlink" title="How They Work"></a>How They Work</h3><p><strong>1. A plugin package declares entry points</strong> in its <code>pyproject.toml</code>:</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs toml"><span class="hljs-section">[project.entry-points.&quot;myapp.plugins&quot;]</span><br><span class="hljs-attr">plugin_a</span> = <span class="hljs-string">&quot;my_package.module:some_function&quot;</span><br><span class="hljs-attr">plugin_b</span> = <span class="hljs-string">&quot;another_package:AnotherClass&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>2. The host application discovers plugins by group name:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> importlib.metadata <span class="hljs-keyword">import</span> entry_points<br><br><span class="hljs-comment"># Discover all plugins registered under &quot;myapp.plugins&quot;</span><br>discovered = entry_points(group=<span class="hljs-string">&quot;myapp.plugins&quot;</span>)<br><span class="hljs-comment"># → (EntryPoint(name=&quot;plugin_a&quot;, value=&quot;my_package.module:some_function&quot;), ...)</span><br><br><span class="hljs-keyword">for</span> ep <span class="hljs-keyword">in</span> discovered:<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Found: <span class="hljs-subst">&#123;ep.name&#125;</span> → <span class="hljs-subst">&#123;ep.value&#125;</span>&quot;</span>)<br>    func = ep.load()  <span class="hljs-comment"># Dynamically imports and returns the callable</span><br>    result = func()   <span class="hljs-comment"># Invoke it</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="vLLM’s-Platform-Architecture"><a href="#vLLM’s-Platform-Architecture" class="headerlink" title="vLLM’s Platform Architecture"></a>vLLM’s Platform Architecture</h2><h3 id="Key-Files"><a href="#Key-Files" class="headerlink" title="Key Files"></a>Key Files</h3><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>vllm/platforms/interface.py</code></td>
+<td>Base <code>Platform</code> class (~600 lines), plus <code>DeviceCapability</code>, <code>PlatformEnum</code></td>
+</tr>
+<tr>
+<td><code>vllm/platforms/__init__.py</code></td>
+<td>Plugin loading, auto-detection, lazy <code>current_platform</code> singleton</td>
+</tr>
+<tr>
+<td><code>vllm/plugins/__init__.py</code></td>
+<td>Generic entry-point plugin loader (<code>load_plugins_by_group</code>)</td>
+</tr>
+<tr>
+<td><code>vllm/platforms/cuda.py</code></td>
+<td><code>CudaPlatform</code> — NVIDIA GPUs</td>
+</tr>
+<tr>
+<td><code>vllm/platforms/rocm.py</code></td>
+<td><code>RocmPlatform</code> — AMD GPUs</td>
+</tr>
+<tr>
+<td><code>vllm/platforms/xpu.py</code></td>
+<td><code>XPUPlatform</code> — Intel GPUs</td>
+</tr>
+<tr>
+<td><code>vllm/platforms/tpu.py</code></td>
+<td><code>TpuPlatform</code> — Google TPUs</td>
+</tr>
+<tr>
+<td><code>vllm/platforms/cpu.py</code></td>
+<td><code>CpuPlatform</code> — x86&#x2F;ARM CPU inference</td>
+</tr>
+<tr>
+<td><code>vllm/platforms/zen_cpu.py</code></td>
+<td><code>ZenCpuPlatform</code> — AMD Zen CPUs with zentorch</td>
+</tr>
+</tbody></table>
+<h3 id="The-Platform-Base-Class-the-Contract"><a href="#The-Platform-Base-Class-the-Contract" class="headerlink" title="The Platform Base Class (the Contract)"></a>The Platform Base Class (the Contract)</h3><p>Every platform subclasses <code>Platform</code> and overrides any number of ~50 classmethods and properties. The base class provides sensible defaults (typically no-op or <code>NotImplementedError</code>) so platforms only override what they need.</p>
+<h3 id="The-Auto-Detection-Pipeline"><a href="#The-Auto-Detection-Pipeline" class="headerlink" title="The Auto-Detection Pipeline"></a>The Auto-Detection Pipeline</h3><p>Platform detection happens <strong>lazily</strong> the first time <code>vllm.platforms.current_platform</code> is accessed. The module-level <code>__getattr__</code> in <code>vllm/platforms/__init__.py</code> triggers <code>resolve_current_platform_cls_qualname()</code>, which runs the following pipeline:</p>
+<ul>
+<li><strong>Load builtin detection functions</strong>:<ul>
+<li><code>tpu_platform_plugin()</code></li>
+<li><code>cuda_platform_plugin()</code></li>
+<li><code>rocm_platform_plugin()</code></li>
+<li><code>xpu_platform_plugin()</code></li>
+<li><code>cpu_platform_plugin()</code></li>
+</ul>
+</li>
+<li><strong>Load out-of-tree (OOT) detection functions</strong> from <code>entry_points(group=&quot;vllm.platform_plugins&quot;)</code>.</li>
+</ul>
+<p>The loaded detection functions (builtin and OOT) follow a consistent pattern: <strong>try to detect hardware presence statelessly, return the qualified class name or <code>None</code></strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">cuda_platform_plugin</span>() -&gt; <span class="hljs-built_in">str</span> | <span class="hljs-literal">None</span>:<br>    <span class="hljs-keyword">try</span>:<br>        <span class="hljs-keyword">import</span> pynvml<br>        pynvml.nvmlInit()<br>        <span class="hljs-keyword">if</span> pynvml.nvmlDeviceGetCount() &gt; <span class="hljs-number">0</span>:<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;vllm.platforms.cuda.CudaPlatform&quot;</span><br>    <span class="hljs-keyword">except</span> Exception:<br>        <span class="hljs-keyword">pass</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span><br></code></pre></td></tr></table></figure>
+
+<p>Then:</p>
+<ul>
+<li><strong>Resolve exactly one platform.</strong> OOT plugins take priority over builtins:<ul>
+<li>If exactly 1 OOT plugin activates → use it</li>
+<li>If 0 OOT and exactly 1 builtin activates → use it</li>
+<li>If 0 total → fall back to <code>UnspecifiedPlatform</code> (no-op stub)</li>
+<li>If ≥2 of either → raise <code>RuntimeError</code> (ambiguous)</li>
+</ul>
+</li>
+<li><strong>Instantiate the singleton</strong>.<ul>
+<li>Dynamically imports the resolved class and instantiates it.</li>
+<li>Stored in the module-level <code>_current_platform</code> variable for the process lifetime.</li>
+</ul>
+</li>
+</ul>
+<h3 id="The-vllm-platforms-current-platform-Singleton"><a href="#The-vllm-platforms-current-platform-Singleton" class="headerlink" title="The vllm.platforms.current_platform Singleton"></a>The <code>vllm.platforms.current_platform</code> Singleton</h3><p>vLLM core code dispatches behavior through <code>vllm.platforms.current_platform</code> — it’s referenced in over 300 files. There are two main dispatch patterns:</p>
+<h3 id="Pattern-1-Type-Checks-Inline-Branching"><a href="#Pattern-1-Type-Checks-Inline-Branching" class="headerlink" title="Pattern 1: Type Checks (Inline Branching)"></a>Pattern 1: Type Checks (Inline Branching)</h3><p>Used when the difference between platforms is fundamental or when only a few cases need special-casing:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># vllm/v1/sample/ops/topk_topp_sampler.py</span><br><span class="hljs-keyword">if</span> current_platform.is_cpu():<br>    arch = current_platform.get_cpu_architecture()<br>    <span class="hljs-comment"># ... CPU-specific sampler implementation</span><br><span class="hljs-keyword">elif</span> current_platform.is_xpu():<br>    <span class="hljs-comment"># ... XPU-specific path</span><br><span class="hljs-keyword">elif</span> current_platform.is_cuda():<br>    capability = current_platform.get_device_capability()<br>    <span class="hljs-comment"># ... CUDA-specific path</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="Pattern-2-Polymorphic-Classmethod-Calls"><a href="#Pattern-2-Polymorphic-Classmethod-Calls" class="headerlink" title="Pattern 2: Polymorphic Classmethod Calls"></a>Pattern 2: Polymorphic Classmethod Calls</h3><p>Used for standardized interfaces where the platform provides the entire implementation:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># vllm/config/vllm.py - platform config hooks</span><br>current_platform.pre_register_and_update()<br>current_platform.apply_config_platform_defaults(<span class="hljs-variable language_">self</span>)<br>current_platform.check_and_update_config(<span class="hljs-variable language_">self</span>)<br><br><span class="hljs-comment"># vllm/config/model.py</span><br>current_platform.verify_quantization(<span class="hljs-variable language_">self</span>.quantization)<br>max_model_len = current_platform.check_max_model_len(max_model_len)<br><br><span class="hljs-comment"># vllm/v1/attention/backends/fa_utils.py</span><br><span class="hljs-keyword">if</span> current_platform.is_xpu():<br>    <span class="hljs-keyword">from</span> vllm.v1.attention.backends <span class="hljs-keyword">import</span> flash_attn <span class="hljs-keyword">as</span> flash_attn_xpu<br>    <span class="hljs-keyword">return</span> flash_attn_xpu.XPUFlashAttentionBackend<br></code></pre></td></tr></table></figure>
+
+<h3 id="These-patterns-serve-the-same-goal"><a href="#These-patterns-serve-the-same-goal" class="headerlink" title="These patterns serve the same goal:"></a>These patterns serve the same goal:</h3><p>Core code <strong>never</strong> writes:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Anti-pattern: never in vLLM core</span><br><span class="hljs-keyword">if</span> torch.cuda.is_available():<br>    ...<br><span class="hljs-keyword">elif</span> <span class="hljs-built_in">hasattr</span>(torch, <span class="hljs-string">&#x27;xpu&#x27;</span>) <span class="hljs-keyword">and</span> torch.xpu.is_available():<br>    ...<br></code></pre></td></tr></table></figure>
+
+<p>Instead, it always writes:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">if</span> current_platform.is_cuda():<br>    ...<br><span class="hljs-keyword">elif</span> current_platform.is_xpu():<br>    ...<br></code></pre></td></tr></table></figure>
+
+<p>This abstraction means adding a new platform type doesn’t require finding and updating every hardware-specific branch — the platform subclass provides all the answers through its overrides.</p>
+<hr>
+<h2 id="Adding-a-New-Out-of-Tree-OOT-Platform"><a href="#Adding-a-New-Out-of-Tree-OOT-Platform" class="headerlink" title="Adding a New Out-of-Tree (OOT) Platform"></a>Adding a New Out-of-Tree (OOT) Platform</h2><p>Here is a minimal example of adding a custom platform without touching vLLM’s source tree.</p>
+<h3 id="Step-1-Create-a-Python-package"><a href="#Step-1-Create-a-Python-package" class="headerlink" title="Step 1: Create a Python package"></a>Step 1: Create a Python package</h3><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs nix">my_vllm_platform<span class="hljs-symbol">/</span><br>├── pyproject.toml<br>└── my_platform<span class="hljs-symbol">/</span><br>    ├── __init__.py<br>    └── platform.py<br></code></pre></td></tr></table></figure>
+
+<h3 id="Step-2-Write-the-detector-function"><a href="#Step-2-Write-the-detector-function" class="headerlink" title="Step 2: Write the detector function"></a>Step 2: Write the detector function</h3><p><code>my_platform/__init__.py</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">detect_my_platform</span>() -&gt; <span class="hljs-built_in">str</span> | <span class="hljs-literal">None</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    Return the fully-qualified class name if our hardware is available,</span><br><span class="hljs-string">    or None otherwise. Called by vLLM at platform resolution time.</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-keyword">try</span>:<br>        <span class="hljs-keyword">import</span> my_hardware_driver<br>        <span class="hljs-keyword">if</span> my_hardware_driver.device_count() &gt; <span class="hljs-number">0</span>:<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;my_platform.platform.MyHardwarePlatform&quot;</span><br>    <span class="hljs-keyword">except</span> ImportError:<br>        <span class="hljs-keyword">pass</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="Step-3-Write-the-Platform-subclass"><a href="#Step-3-Write-the-Platform-subclass" class="headerlink" title="Step 3: Write the Platform subclass"></a>Step 3: Write the <code>Platform</code> subclass</h3><p><code>my_platform/platform.py</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> vllm.platforms <span class="hljs-keyword">import</span> Platform, PlatformEnum<br><span class="hljs-keyword">from</span> vllm.platforms.interface <span class="hljs-keyword">import</span> DeviceCapability<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyHardwarePlatform</span>(<span class="hljs-title class_ inherited__">Platform</span>):<br>    _enum = PlatformEnum.OOT          <span class="hljs-comment"># Out-of-Tree</span><br>    device_name = <span class="hljs-string">&quot;my_hardware&quot;</span><br>    device_type = <span class="hljs-string">&quot;my_hardware&quot;</span><br>    dispatch_key = <span class="hljs-string">&quot;MyHardware&quot;</span>        <span class="hljs-comment"># PyTorch dispatch key</span><br>    ray_device_key = <span class="hljs-string">&quot;GPU&quot;</span>             <span class="hljs-comment"># Ray accelerator key</span><br>    device_control_env_var = <span class="hljs-string">&quot;MY_HW_VISIBLE_DEVICES&quot;</span><br>    dist_backend = <span class="hljs-string">&quot;nccl&quot;</span>              <span class="hljs-comment"># or custom backend</span><br><br>    supported_quantization = [<span class="hljs-string">&quot;fp8&quot;</span>, <span class="hljs-string">&quot;awq&quot;</span>]<br><br><span class="hljs-meta">    @property</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">supported_dtypes</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">return</span> [torch.bfloat16, torch.float16, torch.float32]<br><br><span class="hljs-meta">    @classmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_device_capability</span>(<span class="hljs-params">cls, device_id=<span class="hljs-number">0</span></span>):<br>        <span class="hljs-comment"># Query your hardware for compute capability</span><br>        <span class="hljs-keyword">return</span> DeviceCapability(major=<span class="hljs-number">9</span>, minor=<span class="hljs-number">0</span>)<br><br><span class="hljs-meta">    @classmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_device_name</span>(<span class="hljs-params">cls, device_id=<span class="hljs-number">0</span></span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;MyHardware Accelerator v1&quot;</span><br><br><span class="hljs-meta">    @classmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_device_total_memory</span>(<span class="hljs-params">cls, device_id=<span class="hljs-number">0</span></span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">80</span> * <span class="hljs-number">1024</span>**<span class="hljs-number">3</span>  <span class="hljs-comment"># 80 GiB</span><br><br><span class="hljs-meta">    @classmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_attn_backend_cls</span>(<span class="hljs-params">cls, selected_backend, attn_selector_config, num_heads=<span class="hljs-literal">None</span></span>):<br>        <span class="hljs-comment"># Select the right attention backend for your hardware</span><br>        <span class="hljs-keyword">from</span> vllm.v1.attention.backends.registry <span class="hljs-keyword">import</span> AttentionBackendEnum<br>        <span class="hljs-keyword">return</span> AttentionBackendEnum.FLASH_ATTN.get_path()<br><br><span class="hljs-meta">    @classmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">import_kernels</span>(<span class="hljs-params">cls</span>):<br>        <span class="hljs-comment"># Import your platform&#x27;s C++ extension modules</span><br>        <span class="hljs-keyword">import</span> my_custom_kernels._C  <span class="hljs-comment"># noqa</span><br><br><span class="hljs-meta">    @classmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">import_ir_kernels</span>(<span class="hljs-params">cls</span>):<br>        <span class="hljs-comment"># Import your IR op implementations</span><br>        <span class="hljs-keyword">import</span> my_custom_kernels.ir_ops  <span class="hljs-comment"># noqa</span><br><br><span class="hljs-meta">    @classmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">check_and_update_config</span>(<span class="hljs-params">cls, vllm_config</span>):<br>        <span class="hljs-comment"># Validate / adjust config for your hardware</span><br>        <span class="hljs-keyword">if</span> vllm_config.cache_config.block_size &lt; <span class="hljs-number">32</span>:<br>            vllm_config.cache_config.block_size = <span class="hljs-number">32</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="Step-4-Register-the-Entry-Point"><a href="#Step-4-Register-the-Entry-Point" class="headerlink" title="Step 4: Register the Entry Point"></a>Step 4: Register the Entry Point</h3><p><code>pyproject.toml</code>:</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs toml"><span class="hljs-section">[build-system]</span><br><span class="hljs-attr">requires</span> = [<span class="hljs-string">&quot;setuptools&gt;=61.0&quot;</span>]<br><span class="hljs-attr">build-backend</span> = <span class="hljs-string">&quot;setuptools.backends._legacy:_Backend&quot;</span><br><br><span class="hljs-section">[project]</span><br><span class="hljs-attr">name</span> = <span class="hljs-string">&quot;my-vllm-platform&quot;</span><br><span class="hljs-attr">version</span> = <span class="hljs-string">&quot;0.1.0&quot;</span><br><br><span class="hljs-section">[project.entry-points.&quot;vllm.platform_plugins&quot;]</span><br><span class="hljs-attr">my_hardware</span> = <span class="hljs-string">&quot;my_platform:detect_my_platform&quot;</span><br><br><span class="hljs-comment"># Declare dependency on vllm</span><br><span class="hljs-section">[project]</span><br><span class="hljs-attr">dependencies</span> = [<span class="hljs-string">&quot;vllm&quot;</span>]<br></code></pre></td></tr></table></figure>
+
+<h3 id="Step-5-Install-and-Run"><a href="#Step-5-Install-and-Run" class="headerlink" title="Step 5: Install and Run"></a>Step 5: Install and Run</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install -e ./my_vllm_platform<br><span class="hljs-comment"># vLLM will now auto-detect the platform when current_platform is first accessed</span><br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/AI-and-Machine-Learning/" class="category-chain-item">AI and Machine Learning</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/reference/" class="print-no-link">#reference</a>
+      
+        <a href="/tags/systems/" class="print-no-link">#systems</a>
+      
+        <a href="/tags/python/" class="print-no-link">#python</a>
+      
+        <a href="/tags/llm/" class="print-no-link">#llm</a>
+      
+        <a href="/tags/software-engineering/" class="print-no-link">#software-engineering</a>
+      
+        <a href="/tags/vllm/" class="print-no-link">#vllm</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>vLLM Platform System</div>
+      <div>https://jifengwu2k.github.io/2026/06/07/vllm-platform-system/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>June 7, 2026</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/06/30/2026-06-Financial-Statement/" title="2026-06 Financial Statement">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">2026-06 Financial Statement</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/06/01/2026-05-Financial-Statement/" title="2026-05 Financial Statement">
+                        <span class="hidden-mobile">2026-05 Financial Statement</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'jifengwu2k/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
