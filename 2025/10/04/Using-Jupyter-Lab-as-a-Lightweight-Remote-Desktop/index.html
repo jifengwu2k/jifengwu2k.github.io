@@ -27,7 +27,7 @@
 <meta property="og:description" content="Using Jupyter Lab as a Lightweight Remote DesktopJupyter Lab isn’t just for data science - it’s a powerful all-in-one environment offering:  Programming (Python, R, etc.) Shell Access File Browser &amp;am">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-10-04T04:00:00.000Z">
-<meta property="article:modified_time" content="2026-05-23T19:19:14.614Z">
+<meta property="article:modified_time" content="2026-06-27T02:10:43.961Z">
 <meta property="article:author" content="Jifeng Wu">
 <meta property="article:tag" content="jupyter">
 <meta property="article:tag" content="reference">
@@ -409,7 +409,7 @@
 
 <h4 id="Launch-Jupyter-Lab-and-Make-it-accessible"><a href="#Launch-Jupyter-Lab-and-Make-it-accessible" class="headerlink" title="Launch Jupyter Lab and Make it accessible"></a>Launch Jupyter Lab and Make it accessible</h4><p>Start a <code>tmux</code> session.</p>
 <p>Start JupyterLab in it, listening on localhost:8888, with no password&#x2F;token:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">jupyter lab \<br>    --ip=127.0.0.1 --port 8888 \<br>    --allow-root \<br>    --no-browser \<br>    --IdentityProvider.token=<span class="hljs-string">&#x27;&#x27;</span> \<br>    --ServerApp.password=<span class="hljs-string">&#x27;&#x27;</span> \<br>    --ServerApp.allow_remote_access=True<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">jupyter lab --ip=127.0.0.1 --port 8888 --allow-root --no-browser --IdentityProvider.token=<span class="hljs-string">&#x27;&#x27;</span> --ServerApp.password=<span class="hljs-string">&#x27;&#x27;</span> --ServerApp.allow_remote_access=True<br></code></pre></td></tr></table></figure>
 
 <p>Then open another <code>tmux</code> pane, set up <a target="_blank" rel="noopener" href="https://github.com/jifengwu2k/push-pull-port">push-pull-port</a>, and push port 8888 to port <code>$PRIVATE_PORT</code> (localhost only) of remote public server <code>$PUBLIC_HOST</code>:</p>
 <figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs perl">sh <span class="hljs-keyword">push</span>-<span class="hljs-keyword">local</span>-port.sh -l <span class="hljs-number">8888</span> -r <span class="hljs-variable">$PRIVATE_PORT</span> -u <span class="hljs-variable">$PUBLIC_USER</span> -h <span class="hljs-variable">$PUBLIC_HOST</span> -<span class="hljs-keyword">x</span><br></code></pre></td></tr></table></figure>
