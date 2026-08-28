@@ -1,0 +1,1038 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="A summary of Jie Liu&#39;s B-exam on sparse tensor computation, covering sparse format conversion, asynchronous GPU execution, and the design of high-performance BCSR&#x2F;WCSR SpMM kernels.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jie Liu&#39;s B-Exam: Abstractions and Optimizations for Sparse Tensor Computation on Modern Hardware">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/04/17/Jie-Liu-s-B-Exam-Abstractions-and-Optimizations-for-Sparse-Tensor-Computation-on-Modern-Hardware/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="A summary of Jie Liu&#39;s B-exam on sparse tensor computation, covering sparse format conversion, asynchronous GPU execution, and the design of high-performance BCSR&#x2F;WCSR SpMM kernels.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-04-17T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-17T04:00:00.000Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta property="article:tag" content="computer-architecture">
+<meta property="article:tag" content="defense-summary">
+<meta property="article:tag" content="llm">
+<meta property="article:tag" content="machine-learning">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Jie Liu&#39;s B-Exam: Abstractions and Optimizations for Sparse Tensor Computation on Modern Hardware - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Home</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>Categories</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Tags</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>About</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/links/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-link-fill"></i>
+                  <span>Links</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Search</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Light"
+               data-label-dark="Dark">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dark</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Jie Liu's B-Exam: Abstractions and Optimizations for Sparse Tensor Computation on Modern Hardware</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-04-17 00:00" pubdate>
+          April 17, 2026
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.8k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          82 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Jie Liu&#39;s B-Exam: Abstractions and Optimizations for Sparse Tensor Computation on Modern Hardware</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>On <strong>April 17, 2026</strong>, Jie Liu gave her <strong>B-exam</strong> over Zoom, titled <strong>“Abstractions and Optimizations for Sparse Tensor Computation on Modern Hardware.”</strong></p>
+<p>The central theme of the presentation was simple but important: <strong>specialization is unavoidable in sparse computing</strong>, yet manually engineering every sparse format and every sparse kernel for every hardware target does not scale. Jie framed her dissertation around two complementary directions:</p>
+<ol>
+<li><strong>format specialization</strong>: a unified abstraction and compiler framework for representing, converting, and generating code for many sparse tensor formats; and</li>
+<li><strong>hardware specialization</strong>: a systematic study of how to map sparse matrix-matrix multiplication efficiently onto modern asynchronous GPU architectures.</li>
+</ol>
+<h2 id="Why-sparse-tensor-computation-remains-hard"><a href="#Why-sparse-tensor-computation-remains-hard" class="headerlink" title="Why sparse tensor computation remains hard"></a>Why sparse tensor computation remains hard</h2><p>Sparse tensors show up everywhere: graph learning, scientific computing, recommender systems, and LLM inference. But sparse workloads are fundamentally harder to optimize than dense ones.</p>
+<p>A recurring point in the talk was that, as sparsity increases, the computation becomes increasingly <strong>memory-bound</strong> rather than compute-bound. Compared with dense GEMM, sparse matrix-matrix multiplication (SpMM) often has:</p>
+<ul>
+<li>worse memory locality,</li>
+<li>less contiguous access to the dense operand,</li>
+<li>less reuse across iterations,</li>
+<li>and more irregular control flow.</li>
+</ul>
+<p>At the same time, the sparse computing world keeps fragmenting:</p>
+<ul>
+<li>many specialized sparse formats have been proposed,</li>
+<li>different hardware platforms prefer different regularities,</li>
+<li>and kernels that are good on one system may be awkward or inefficient on another.</li>
+</ul>
+<p>This creates a dual challenge: we need both <strong>better abstractions</strong> for sparse formats and <strong>better strategies</strong> for mapping them onto specialized hardware.</p>
+<h2 id="Contribution-1-UniSparse"><a href="#Contribution-1-UniSparse" class="headerlink" title="Contribution 1: UniSparse"></a>Contribution 1: UniSparse</h2><p>The first major contribution was <strong>UniSparse</strong>, a unified abstraction for sparse tensor formats.</p>
+<p>Jie motivated UniSparse by contrasting it with prior systems such as <strong>TACO</strong>, which use a small fixed attribute vocabulary to describe sparse formats. Her argument was that such attribute-based schemes are useful, but fundamentally limited: they cannot naturally express the full diversity of existing and emerging sparse formats.</p>
+<p>The key design move in UniSparse is to <strong>separate sparse formats into two dimensions</strong>:</p>
+<ul>
+<li><strong>data structure</strong>: how sparse tensor metadata and coordinates are logically represented, and</li>
+<li><strong>data layout</strong>: how the data is physically arranged in memory.</li>
+</ul>
+<p>This decomposition makes the abstraction substantially more expressive.</p>
+<h3 id="Core-ideas-in-UniSparse"><a href="#Core-ideas-in-UniSparse" class="headerlink" title="Core ideas in UniSparse"></a>Core ideas in UniSparse</h3><p>From the talk, the important ingredients were:</p>
+<ul>
+<li><strong>index maps</strong> for describing how indices in a dense tensor map to indices in a sparse representation,</li>
+<li><strong>metadata trees</strong> for reasoning about hierarchical sparse structure,</li>
+<li><strong>layout choices</strong> expressed via traversal order,</li>
+<li>and a small set of well-defined <strong>mutation primitives</strong>, especially operations such as <strong>merge</strong> and <strong>trim</strong>.</li>
+</ul>
+<p>The conceptual payoff is that many formats that look unrelated at first can be described as variations in structure, layout, and metadata transformation.</p>
+<h3 id="What-UniSparse-enables"><a href="#What-UniSparse-enables" class="headerlink" title="What UniSparse enables"></a>What UniSparse enables</h3><p>UniSparse is not only a descriptive language. It is also intended to support automation.</p>
+<p>According to the talk, the framework supports:</p>
+<ul>
+<li>expressing a broad range of custom sparse formats,</li>
+<li>representing custom index-map transformations,</li>
+<li>describing hybrid formats and alternative memory layouts,</li>
+<li><strong>automated format conversion</strong>,</li>
+<li>and <strong>kernel generation</strong> through an MLIR-based compiler infrastructure.</li>
+</ul>
+<p>Jie emphasized that the compiler can infer conversion sequences between source and target formats by using reversible operators plus a reachable reference representation. In other words, UniSparse is meant to bridge custom format design and actual compiler automation, instead of serving as a purely theoretical notation.</p>
+<p>This is a strong systems contribution because it aims to reduce the amount of handwritten sparse-format-specific infrastructure that researchers and engineers typically have to maintain.</p>
+<h2 id="Contribution-2-optimizing-sparse-kernels-on-GPUs"><a href="#Contribution-2-optimizing-sparse-kernels-on-GPUs" class="headerlink" title="Contribution 2: optimizing sparse kernels on GPUs"></a>Contribution 2: optimizing sparse kernels on GPUs</h2><p>The second half of the talk shifted from abstraction to performance engineering.</p>
+<p>Here the focus was on <strong>SpMM on NVIDIA Hopper GPUs</strong>, especially on how to exploit Hopper’s asynchronous execution features for sparse workloads. Jie argued that recent GPU architectures expose powerful mechanisms designed largely with dense matrix multiplication in mind, but sparse kernels do not automatically benefit from them.</p>
+<p>That observation led to a systematic optimization study.</p>
+<h3 id="Starting-point-sparse-is-not-dense"><a href="#Starting-point-sparse-is-not-dense" class="headerlink" title="Starting point: sparse is not dense"></a>Starting point: sparse is not dense</h3><p>A useful lesson from the talk was that many optimizations that work beautifully for dense GEMM do <strong>not</strong> transfer cleanly to sparse workloads. Sparse matrices introduce:</p>
+<ul>
+<li>irregular nonzero distributions,</li>
+<li>padding overhead,</li>
+<li>load imbalance,</li>
+<li>and weaker reuse patterns.</li>
+</ul>
+<p>So even if the hardware offers mechanisms such as tensor cores, asynchronous memory movement, or cluster-level execution, the burden is still on the kernel designer to mine enough regularity from the sparse structure.</p>
+<h3 id="Hopper-specific-mechanisms"><a href="#Hopper-specific-mechanisms" class="headerlink" title="Hopper-specific mechanisms"></a>Hopper-specific mechanisms</h3><p>The talk examined several Hopper features in detail, especially:</p>
+<ul>
+<li><strong>WGMMA</strong> (warp-group matrix multiply-accumulate),</li>
+<li><strong>TMA</strong> (Tensor Memory Accelerator),</li>
+<li><strong>warp specialization</strong> with producer-consumer pipelines,</li>
+<li>thread-block clusters,</li>
+<li>and persistent-kernel style scheduling.</li>
+</ul>
+<p>The optimization story was progressive rather than magical.</p>
+<ol>
+<li>A basic implementation was far from efficient.</li>
+<li>Replacing scalar FMA with <strong>WGMMA</strong> brought a large speedup.</li>
+<li>Moving data with <strong>TMA</strong> improved throughput further.</li>
+<li>Using <strong>warp specialization</strong> and circular buffers allowed load and compute to overlap more effectively.</li>
+<li>Some inter-SM ideas, such as multicast and persistent scheduling, were studied carefully but did not always help because sparse irregularity reintroduced synchronization overhead and load imbalance.</li>
+</ol>
+<p>That last point was one of the most interesting aspects of the talk: <strong>negative results were treated as first-class technical insight</strong>. Jie did not present Hopper as a magic solution. Instead, she showed where the architecture helps, where it hurts, and why sparse workloads expose limitations that dense-kernel techniques can hide.</p>
+<h2 id="BCSR-and-WCSR"><a href="#BCSR-and-WCSR" class="headerlink" title="BCSR and WCSR"></a>BCSR and WCSR</h2><p>A particularly concrete part of the presentation was the discussion of specialized sparse formats for GPU execution.</p>
+<h3 id="BCSR"><a href="#BCSR" class="headerlink" title="BCSR"></a>BCSR</h3><p>The talk first used <strong>BCSR (Block Compressed Sparse Row)</strong> as a structured format that matches tensor-core-style execution reasonably well. BCSR makes it easier to feed blocked sparse data into Hopper’s matrix-multiply machinery, but it can also introduce padding overhead when the sparse structure is highly irregular.</p>
+<h3 id="WCSR"><a href="#WCSR" class="headerlink" title="WCSR"></a>WCSR</h3><p>To reduce that overhead, Jie introduced <strong>WCSR (Window Compressed Sparse Row)</strong>.</p>
+<p>The motivation was that BCSR still stores redundant zero substructures in some cases. WCSR is more compact and improves load balancing by splitting work at a finer granularity. The trade-off is that it sacrifices some regularity:</p>
+<ul>
+<li>BCSR is friendlier to fully contiguous accesses and async mechanisms such as TMA,</li>
+<li>while WCSR is more compact and better balanced, but requires more indirect access for some operands.</li>
+</ul>
+<p>This kind of trade-off analysis made the talk especially strong: the design space was not presented as a single universal winner, but as a careful balancing act between compactness, regularity, and hardware friendliness.</p>
+<h2 id="Main-reported-results"><a href="#Main-reported-results" class="headerlink" title="Main reported results"></a>Main reported results</h2><p>Two headline results stood out.</p>
+<h3 id="Sparse-kernel-performance"><a href="#Sparse-kernel-performance" class="headerlink" title="Sparse kernel performance"></a>Sparse kernel performance</h3><p>On <strong>SuiteSparse</strong> benchmarks, Jie reported that:</p>
+<ul>
+<li>the <strong>WCSR</strong> kernel outperformed prior SpMM kernels,</li>
+<li>reaching <strong>1.47×</strong> over <strong>AccSpMM</strong>,</li>
+<li>and <strong>6.24×</strong> over <strong>cuSPARSE</strong>.</li>
+</ul>
+<p>The <strong>BCSR</strong> kernel also performed very strongly when sparsity patterns were favorable, especially at moderate density.</p>
+<h3 id="End-to-end-LLM-impact"><a href="#End-to-end-LLM-impact" class="headerlink" title="End-to-end LLM impact"></a>End-to-end LLM impact</h3><p>The talk also connected sparse kernel design to a concrete LLM use case.</p>
+<p>Using <strong>Qwen2.5-7B</strong> in the prefill stage, Jie combined:</p>
+<ul>
+<li>sparse attention from prior work, and</li>
+<li>her sparse FFN acceleration using block sparsity.</li>
+</ul>
+<p>The reported end-to-end gain was a combined <strong>2.66× speedup</strong> at <strong>90% block sparsity</strong> with <strong>64K tokens</strong> over a <strong>cuDNN&#x2F;cuBLAS</strong> baseline.</p>
+<p>This was an important part of the presentation because it showed that the work is not only about microbenchmarks or isolated kernels. It also has implications for real model-serving pipelines.</p>
+<h2 id="Questions-that-shaped-the-discussion"><a href="#Questions-that-shaped-the-discussion" class="headerlink" title="Questions that shaped the discussion"></a>Questions that shaped the discussion</h2><p>The Q&amp;A was strong and revealed what I thought were the most intellectually interesting edges of the work.</p>
+<h3 id="1-Can-specialized-sparse-formats-be-discovered-automatically"><a href="#1-Can-specialized-sparse-formats-be-discovered-automatically" class="headerlink" title="1. Can specialized sparse formats be discovered automatically?"></a>1. Can specialized sparse formats be discovered automatically?</h3><p>One audience question asked whether formats such as those used for warp-specialized SpMM, TMA-based movement, or multicast-friendly layouts were designed manually, and whether they could eventually be discovered automatically.</p>
+<p>Jie said the formats were designed manually, but that she later realized they could be expressed using UniSparse’s format-preprocessing framework. She also suggested that an LLM-guided feedback loop might make future format exploration more automatic.</p>
+<p>That answer was notable because it hints at a future research direction: <strong>use a rich sparse-format IR not just to encode known formats, but to search over format design spaces.</strong></p>
+<h3 id="2-Is-UniSparse-a-library-or-a-portability-layer"><a href="#2-Is-UniSparse-a-library-or-a-portability-layer" class="headerlink" title="2. Is UniSparse a library, or a portability layer?"></a>2. Is UniSparse a library, or a portability layer?</h3><p>Another question asked whether UniSparse should be thought of as a standalone sparse library, or more as an integration layer across libraries and backends.</p>
+<p>Jie’s answer clarified that UniSparse separates:</p>
+<ul>
+<li><strong>format conversion</strong>, implemented through conversion operators lowered to linked function calls, and</li>
+<li><strong>kernel generation</strong>, where existing lowering passes are reused or external implementations are linked.</li>
+</ul>
+<p>So at least in its current form, UniSparse is not simply a drop-in universal wrapper. It is better understood as a <strong>compiler and IR framework</strong> that could, with additional engineering, become a useful integration layer for other sparse libraries.</p>
+<h3 id="3-Is-Hopper-really-good-for-sparse-workloads"><a href="#3-Is-Hopper-really-good-for-sparse-workloads" class="headerlink" title="3. Is Hopper really good for sparse workloads?"></a>3. Is Hopper really good for sparse workloads?</h3><p>One of the best questions challenged the premise of the second half of the talk: if Hopper’s features are mostly built for dense matrix multiplication, and sparse kernels still remain well below the roofline at high sparsity, should we conclude that Hopper is not really a good fit for sparse workloads?</p>
+<p>Jie’s answer was nuanced.</p>
+<p>She did <strong>not</strong> claim that Hopper is ideal for sparse workloads. Instead, she emphasized that:</p>
+<ul>
+<li>GPUs remain the most mature widely available high-performance platform,</li>
+<li>sparse workloads are intrinsically more irregular than dense ones,</li>
+<li>and comparing a general-purpose GPU against a hypothetical sparse-specific accelerator is not always the most useful baseline.</li>
+</ul>
+<p>In other words, Hopper is not the perfect sparse machine, but it is still the most practical and relevant platform for serious sparse-kernel work today.</p>
+<h3 id="4-What-should-NVIDIA-change-to-make-SpMM-truly-first-class"><a href="#4-What-should-NVIDIA-change-to-make-SpMM-truly-first-class" class="headerlink" title="4. What should NVIDIA change to make SpMM truly first-class?"></a>4. What should NVIDIA change to make SpMM truly first-class?</h3><p>Another memorable exchange asked what GPU designers should change if they wanted to make sparse matrix multiplication a first-class workload rather than something adapted from dense-math machinery.</p>
+<p>Jie’s answer suggested that the current sparse tensor core model is still too rigid, because it assumes specific structured sparsity patterns and often falls back on padding. Her instinct was that a truly better solution would likely require <strong>more dedicated sparse-oriented hardware support</strong>, rather than merely repurposing dense tensor cores.</p>
+<p>That answer nicely captured a broader lesson from the whole talk: a lot of current sparse acceleration is still about forcing irregular computations into regular hardware templates.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Research-Notes/" class="category-chain-item">Research Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/machine-learning/" class="print-no-link">#machine-learning</a>
+      
+        <a href="/tags/llm/" class="print-no-link">#llm</a>
+      
+        <a href="/tags/defense-summary/" class="print-no-link">#defense-summary</a>
+      
+        <a href="/tags/computer-architecture/" class="print-no-link">#computer-architecture</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Jie Liu&#39;s B-Exam: Abstractions and Optimizations for Sparse Tensor Computation on Modern Hardware</div>
+      <div>https://jifengwu2k.github.io/2026/04/17/Jie-Liu-s-B-Exam-Abstractions-and-Optimizations-for-Sparse-Tensor-Computation-on-Modern-Hardware/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>April 17, 2026</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/04/18/Docker-and-Podman-Containers-as-Lightweight-VMs-for-Interactive-Work/" title="Docker and Podman Containers as Lightweight VMs for Interactive Work">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Docker and Podman Containers as Lightweight VMs for Interactive Work</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/04/16/Critique-of-RFSeek-and-Ye-Shall-Find-A-tool-for-summary-visualization-and-analysis-of-RFCs/" title="Critique of &#34;RFSeek and Ye Shall Find: A tool for summary visualization and analysis of RFCs&#34;">
+                        <span class="hidden-mobile">Critique of &#34;RFSeek and Ye Shall Find: A tool for summary visualization and analysis of RFCs&#34;</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'jifengwu2k/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

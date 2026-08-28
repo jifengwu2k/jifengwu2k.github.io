@@ -1,0 +1,1017 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="This post introduces Nadaraya-Watson kernel regression from a localized squared-error objective, then connects it to the normalized, similarity-weighted averaging performed by attention.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kernel Regression and the Pairwise Nature of Attention">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/08/16/Kernel-Regression-and-the-Pairwise-Nature-of-Attention/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="This post introduces Nadaraya-Watson kernel regression from a localized squared-error objective, then connects it to the normalized, similarity-weighted averaging performed by attention.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-08-16T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-16T04:00:00.000Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta property="article:tag" content="essay">
+<meta property="article:tag" content="machine-learning">
+<meta property="article:tag" content="transformers">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Kernel Regression and the Pairwise Nature of Attention - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Home</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>Categories</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Tags</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>About</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/links/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-link-fill"></i>
+                  <span>Links</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Search</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Light"
+               data-label-dark="Dark">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dark</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kernel Regression and the Pairwise Nature of Attention</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-08-16 00:00" pubdate>
+          August 16, 2026
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          10k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          84 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Kernel Regression and the Pairwise Nature of Attention</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>You have probably heard of the 2017 paper <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.03762"><em>Attention Is All You Need</em></a>. You may also know its headline result: the Transformer replaced recurrence with attention and went on to become the foundation of modern large language models.</p>
+<p>But what, exactly, is attention doing—and what made it such a consequential design?</p>
+<p>A useful answer begins with a seemingly unrelated classical method: <strong>kernel regression</strong>. If you have not encountered it before, kernel regression predicts a value by taking a similarity-weighted average of observations. Starting from a localized squared-error objective, we can derive this estimator from first principles.</p>
+<p>Then we will return to attention. Once the matrix operations are expanded, one row of attention has almost the same normalized, similarity-weighted averaging form as kernel regression.</p>
+<p>The common thread is <strong>pairwise interaction</strong>. Kernel regression compares a query location with each observed location. Attention compares each query vector with every visible key vector. This connection provides a simple mathematical lens through which to understand the essence of attention.</p>
+<h2 id="Kernel-regression"><a href="#Kernel-regression" class="headerlink" title="Kernel regression"></a>Kernel regression</h2><p><a href="/2023/12/24/Linear-Regression-Ridge-Regression-Lasso-Regression-and-Kernel-Ridge-Regression/">Ordinary least squares and ridge regression</a> optimize a global loss: they search for one set of parameters that minimizes error across all $n$ observations. Consequently, a point at one extreme of the input domain can affect the prediction at the other extreme.</p>
+<p>That behavior can be undesirable when the relationship is strongly local. Kernel ridge regression can represent nonlinear global functions, but its standard exact solution also requires solving a system involving an $n \times n$ kernel matrix, with up to $O(n^3)$ time complexity.</p>
+<p>The Nadaraya-Watson estimator takes a different approach. Instead of fitting a global parametric function, it makes a prediction at a query location from a weighted average of nearby observations.</p>
+<h3 id="The-baseline-a-global-constant"><a href="#The-baseline-a-global-constant" class="headerlink" title="The baseline: a global constant"></a>The baseline: a global constant</h3><p>First consider fitting a single constant $c$ to the responses $y_1,\ldots,y_n$. The squared-error objective is</p>
+<p>$$L(c)&#x3D;(y_1-c)^2+\dots+(y_n-c)^2$$</p>
+<p>Differentiating and setting the result to zero gives</p>
+<p>$$\frac{dL(c)}{dc}&#x3D;2(c-y_1)+\dots+2(c-y_n)&#x3D;0$$</p>
+<p>so the optimal constant is the arithmetic mean:</p>
+<p>$$c^*&#x3D;\frac{y_1+\dots+y_n}{n}$$</p>
+<p>A global mean cannot capture a relationship that changes with $x$. We therefore want the fitted constant to depend on the query location.</p>
+<h3 id="From-a-global-constant-to-a-local-constant"><a href="#From-a-global-constant-to-a-local-constant" class="headerlink" title="From a global constant to a local constant"></a>From a global constant to a local constant</h3><p>For a query $x$, assign each observation $(x_i,y_i)$ a nonnegative weight using a kernel function $k(x,x_i)$. In a typical local kernel, this weight is largest near $x$ and decreases as $x_i$ becomes less similar to $x$.</p>
+<p>We can then define the localized objective</p>
+<p>$$L_x(c)&#x3D;k(x,x_1)(y_1-c)^2+\dots+k(x,x_n)(y_n-c)^2$$</p>
+<p>Nearby errors now matter more than distant errors. Differentiating gives</p>
+<p>$$\frac{dL_x(c)}{dc}&#x3D;2[k(x,x_1)+\dots+k(x,x_n)]c-2[k(x,x_1)y_1+\dots+k(x,x_n)y_n]$$</p>
+<p>and</p>
+<p>$$\frac{d^2L_x(c)}{dc^2}&#x3D;2[k(x,x_1)+\dots+k(x,x_n)]&gt;0$$</p>
+<p>provided at least one observation has positive weight. Setting the first derivative to zero yields</p>
+<p>$$\hat{y}(x)&#x3D;\underset{c}{\arg\min};L_x(c)&#x3D;\frac{k(x,x_1)y_1+\dots+k(x,x_n)y_n}{k(x,x_1)+\dots+k(x,x_n)}$$</p>
+<p>This is the <strong>Nadaraya-Watson kernel regression estimator</strong>. It has no global coefficient-fitting step: at prediction time, it compares the query with the observations and returns their normalized, similarity-weighted average. The kernel function determines how similarity between the query and each observation is translated into weight.</p>
+<h2 id="The-pairwise-nature-of-attention"><a href="#The-pairwise-nature-of-attention" class="headerlink" title="The pairwise nature of attention"></a>The pairwise nature of attention</h2><p>Scaled dot-product attention is</p>
+<p>$$\text{Attention}(Q, K, V) &#x3D; \text{row_softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$</p>
+<p>Let the rows of $Q$, $K$, and $V$ be query vectors $\vec{q}_i$, key vectors $\vec{k}_j$, and value vectors $\vec{v}_j$. Expanding the matrix multiplication makes the pairwise structure explicit:</p>
+<p>$$\text{row_softmax} \left( \frac{1}{\sqrt{d_k}} \begin{pmatrix} \vec{q}_1 \\ \vdots \\ \vec{q}_n \end{pmatrix} \begin{pmatrix} \vec{k}_1^T &amp; \dots &amp; \vec{k}_n^T \end{pmatrix} \right) \begin{pmatrix} \vec{v}_1 \\ \vdots \\ \vec{v}_n \end{pmatrix}$$</p>
+<p>$$\text{row_softmax} \left( \begin{matrix} \frac{\vec{q}_1 \vec{k}_1^T}{\sqrt{d_k}} &amp; \dots &amp; \frac{\vec{q}_1 \vec{k}_n^T}{\sqrt{d_k}} \\ \vdots &amp; \ddots &amp; \vdots \\ \frac{\vec{q}_n \vec{k}_1^T}{\sqrt{d_k}} &amp; \dots &amp; \frac{\vec{q}_n \vec{k}_n^T}{\sqrt{d_k}} \end{matrix} \right) \begin{pmatrix} \vec{v}_1 \\ \vdots \\ \vec{v}_n \end{pmatrix}$$</p>
+<p>Every entry in the $n \times n$ score matrix is a direct comparison between one query and one key:</p>
+<p>$$s_{ij}&#x3D;\frac{\vec{q}_i \vec{k}_j^T}{\sqrt{d_k}}$$</p>
+<p>For causal or otherwise masked attention, some of these pairwise comparisons are excluded before the row-wise softmax is applied.</p>
+<p>This pairwise design has several important consequences.</p>
+<h3 id="Direct-content-based-access"><a href="#Direct-content-based-access" class="headerlink" title="Direct content-based access"></a>Direct content-based access</h3><p>A token can compare its query directly with the key of every visible token. For example, a pronoun can assign high attention weight to an earlier noun whose representation is relevant to resolving its reference.</p>
+<p>Unlike an RNN, which repeatedly compresses the prefix into a recurrent state, self-attention keeps the source-token representations individually addressable within the layer. This does not guarantee perfect memory—the representations and attention weights still have finite capacity—but it provides a direct lookup-like mechanism.</p>
+<h3 id="Short-paths-between-positions"><a href="#Short-paths-between-positions" class="headerlink" title="Short paths between positions"></a>Short paths between positions</h3><p>In an RNN, information from the first token must pass through many recurrent transitions before reaching a much later token. In a full self-attention layer, any visible pair of positions is connected by one attention edge. These shorter paths make long-range interactions easier to represent and can improve gradient flow.</p>
+<h3 id="Dynamic-information-routing"><a href="#Dynamic-information-routing" class="headerlink" title="Dynamic information routing"></a>Dynamic information routing</h3><p>A convolution uses a receptive field determined primarily by its architecture. Attention instead selects relevant positions from their content: its effective connectivity changes with the input. Multiple layers and heads can learn different routing patterns, such as syntactic, positional, or semantic relationships.</p>
+<h3 id="Parallel-execution—and-quadratic-cost"><a href="#Parallel-execution—and-quadratic-cost" class="headerlink" title="Parallel execution—and quadratic cost"></a>Parallel execution—and quadratic cost</h3><p>All pairwise scores are computed by the dense matrix multiplication $QK^\top$. GPUs and TPUs are particularly effective at this operation, allowing the comparisons for a layer to run in parallel rather than recurrently.</p>
+<p>This compatibility with accelerator hardware is a major practical advantage, but it comes with the familiar cost of standard attention: for a sequence of length $N$, the score matrix contains $N^2$ entries. Computing and storing it therefore requires quadratic work and, in a straightforward implementation, quadratic memory.</p>
+<h2 id="Attention-as-kernel-regression"><a href="#Attention-as-kernel-regression" class="headerlink" title="Attention as kernel regression"></a>Attention as kernel regression</h2><p>Attention has an intricate relationship with kernel methods, where pairwise-ness also arises from a similarity function.</p>
+<p>Let’s break down exactly how we get from the matrix multiplication to the kernel equation:</p>
+<p>$$\text{row_softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$</p>
+<p>Applying the row-wise softmax to the pairwise score matrix from the previous section gives</p>
+<p>$$\begin{pmatrix} \frac{\exp\left(\frac{\vec{q}_1 \vec{k}_1^T}{\sqrt{d_k}}\right)}{\exp\left(\frac{\vec{q}_1 \vec{k}_1^T}{\sqrt{d_k}}\right) + \dots + \exp\left(\frac{\vec{q}_1 \vec{k}_n^T}{\sqrt{d_k}}\right)} &amp; \dots \\ \vdots &amp; \ddots \\ \frac{\exp\left(\frac{\vec{q}_n \vec{k}_1^T}{\sqrt{d_k}}\right)}{\exp\left(\frac{\vec{q}_n \vec{k}_1^T}{\sqrt{d_k}}\right) + \dots + \exp\left(\frac{\vec{q}_n \vec{k}_n^T}{\sqrt{d_k}}\right)} &amp; \dots \end{pmatrix} \begin{pmatrix} \vec{v}_1 \\ \vdots \\ \vec{v}_n \end{pmatrix}$$</p>
+<p>The $i$-th row of the output is</p>
+<p>$$\vec{o}_i &#x3D; \frac{\exp\left(\frac{\vec{q}_i \vec{k}_1^T}{\sqrt{d_k}}\right) \vec{v}_1 + \dots + \exp\left(\frac{\vec{q}_i \vec{k}_n^T}{\sqrt{d_k}}\right) \vec{v}_n}{\exp\left(\frac{\vec{q}_i \vec{k}_1^T}{\sqrt{d_k}}\right) + \dots + \exp\left(\frac{\vec{q}_i \vec{k}_n^T}{\sqrt{d_k}}\right)}$$</p>
+<p>This has the same normalized weighted-average form as the Nadaraya-Watson estimator,</p>
+<p>$$\hat{y}(x)&#x3D;\frac{k(x,x_1)y_1+\dots+k(x,x_n)y_n}{k(x,x_1)+\dots+k(x,x_n)}$$</p>
+<p>The correspondence is</p>
+<table>
+<thead>
+<tr>
+<th>Kernel regression</th>
+<th>Attention</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>query location $x$</td>
+<td>query vector $\vec{q}_i$</td>
+</tr>
+<tr>
+<td>observed location $x_j$</td>
+<td>key vector $\vec{k}_j$</td>
+</tr>
+<tr>
+<td>observed response $y_j$</td>
+<td>value vector $\vec{v}_j$</td>
+</tr>
+<tr>
+<td>weight $k(x,x_j)$</td>
+<td>$\exp(\vec{q}_i \vec{k}_j^T&#x2F;\sqrt{d_k})$</td>
+</tr>
+<tr>
+<td>prediction $\hat{y}(x)$</td>
+<td>attention output $\vec{o}_i$</td>
+</tr>
+</tbody></table>
+<p>Thus, an attention head can be viewed as a vector-valued kernel smoother using the exponentiated, scaled dot-product kernel</p>
+<p>$$k_{\mathrm{att}}(\vec{q},\vec{k})&#x3D;\exp\left(\frac{\vec{q}\vec{k}^T}{\sqrt{d_k}}\right)$$</p>
+<p>There are, however, important differences from classical kernel regression. The most important is the shift from estimation to message passing.</p>
+<h3 id="From-estimation-to-message-passing"><a href="#From-estimation-to-message-passing" class="headerlink" title="From estimation to message passing"></a>From estimation to message passing</h3><p>Classical kernel regression is often introduced as a way to estimate an unknown response at a new location. The weighted average is the prediction itself.</p>
+<p>A Transformer has a different system-level purpose. Every token already has a representation. Attention uses kernel-regression-like mathematics to decide how information should flow among those existing representations. The result is projected, combined across heads, passed through a residual connection, and followed by other transformations.</p>
+<p>This gives another useful interpretation: self-attention is <strong>message passing on a dynamically weighted graph</strong>.</p>
+<ul>
+<li>Each token is a node.</li>
+<li>Each query-key score determines the weight of a directed edge.</li>
+<li>Each value vector is a message sent along that edge.</li>
+<li>The weighted aggregate $\vec{o}_i$ contains the messages received by node $i$.</li>
+<li>The residual stream combines the aggregate with the node’s current state.</li>
+</ul>
+<p>Unlike a graph with fixed edges, this graph is reconstructed from the token representations at every attention layer. Pairwise attention is therefore both a similarity-weighted estimator and a dynamic routing mechanism. This shift—from producing a final estimate to updating existing representations—is the central difference between classical kernel regression and attention.</p>
+<p>Several additional technical differences follow:</p>
+<ol>
+<li><strong>The similarity space is learned.</strong> In self-attention, queries and keys are usually projections of token representations, such as $\vec{q}_i&#x3D;\vec{x}_iW_Q$ and $\vec{k}_j&#x3D;\vec{x}_jW_K$. Similarity is measured in learned feature spaces rather than by a fixed distance in the original input space.</li>
+<li><strong>Queries and keys can use different projections.</strong> Attention is not necessarily a symmetric notion of similarity at the token level, even though the underlying exponentiated dot-product function is a valid kernel when both arguments inhabit the same feature space.</li>
+<li><strong>The responses are vectors.</strong> Values $\vec{v}_j$ carry learned features rather than scalar observations.</li>
+<li><strong>The support set changes with the input.</strong> In self-attention, the observations being averaged are the tokens in the current sequence. A mask may further restrict which observations are available.</li>
+</ol>
+<p>Attention is therefore not merely kernel regression applied to tokens: it repurposes the same normalized weighted-average structure as a learned message-routing operation inside a deep network.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li>Vaswani et al., <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.03762"><em>Attention Is All You Need</em></a>, 2017.</li>
+<li>Elizbar A. Nadaraya, <a target="_blank" rel="noopener" href="https://doi.org/10.1137/1109020"><em>On Estimating Regression</em></a>, 1964.</li>
+<li>Geoffrey S. Watson, <em>Smooth Regression Analysis</em>, 1964.</li>
+<li>Sara Hooker, <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2009.06489"><em>The Hardware Lottery</em></a>, 2020.</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Mathematics/" class="category-chain-item">Mathematics</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/machine-learning/" class="print-no-link">#machine-learning</a>
+      
+        <a href="/tags/essay/" class="print-no-link">#essay</a>
+      
+        <a href="/tags/transformers/" class="print-no-link">#transformers</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kernel Regression and the Pairwise Nature of Attention</div>
+      <div>https://jifengwu2k.github.io/2026/08/16/Kernel-Regression-and-the-Pairwise-Nature-of-Attention/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>August 16, 2026</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/08/17/The-Endless-Youth-Act/" title="The Endless Youth Act">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">The Endless Youth Act</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/08/08/llama-cpp-Workflow-Download-Convert-Quantize-and-Serve-Models/" title="llama.cpp Workflow: Download, Convert, Quantize, and Serve Models">
+                        <span class="hidden-mobile">llama.cpp Workflow: Download, Convert, Quantize, and Serve Models</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'jifengwu2k/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

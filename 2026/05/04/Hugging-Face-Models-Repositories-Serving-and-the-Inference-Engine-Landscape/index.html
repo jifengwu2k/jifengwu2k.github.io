@@ -1,0 +1,1135 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jifeng Wu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="A practical guide to Hugging Face model repositories: what they contain, how Transformers loads them, and how serving runtimes such as vLLM, llama.cpp, and Ollama fit into the ecosystem.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hugging Face Models: Repositories, Serving, and the Inference Engine Landscape">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/05/04/Hugging-Face-Models-Repositories-Serving-and-the-Inference-Engine-Landscape/index.html">
+<meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
+<meta property="og:description" content="A practical guide to Hugging Face model repositories: what they contain, how Transformers loads them, and how serving runtimes such as vLLM, llama.cpp, and Ollama fit into the ecosystem.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-05-04T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-08T04:00:00.000Z">
+<meta property="article:author" content="Jifeng Wu">
+<meta property="article:tag" content="huggingface">
+<meta property="article:tag" content="llama.cpp">
+<meta property="article:tag" content="machine-learning">
+<meta property="article:tag" content="model-deployment">
+<meta property="article:tag" content="ollama">
+<meta property="article:tag" content="reference">
+<meta property="article:tag" content="vllm">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Hugging Face Models: Repositories, Serving, and the Inference Engine Landscape - Jifeng Wu&#39;s Personal Website</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jifengwu2k.github.io","root":"/","version":"1.9.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Jifeng Wu</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Home</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>Categories</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Tags</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>About</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/links/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-link-fill"></i>
+                  <span>Links</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Search</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Light"
+               data-label-dark="Dark">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dark</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Hugging Face Models: Repositories, Serving, and the Inference Engine Landscape</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Jifeng Wu
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-05-04 00:00" pubdate>
+          May 4, 2026
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          16k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          134 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Hugging Face Models: Repositories, Serving, and the Inference Engine Landscape</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Hugging Face is the primary distribution platform for many modern large language models (LLMs). A repository on the Hugging Face Hub may contain model weights, configuration files, tokenizer data, documentation, and sometimes custom Python code. Those files are enough to reconstruct a model only when they are paired with software that understands the model’s architecture.</p>
+<p>That distinction explains much of the Hugging Face ecosystem:</p>
+<ul>
+<li>The <strong>Hub</strong> stores and versions model artifacts.</li>
+<li><strong>Transformers</strong> interprets those artifacts and provides model implementations.</li>
+<li>Serving tools such as <strong>vLLM</strong>, <strong>llama.cpp</strong>, and <strong>Ollama</strong> consume those artifacts—or converted versions of them—through different execution engines.</li>
+</ul>
+<p>This post follows that path from repository to running service.</p>
+<h2 id="What-is-in-a-Hugging-Face-model-repository"><a href="#What-is-in-a-Hugging-Face-model-repository" class="headerlink" title="What is in a Hugging Face model repository?"></a>What is in a Hugging Face model repository?</h2><p>A typical repository for a text-generation model contains files like these:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">README.md<br>config.json<br>generation_config.json<br>tokenizer.json<br>tokenizer_config.json<br>special_tokens_map.json<br>model.safetensors.index.json<br>model-00001-of-000NN.safetensors<br>model-00002-of-000NN.safetensors<br>...<br>optional custom Python files<br></code></pre></td></tr></table></figure>
+
+<p>These files have different roles:</p>
+<ul>
+<li><code>README.md</code> is the model card. It usually describes the model, license, intended use, limitations, and examples.</li>
+<li><code>config.json</code> records the architecture name and structural parameters, such as the hidden size and number of layers.</li>
+<li><code>generation_config.json</code> stores default generation settings, such as sampling parameters and special token IDs.</li>
+<li>Tokenizer files define how text is converted to and from token IDs.</li>
+<li><code>.safetensors</code> files contain the learned tensors: embeddings, attention weights, MLP weights, normalization parameters, and output heads.</li>
+<li><code>model.safetensors.index.json</code> maps tensor names to files when the weights are split across several shards.</li>
+<li>Optional Python files implement an architecture that is not built into the installed version of Transformers.</li>
+</ul>
+<p>A repository is therefore best understood as a <strong>versioned collection of model artifacts</strong>, not necessarily as a self-contained executable model. The weight files contain named arrays, but another program must know what those names mean and how the arrays participate in the forward pass.</p>
+<h2 id="Where-does-the-model-definition-live"><a href="#Where-does-the-model-definition-live" class="headerlink" title="Where does the model definition live?"></a>Where does the model definition live?</h2><p>For most models, the executable definition comes from three pieces:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">configuration metadata<br>+ architecture implementation<br>+ learned weights<br></code></pre></td></tr></table></figure>
+
+<p>The location of the architecture implementation depends on whether Transformers already supports the model.</p>
+<h3 id="Architectures-built-into-Transformers"><a href="#Architectures-built-into-Transformers" class="headerlink" title="Architectures built into Transformers"></a>Architectures built into Transformers</h3><p>A standard <code>config.json</code> may include fields like these:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;model_type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;llama&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;architectures&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;LlamaForCausalLM&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;hidden_size&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4096</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;num_hidden_layers&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">32</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;num_attention_heads&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">32</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;num_key_value_heads&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">8</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;intermediate_size&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">11008</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;vocab_size&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">32000</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>The configuration describes the size and variant of the model, but it does not spell out every operation in the forward pass. Transformers uses <code>model_type</code> to resolve the configuration class, and a task-specific AutoClass maps that configuration to a built-in model implementation. The <code>architectures</code> field records the class associated with the checkpoint and helps identify its intended task head. Transformers then constructs the selected implementation and fills its parameters with tensors from the weight files.</p>
+<p>In other words, the repository supplies the configuration and weights; the installed Transformers package supplies the executable model code.</p>
+<h3 id="Architectures-that-ship-custom-code"><a href="#Architectures-that-ship-custom-code" class="headerlink" title="Architectures that ship custom code"></a>Architectures that ship custom code</h3><p>A repository for a model that is not built into Transformers may include files such as:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">configuration_my_model.py<br>modeling_my_model.py<br></code></pre></td></tr></table></figure>
+
+<p>Its <code>config.json</code> can use <code>auto_map</code> to associate AutoClasses with those modules:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;model_type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;my_model&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;auto_map&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;AutoConfig&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration_my_model.MyModelConfig&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;AutoModelForCausalLM&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;modeling_my_model.MyModelForCausalLM&quot;</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>Loading this kind of repository may require <code>trust_remote_code=True</code>. That option executes Python code downloaded from the repository, so it should be used only after reviewing the code and pinning a trusted repository revision.</p>
+<h2 id="Downloading-a-repository"><a href="#Downloading-a-repository" class="headerlink" title="Downloading a repository"></a>Downloading a repository</h2><p>There are two common ways to copy a model repository to a local directory.</p>
+<h3 id="Hugging-Face-CLI"><a href="#Hugging-Face-CLI" class="headerlink" title="Hugging Face CLI"></a>Hugging Face CLI</h3><p>The <code>hf</code> CLI is convenient for interactive downloads and supports features such as caching and resuming interrupted transfers. It is installed with <code>huggingface_hub</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install -U huggingface_hub<br>hf download Qwen/Qwen2.5-0.5B --local-dir ./Qwen2.5-0.5B<br></code></pre></td></tr></table></figure>
+
+<p>For gated or private repositories, authenticate first with a Hugging Face access token:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">hf auth login<br></code></pre></td></tr></table></figure>
+
+<p>The older <code>huggingface-cli</code> command is deprecated and should not be used in new scripts.</p>
+<h3 id="Python-API"><a href="#Python-API" class="headerlink" title="Python API"></a>Python API</h3><p>For scripts and automated pipelines, use <code>snapshot_download</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> huggingface_hub <span class="hljs-keyword">import</span> snapshot_download<br><br>snapshot_download(<br>    repo_id=<span class="hljs-string">&quot;Qwen/Qwen2.5-0.5B&quot;</span>,<br>    local_dir=<span class="hljs-string">&quot;./Qwen2.5-0.5B&quot;</span>,<br>)<br></code></pre></td></tr></table></figure>
+
+<p>Both methods download repository artifacts. Neither converts the model to another runtime format.</p>
+<h2 id="Loading-a-model-with-Transformers"><a href="#Loading-a-model-with-Transformers" class="headerlink" title="Loading a model with Transformers"></a>Loading a model with Transformers</h2><p>Transformers AutoClasses provide the usual way to load a repository from the Hub or from a local directory. Install Transformers with its PyTorch and Accelerate dependencies:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install -U <span class="hljs-string">&quot;transformers[torch]&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>The following example loads the snapshot downloaded above:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> transformers <span class="hljs-keyword">import</span> AutoModelForCausalLM, AutoTokenizer<br><br>model_path = <span class="hljs-string">&quot;./Qwen2.5-0.5B&quot;</span><br><br>tokenizer = AutoTokenizer.from_pretrained(model_path)<br>model = AutoModelForCausalLM.from_pretrained(<br>    model_path,<br>    device_map=<span class="hljs-string">&quot;auto&quot;</span>,<br>    dtype=<span class="hljs-string">&quot;auto&quot;</span>,<br>)<br><br>inputs = tokenizer(<br>    <span class="hljs-string">&quot;The secret to baking a good cake is&quot;</span>,<br>    return_tensors=<span class="hljs-string">&quot;pt&quot;</span>,<br>).to(model.device)<br><br>outputs = model.generate(**inputs, max_new_tokens=<span class="hljs-number">20</span>)<br><span class="hljs-built_in">print</span>(tokenizer.decode(outputs[<span class="hljs-number">0</span>], skip_special_tokens=<span class="hljs-literal">True</span>))<br></code></pre></td></tr></table></figure>
+
+<p>To load directly from the Hub instead, set <code>model_path = &quot;Qwen/Qwen2.5-0.5B&quot;</code>. In either case, <code>from_pretrained()</code> uses the same repository files.</p>
+<p>Several arguments are especially useful:</p>
+<ul>
+<li><code>device_map=&quot;auto&quot;</code> asks the Accelerate integration to place model components on available devices and, when necessary, offload some components.</li>
+<li><code>dtype=&quot;auto&quot;</code> uses the data type recorded for the saved weights instead of automatically expanding them to <code>float32</code>.</li>
+<li><code>trust_remote_code=True</code> permits repository-provided Python code to run. Use it only for reviewed and trusted code.</li>
+<li><code>revision=&quot;&lt;commit-hash&gt;&quot;</code> pins loading to a specific repository revision, which improves reproducibility and is particularly important with remote code.</li>
+</ul>
+<p>A simplified view of <code>from_pretrained()</code> is:</p>
+<ol>
+<li>Download or open the configuration.</li>
+<li>Resolve the appropriate model class.</li>
+<li>Instantiate the architecture described by the configuration.</li>
+<li>Load the named tensors into that architecture.</li>
+<li>Apply placement, precision, and quantization options.</li>
+</ol>
+<p>A task-specific class matters. <code>AutoModelForCausalLM</code>, for example, selects an architecture with a causal language-modeling head rather than returning only the base model.</p>
+<p>During autoregressive generation, <code>model.generate()</code> normally uses a <strong>KV cache</strong> so that each step can reuse the attention keys and values computed for earlier tokens. For more detail, see <a href="/2026/05/31/How-the-KV-Cache-Works-in-HuggingFace-Transformers/">How the KV Cache Works in HuggingFace Transformers</a>.</p>
+<h2 id="Serving-a-model-through-an-OpenAI-compatible-API"><a href="#Serving-a-model-through-an-OpenAI-compatible-API" class="headerlink" title="Serving a model through an OpenAI-compatible API"></a>Serving a model through an OpenAI-compatible API</h2><p>Loading a model in a Python process is enough for experimentation, but applications usually need a long-running HTTP service. <code>transformers serve</code> provides a straightforward serving path while remaining close to the Transformers model implementation.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install -U <span class="hljs-string">&quot;transformers[serving]&quot;</span><br>transformers serve Qwen/Qwen2.5-0.5B-Instruct --reasoning auto<br></code></pre></td></tr></table></figure>
+
+<p>The server listens on <code>http://localhost:8000</code> by default and exposes OpenAI-compatible endpoints. A client can call it with the OpenAI Python SDK:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> openai <span class="hljs-keyword">import</span> OpenAI<br><br>client = OpenAI(<br>    base_url=<span class="hljs-string">&quot;http://localhost:8000/v1&quot;</span>,<br>    api_key=<span class="hljs-string">&quot;local-dummy-key&quot;</span>,<br>)<br><br>response = client.chat.completions.create(<br>    model=<span class="hljs-string">&quot;Qwen/Qwen2.5-0.5B-Instruct&quot;</span>,<br>    messages=[<br>        &#123;<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;system&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;You are a helpful assistant.&quot;</span>&#125;,<br>        &#123;<br>            <span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;user&quot;</span>,<br>            <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;Write a short haiku about open-source software.&quot;</span>,<br>        &#125;,<br>    ],<br>    temperature=<span class="hljs-number">0.7</span>,<br>    max_tokens=<span class="hljs-number">50</span>,<br>)<br><br><span class="hljs-built_in">print</span>(response.choices[<span class="hljs-number">0</span>].message.content)<br></code></pre></td></tr></table></figure>
+
+<p>An instruct or chat model is preferable here because it normally includes a tokenizer chat template. A base completion model such as GPT-2 does not necessarily know how to format role-based messages.</p>
+<p>At a high level, the server:</p>
+<ol>
+<li>Parses an OpenAI-style request.</li>
+<li>Formats chat messages with the tokenizer’s chat template when needed.</li>
+<li>Tokenizes the resulting prompt.</li>
+<li>Runs generation through Transformers.</li>
+<li>Returns or streams the generated text in an OpenAI-compatible response format.</li>
+</ol>
+<p>This route prioritizes compatibility with the Transformers ecosystem. A newly supported or repository-defined architecture may work here before a specialized inference engine supports it. Compatibility is not automatic, however: custom code, unusual generation logic, or unsupported serving features can still require additional work.</p>
+<h2 id="Why-use-a-separate-inference-engine"><a href="#Why-use-a-separate-inference-engine" class="headerlink" title="Why use a separate inference engine?"></a>Why use a separate inference engine?</h2><p>Transformers is an excellent reference implementation and integration layer, but a general PyTorch execution path is not always the best choice for production throughput, restricted memory, or consumer hardware. Dedicated inference engines make different tradeoffs.</p>
+<h3 id="vLLM-throughput-and-concurrency"><a href="#vLLM-throughput-and-concurrency" class="headerlink" title="vLLM: throughput and concurrency"></a>vLLM: throughput and concurrency</h3><p>vLLM targets high-throughput language-model serving, especially on data-center accelerators. Its scheduler uses continuous batching so that new requests can join the running workload as other requests finish. Its paged KV-cache design allocates cache storage in blocks, reducing memory fragmentation and making it easier to serve requests with different sequence lengths.</p>
+<ul>
+<li><strong>Best for</strong>: Concurrent APIs, batch inference, and production services on supported accelerators</li>
+<li><strong>Strengths</strong>: Continuous batching, efficient KV-cache management, optimized kernels, and OpenAI-compatible serving</li>
+<li><strong>Tradeoff</strong>: Architecture, feature, and quantization support can lag behind the latest Transformers implementation</li>
+</ul>
+<p>vLLM is not merely a wrapper around <code>model.generate()</code>. It runs supported models inside its own scheduling and execution system, using either a native vLLM implementation or a compatible model backend. It still reuses parts of the Hugging Face ecosystem, including configuration and tokenizer tooling.</p>
+<h3 id="llama-cpp-portability-and-efficient-local-inference"><a href="#llama-cpp-portability-and-efficient-local-inference" class="headerlink" title="llama.cpp: portability and efficient local inference"></a>llama.cpp: portability and efficient local inference</h3><p>llama.cpp is a C&#x2F;C++ inference runtime designed to run models with minimal dependencies across CPUs, Apple Silicon, and supported GPUs. It commonly uses <strong>GGUF</strong>, a format that packages model metadata, tokenizer information, and tensors for efficient loading by the runtime.</p>
+<p>GGUF models are often quantized to 8, 6, 5, 4, or fewer bits per weight. Lower precision reduces storage and memory use, making models practical on hardware that cannot hold the original 16-bit weights. Quantization may reduce output quality, and the effect varies by model and quantization method.</p>
+<ul>
+<li><strong>Best for</strong>: Local inference, CPUs, Apple Silicon, and memory-constrained systems</li>
+<li><strong>Strengths</strong>: Broad hardware support, quantized models, a native runtime, and fine-grained controls</li>
+<li><strong>Tradeoff</strong>: A Hugging Face checkpoint usually needs a compatible GGUF conversion, and unsupported architectures require implementation work in llama.cpp</li>
+</ul>
+<h3 id="Ollama-a-convenient-local-model-manager"><a href="#Ollama-a-convenient-local-model-manager" class="headerlink" title="Ollama: a convenient local model manager"></a>Ollama: a convenient local model manager</h3><p>Ollama packages a local inference runtime, model download and storage, configuration, and API access behind a simple interface:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ollama run llama3<br></code></pre></td></tr></table></figure>
+
+<p>It uses llama.cpp technology for much of its model execution but presents a higher-level workflow. It can download prepared model variants, manage them locally, expose an API, and create customized models through a <code>Modelfile</code>.</p>
+<ul>
+<li><strong>Best for</strong>: Local development and quick experiments</li>
+<li><strong>Strengths</strong>: Simple installation, model management, sensible defaults, and an integrated API</li>
+<li><strong>Tradeoff</strong>: Less low-level control than using llama.cpp directly, with support shaped by Ollama’s packaging and runtime</li>
+</ul>
+<p>Ollama supports custom GGUF files, so its model catalog is not the only possible source of weights.</p>
+<h3 id="Comparison"><a href="#Comparison" class="headerlink" title="Comparison"></a>Comparison</h3><table>
+<thead>
+<tr>
+<th>Runtime</th>
+<th>Primary goal</th>
+<th>Typical model format</th>
+<th>Best fit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>transformers serve</code></td>
+<td>Compatibility with Transformers</td>
+<td>Hugging Face configuration and weights</td>
+<td>Evaluation, development, and recently supported architectures</td>
+</tr>
+<tr>
+<td>vLLM</td>
+<td>Throughput and concurrency</td>
+<td>Hugging Face configuration and weights in supported formats</td>
+<td>Production APIs on supported accelerators</td>
+</tr>
+<tr>
+<td>llama.cpp</td>
+<td>Portability and low-memory inference</td>
+<td>GGUF</td>
+<td>CPUs, Apple Silicon, consumer GPUs, and quantized local inference</td>
+</tr>
+<tr>
+<td>Ollama</td>
+<td>Ease of local use</td>
+<td>Managed GGUF-based model packages</td>
+<td>Rapid local setup and application development</td>
+</tr>
+</tbody></table>
+<p>The choice is not simply “fast versus slow.” It depends on the model architecture, hardware, request volume, latency target, quantization requirements, and how quickly support for a new model is needed.</p>
+<h2 id="How-optimized-runtimes-consume-Hugging-Face-models"><a href="#How-optimized-runtimes-consume-Hugging-Face-models" class="headerlink" title="How optimized runtimes consume Hugging Face models"></a>How optimized runtimes consume Hugging Face models</h2><p>Hugging Face often remains the source of model artifacts even when Transformers is not the execution engine. A runtime may read:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">config.json<br>*.safetensors<br>tokenizer.json<br>generation_config.json<br></code></pre></td></tr></table></figure>
+
+<p>It must then translate those artifacts into its own internal representation. This is possible only when the runtime understands the architecture’s:</p>
+<ul>
+<li>configuration fields</li>
+<li>tensor names and shapes</li>
+<li>attention and positional-encoding conventions</li>
+<li>MLP or mixture-of-experts structure</li>
+<li>quantization scheme</li>
+<li>tokenizer behavior</li>
+<li>weight-packing and memory-layout requirements</li>
+</ul>
+<p>That is why an inference engine cannot automatically run every repository on the Hub. Supporting the file format is not the same as supporting the model architecture.</p>
+<h3 id="vLLM-load-Hugging-Face-artifacts-into-a-specialized-runtime"><a href="#vLLM-load-Hugging-Face-artifacts-into-a-specialized-runtime" class="headerlink" title="vLLM: load Hugging Face artifacts into a specialized runtime"></a>vLLM: load Hugging Face artifacts into a specialized runtime</h3><p>A simplified vLLM loading path looks like this:</p>
+<ol>
+<li><strong>Inspect the configuration.</strong> vLLM reads the model configuration and resolves a supported architecture or backend.</li>
+<li><strong>Construct the runtime model.</strong> It creates vLLM-compatible layers and execution plans rather than simply calling the standard Transformers generation loop.</li>
+<li><strong>Load the weights.</strong> It reads tensors from files such as <code>.safetensors</code> and maps them into the runtime model.</li>
+<li><strong>Initialize the tokenizer.</strong> Hugging Face tokenizer libraries are commonly used, with additional scheduling and caching around request processing.</li>
+<li><strong>Allocate serving memory.</strong> vLLM reserves accelerator memory for weights, temporary data, and paged KV-cache blocks.</li>
+<li><strong>Schedule requests continuously.</strong> Incoming requests are batched at the token level as capacity becomes available.</li>
+</ol>
+<p>The key idea is that vLLM can consume standard Hugging Face artifacts without preserving the standard Transformers execution path. Model support still depends on whether vLLM can correctly implement or delegate the architecture and its features.</p>
+<p>For a deeper look at its memory management and compilation pipeline, see <a href="/2026/05/12/vLLM-Internals-PagedAttention-and-Custom-Accelerator-Compilation/">vLLM Internals: PagedAttention and Custom Accelerator Compilation</a>.</p>
+<h3 id="llama-cpp-convert-Hugging-Face-artifacts-to-GGUF"><a href="#llama-cpp-convert-Hugging-Face-artifacts-to-GGUF" class="headerlink" title="llama.cpp: convert Hugging Face artifacts to GGUF"></a>llama.cpp: convert Hugging Face artifacts to GGUF</h3><p>The usual llama.cpp workflow adds an explicit conversion step:</p>
+<ol>
+<li><strong>Download the Hugging Face repository.</strong> Obtain the configuration, tokenizer, and weight files.</li>
+<li><strong>Convert to GGUF.</strong> Run <code>convert_hf_to_gguf.py</code> for an architecture supported by the converter.</li>
+<li><strong>Quantize if desired.</strong> Use a llama.cpp quantization tool to create a smaller GGUF variant.</li>
+<li><strong>Load with memory mapping.</strong> llama.cpp can map the GGUF file into virtual memory, allowing the operating system to manage file-backed pages efficiently.</li>
+<li><strong>Execute with the selected backends.</strong> Layers can run on CPU or be offloaded to supported GPU backends.</li>
+</ol>
+<p>Memory mapping can reduce startup copies and let the operating system page file data efficiently. It does not make the model’s working-set requirement disappear: inference still needs frequent access to the weights, and insufficient physical memory can cause severe paging and poor performance.</p>
+<p>Once converted, the GGUF file no longer depends on the original Transformers Python implementation. llama.cpp must independently implement the architecture and reproduce its behavior.</p>
+<h2 id="Why-arbitrary-model-conversion-is-difficult"><a href="#Why-arbitrary-model-conversion-is-difficult" class="headerlink" title="Why arbitrary model conversion is difficult"></a>Why arbitrary model conversion is difficult</h2><p>It is tempting to think that any PyTorch model can be exported once and then run efficiently everywhere. In practice, there is no universal, reliable conversion from:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">arbitrary Transformers model plus custom Python code<br></code></pre></td></tr></table></figure>
+
+<p>into:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">an efficient ONNX, XLA, JAX, GGUF, or specialized serving implementation<br></code></pre></td></tr></table></figure>
+
+<p>Export and tracing tools include:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">torch.export<br>torch.onnx.export<br>torch.fx<br>torch.jit.trace<br>torch.jit.script<br></code></pre></td></tr></table></figure>
+
+<p>They can work well for supported graphs, but model export becomes harder when an implementation uses:</p>
+<ul>
+<li>dynamic or data-dependent control flow</li>
+<li>changing tensor shapes</li>
+<li>mixture-of-experts routing</li>
+<li>custom operators or kernels</li>
+<li>specialized KV-cache classes</li>
+<li>unsupported operations</li>
+<li>complex quantization schemes</li>
+<li>backend-specific memory layouts</li>
+</ul>
+<p>A correct port may therefore require:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">architecture reimplementation<br>weight-name and layout conversion<br>runtime adapter code<br>reference-logit comparison tests<br>backend-specific kernel optimization<br></code></pre></td></tr></table></figure>
+
+<h2 id="A-practical-mental-model"><a href="#A-practical-mental-model" class="headerlink" title="A practical mental model"></a>A practical mental model</h2><p>The ecosystem becomes easier to reason about when each layer has a distinct role:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs text">Hugging Face Hub<br>    stores configuration, tokenizers, weights, code, and documentation<br><br>Transformers<br>    provides general model implementations and loading APIs<br><br>transformers serve<br>    exposes a Transformers-oriented model through an HTTP API<br><br>vLLM<br>    runs supported models in a throughput-oriented serving runtime<br><br>llama.cpp<br>    runs supported architectures through a portable C/C++ runtime, usually from GGUF<br><br>Ollama<br>    adds model management and a convenient local interface around that style of runtime<br></code></pre></td></tr></table></figure>
+
+<p>The central lesson is simple: <strong>weights and configuration are not, by themselves, an executable model</strong>. A runtime must understand the architecture, tokenizer, tensor layout, generation behavior, and cache semantics. Hugging Face standardizes model distribution, while each inference engine decides which parts of that ecosystem it can interpret and how it will execute them.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/AI-and-Machine-Learning/" class="category-chain-item">AI and Machine Learning</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/reference/" class="print-no-link">#reference</a>
+      
+        <a href="/tags/machine-learning/" class="print-no-link">#machine-learning</a>
+      
+        <a href="/tags/vllm/" class="print-no-link">#vllm</a>
+      
+        <a href="/tags/huggingface/" class="print-no-link">#huggingface</a>
+      
+        <a href="/tags/model-deployment/" class="print-no-link">#model-deployment</a>
+      
+        <a href="/tags/llama-cpp/" class="print-no-link">#llama.cpp</a>
+      
+        <a href="/tags/ollama/" class="print-no-link">#ollama</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Hugging Face Models: Repositories, Serving, and the Inference Engine Landscape</div>
+      <div>https://jifengwu2k.github.io/2026/05/04/Hugging-Face-Models-Repositories-Serving-and-the-Inference-Engine-Landscape/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Jifeng Wu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>May 4, 2026</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/05/10/Our-Cognitive-Profile-and-a-Personal-Playbook-for-the-Agentic-Era/" title="Our Cognitive Profile and a Personal Playbook for the Agentic Era">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Our Cognitive Profile and a Personal Playbook for the Agentic Era</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/05/03/Exporting-Compute-Graphs-LLM-Shape-Dynamics-and-Serving-Runtimes/" title="Exporting Compute Graphs, LLM Shape Dynamics, and Serving Runtimes">
+                        <span class="hidden-mobile">Exporting Compute Graphs, LLM Shape Dynamics, and Serving Runtimes</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'jifengwu2k/utterances');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
