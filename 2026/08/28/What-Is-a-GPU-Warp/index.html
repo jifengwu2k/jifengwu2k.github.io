@@ -19,25 +19,25 @@
   <meta name="author" content="Jifeng Wu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Capture and visualize execution traces from pre-compiled NEFF binaries using neuron-explorer.">
+    <meta name="description" content="A warp is a bundle of 32 threads that a GPU executes in lockstep under a single instruction. This post explains what a warp is, where the name comes from, how thread IDs and private registers let one">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Profile a NEFF Executable">
-<meta property="og:url" content="https://jifengwu2k.github.io/2026/07/19/Profile-a-NEFF-Executable/index.html">
+<meta property="og:title" content="What Is a GPU Warp? SIMT, Thread IDs, Divergence, and Synchronization">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/08/28/What-Is-a-GPU-Warp/index.html">
 <meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
-<meta property="og:description" content="Capture and visualize execution traces from pre-compiled NEFF binaries using neuron-explorer.">
+<meta property="og:description" content="A warp is a bundle of 32 threads that a GPU executes in lockstep under a single instruction. This post explains what a warp is, where the name comes from, how thread IDs and private registers let one">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-07-19T04:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-19T04:00:00.000Z">
+<meta property="article:published_time" content="2026-08-28T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-29T00:55:42.477Z">
 <meta property="article:author" content="Jifeng Wu">
-<meta property="article:tag" content="neuron">
-<meta property="article:tag" content="python">
+<meta property="article:tag" content="computer-architecture">
+<meta property="article:tag" content="machine-learning">
 <meta property="article:tag" content="reference">
-<meta property="article:tag" content="shell">
+<meta property="article:tag" content="systems">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Profile a NEFF Executable - Jifeng Wu&#39;s Personal Website</title>
+  <title>What Is a GPU Warp? SIMT, Thread IDs, Divergence, and Synchronization - Jifeng Wu&#39;s Personal Website</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -306,7 +306,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Profile a NEFF Executable</span>
+            <span id="subtitle">What Is a GPU Warp? SIMT, Thread IDs, Divergence, and Synchronization</span>
           
         </div>
 
@@ -322,8 +322,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-07-19 00:00" pubdate>
-          July 19, 2026
+        <time datetime="2026-08-28 00:00" pubdate>
+          August 28, 2026
         </time>
       </span>
     
@@ -334,7 +334,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.2k words
+          7.4k words
         
       </span>
     
@@ -345,7 +345,7 @@
         
         
         
-          19 mins
+          63 mins
         
       </span>
     
@@ -384,62 +384,59 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Profile a NEFF Executable</h1>
+            <h1 id="seo-header">What Is a GPU Warp? SIMT, Thread IDs, Divergence, and Synchronization</h1>
             
             
               <div class="markdown-body">
                 
-                <p>Suppose you have obtained a NEFF (Neuron Executable File Format) binary — for example, through the workflows described in:</p>
+                <p>When you write a GPU kernel, you never mention a “warp” in your code. Yet the warp is the single most important concept for understanding <em>why</em> GPU code is fast or slow. This post walks through the idea from first principles: what a warp is, where the name comes from, what each thread inside one actually owns, how one shared instruction produces thirty-two different results, what happens when threads disagree on a branch, and when those threads need to talk to each other.</p>
+<h2 id="1-What-is-a-warp"><a href="#1-What-is-a-warp" class="headerlink" title="1. What is a warp?"></a>1. What is a warp?</h2><p>A <strong>warp</strong> is the fundamental unit of execution on an NVIDIA GPU: a group of exactly <strong>32 threads</strong> that are bundled together and execute the <strong>same instruction at the same time</strong>.</p>
+<p>A kernel launches thousands of individual threads, and the hardware groups them into warps of 32 behind the scenes. The warp — not the individual thread — is what the scheduler actually feeds to the GPU’s cores. When a warp runs, the scheduler fetches one instruction and broadcasts it to all 32 threads at once; each thread performs that <em>same</em> operation, but applies it to its <em>own</em> piece of data.</p>
+<p>The concept is not unique to NVIDIA. AMD’s equivalent is the <strong>wavefront</strong>, traditionally 64 threads (newer RDNA architectures use 32). But “warp” is the name that stuck in the CUDA world, and it has a story behind it.</p>
+<h2 id="2-Why-is-it-called-a-warp"><a href="#2-Why-is-it-called-a-warp" class="headerlink" title="2. Why is it called a warp?"></a>2. Why is it called a warp?</h2><p>The name is a deliberate pun on <strong>textile weaving</strong>.</p>
+<p>On a traditional loom, fabric is made from two sets of threads:</p>
 <ul>
-<li><a href="/2026/05/14/Compile-NEFF-Executables-from-NKI-Kernels/">Compile NEFF Executables from NKI Kernels</a></li>
-<li><a href="/2026/07/19/Compile-NEFF-Executables-from-PyTorch-Code/">Compile NEFF Executables from PyTorch Code</a></li>
+<li><strong>The warp</strong> — a bundle of parallel threads held tightly in tension lengthwise across the loom.</li>
+<li><strong>The weft</strong> — a single thread woven back and forth over and under the warp threads.</li>
 </ul>
-<p>This post covers the next step: profiling that NEFF on a NeuronDevice, capturing the execution trace, and exploring it interactively with Neuron Explorer.</p>
-<h2 id="1-Capture-an-execution-trace"><a href="#1-Capture-an-execution-trace" class="headerlink" title="1. Capture an execution trace"></a>1. Capture an execution trace</h2><p>The following command executes the NEFF on the NeuronDevice and records a raw execution trace into a NTFF (Neuron Trace File Format) artifact:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sh">neuron-explorer capture \<br>    -n &lt;neff file&gt; \<br>    -s &lt;ntff file&gt; \<br>    --profile-nth-exec=2 \<br>    --enable-dge-notifs<br></code></pre></td></tr></table></figure>
+<p>When NVIDIA introduced the concept in the CUDA architecture, they needed a word for a bundle of parallel computing “threads” grouped together and operated on simultaneously. The physical warp on a loom is <em>literally</em> a bundle of parallel threads constrained to move together, so the analogy was a perfect fit. In their foundational 2008 paper on the architecture, NVIDIA engineers explicitly noted the reference to weaving, jokingly calling it “the first parallel thread technology.”</p>
+<h2 id="3-Each-thread-has-a-unique-ID-and-its-own-registers"><a href="#3-Each-thread-has-a-unique-ID-and-its-own-registers" class="headerlink" title="3. Each thread has a unique ID and its own registers"></a>3. Each thread has a unique ID and its own registers</h2><p>A warp steps through code in lockstep, but the 32 threads are not interchangeable. Two things make each thread distinct:</p>
+<p><strong>A unique thread ID.</strong> Every thread carries a hardware-assigned identity. In CUDA this is exposed through built-in variables like <code>threadIdx.x</code> — thread 0 knows it is 0, thread 1 knows it is 1, and so on.</p>
+<p><strong>Private registers.</strong> Every thread has its own dedicated set of registers to hold the specific piece of data it is working on. Thread 0’s register 1 and Thread 7’s register 1 are completely separate physical storage.</p>
+<p>Together these two facts answer a question that confuses everyone at first: <em>if all threads execute the same instruction, how do they load different data?</em> The instruction is not an absolute command like “load address 100.” It is a <strong>formula</strong> that uses the thread ID. The program supplies a base pointer shared by everyone; each thread then computes its own address:</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs excel"><span class="hljs-built_in">address</span> = <span class="hljs-built_in">base</span> + threadIdx.x<br></code></pre></td></tr></table></figure>
 
-<h3 id="Flags-explained"><a href="#Flags-explained" class="headerlink" title="Flags explained"></a>Flags explained</h3><table>
-<thead>
-<tr>
-<th>Flag</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>-n &lt;neff file&gt;</code></td>
-<td>Path to the compiled NEFF binary to profile</td>
-</tr>
-<tr>
-<td><code>-s &lt;ntff file&gt;</code></td>
-<td>Output path for the NTFF trace artifact</td>
-</tr>
-<tr>
-<td><code>--profile-nth-exec=2</code></td>
-<td>Profile the <strong>second</strong> execution of the NEFF. The first iteration is discarded, which avoids one-time warmup delays (e.g., cold cache effects) from polluting the profile</td>
-</tr>
-<tr>
-<td><code>--enable-dge-notifs</code></td>
-<td>Enable capture of DGE DMA events. <strong>Caveat:</strong> this may overflow the status notification queue and cause execution timeouts when the NEFF contains many DGE instructions</td>
-</tr>
-</tbody></table>
-<p>At this point you should have both the NEFF and the NTFF trace file ready for analysis.</p>
-<h2 id="2-Explore-the-trace-in-the-web-UI"><a href="#2-Explore-the-trace-in-the-web-UI" class="headerlink" title="2. Explore the trace in the web UI"></a>2. Explore the trace in the web UI</h2><p>Neuron Explorer includes an interactive, web-based UI for exploring execution traces:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">neuron-explorer view --data-path &lt;workspace directory&gt;<br></code></pre></td></tr></table></figure>
-
-<p>This prints a URL you can open in a browser:</p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">View <span class="hljs-keyword">a</span> list <span class="hljs-keyword">of</span> profiles <span class="hljs-keyword">at</span> <span class="hljs-keyword">http</span>://localhost:<span class="hljs-number">3001</span>/<br></code></pre></td></tr></table></figure>
-
-<p>By default, <code>neuron-explorer</code> starts a web server on port <strong>3001</strong> and an API server on port <strong>3002</strong>.</p>
-<h3 id="Accessing-the-UI-on-a-headless-instance"><a href="#Accessing-the-UI-on-a-headless-instance" class="headerlink" title="Accessing the UI on a headless instance"></a>Accessing the UI on a headless instance</h3><p>If you are profiling on a remote server without a desktop environment, you have two options:</p>
-<p><strong>Option 1: Port forwarding (lighter weight).</strong> Download the NEFF and NTFF files to your local machine, then run Neuron Explorer on the remote instance and forward both ports (the web server on 3001 and the API server on 3002) to your local machine via SSH. Open <code>http://localhost:3001/</code> in your local browser — it loads the NEFF and NTFF files from your local copy to render the trace visualization.</p>
-<p><strong>Option 2: VNC (full remote desktop).</strong> Install a browser on the instance and use a VNC-based remote desktop setup:</p>
-<blockquote>
-<p><a href="/2025/08/21/Setting-Up-a-VNC-Server-for-Remote-Desktop-Access/#Headless-VNC-Setup-Guide">Setting Up a VNC Server for Remote Desktop Access § Headless VNC Setup Guide</a></p>
-</blockquote>
-<p>Once the VNC session is active, open a browser inside it and connect to <code>http://localhost:3001/</code> to interact with the trace viewer.</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
-<li>Adapted from <a target="_blank" rel="noopener" href="https://awsdocs-neuron.readthedocs-hosted.com/en/latest/nki/guides/use-neuron-profile.html#step-3-profile-the-generated-neff">Use Neuron Profile — AWS Neuron Documentation</a></li>
+<p>So <code>Thread 0</code> loads <code>base + 0</code>, <code>Thread 1</code> loads <code>base + 1</code>, and so on up to <code>Thread 31</code>. It is like telling a row of people “take the paper directly in front of you” — one verbal command, but everyone picks up a different sheet because they stand in a different place.</p>
+<p>Because all 32 threads are requesting <em>adjacent</em> data at once, the hardware can often bundle those requests into one large contiguous memory fetch. That optimization is called <strong>memory coalescing</strong>, and it is one of the biggest factors in GPU performance.</p>
+<h2 id="4-One-shared-instruction-thirty-two-different-actions"><a href="#4-One-shared-instruction-thirty-two-different-actions" class="headerlink" title="4. One shared instruction, thirty-two different actions"></a>4. One shared instruction, thirty-two different actions</h2><p>The same-instruction-different-data principle is not limited to loading. Because the instruction refers to <em>which registers to use</em> rather than <em>what values they hold</em>, almost every instruction produces a different outcome in each thread. A few categories stand out:</p>
+<ul>
+<li><strong>Arithmetic and logic.</strong> An <code>add</code> broadcast to the warp uses the same operation everywhere, but each thread’s registers hold different inputs, so every thread lands on a different result.</li>
+<li><strong>Control flow.</strong> A comparison like “if my value is greater than 10, jump” is evaluated against each thread’s own register. Thread 0 may want to jump while Thread 1 wants to skip — and that disagreement is exactly what causes divergence, the subject of the next section.</li>
+<li><strong>Warp shuffle.</strong> Modern GPUs have instructions that let threads read directly from each other’s registers. A “shuffle down” tells every thread to grab a value from the neighbor next to it; the instruction is identical, but each thread’s lane position makes it reach to a different source.</li>
+<li><strong>Atomics.</strong> If all 32 threads run <code>atomicAdd</code> on one shared counter, they cannot write simultaneously without corrupting it. The hardware intercepts the request and serializes the 32 operations into a queue, so the same instruction causes each thread to execute at a slightly different time and observe a different previous value.</li>
 </ul>
+<p>In short: the instruction is a recipe, the thread ID and registers are the ingredients, and the dish comes out different on every lane.</p>
+<h2 id="5-Warp-divergence"><a href="#5-Warp-divergence" class="headerlink" title="5. Warp divergence"></a>5. Warp divergence</h2><p>Because a warp shares a single instruction fetcher, the GPU <em>cannot</em> send half the threads down an <code>if</code> path and the other half down an <code>else</code> path at the same time. When threads disagree on a branch, the hardware resolves the conflict by <strong>serializing</strong> the two paths.</p>
+<p>The process works like this:</p>
+<ol>
+<li>The warp evaluates the condition. Each thread returns true or false based on its private data.</li>
+<li>The scheduler builds an <strong>active mask</strong> — a 32-bit map of 1s and 0s. Threads that evaluated false are masked out and temporarily disabled.</li>
+<li>The warp executes the <code>if</code> path. Masked threads sit completely idle, doing zero useful work.</li>
+<li>The scheduler inverts the mask: the threads that just ran are put to sleep, and the idle threads wake up.</li>
+<li>The warp executes the <code>else</code> path using only the newly awakened threads.</li>
+<li>Both paths finish, the mask is cleared, and all 32 threads reconverge on the next shared instruction.</li>
+</ol>
+<p>This is one of the biggest performance killers in GPU programming. In a 50&#x2F;50 <code>if/else</code> split, the warp runs at roughly <strong>50% efficiency</strong>, because half the lanes are asleep at any moment, and the branch costs the <em>sum</em> of both paths’ execution times. The worst case is a <code>switch</code> or deeply nested branch where all 32 threads take different routes: the warp must run 32 sequential paths, and its efficiency collapses toward <strong>1&#x2F;32 (about 3%)</strong>.</p>
+<p>Crucially, divergence is <strong>logically invisible</strong> — you write ordinary scalar <code>if/else</code> in your kernel, and the hardware handles the masking automatically, so your code still produces the correct answer. It is only <strong>practically visible</strong> in performance, which is why tools like NVIDIA Nsight Compute report a “branch efficiency” metric showing how many lanes were masked out. Programmers then reorganize data (sorting so a warp processes similar values, or replacing branches with arithmetic) to keep whole warps on one path.</p>
+<h2 id="6-Threads-in-a-warp-can-share-data-and-synchronize"><a href="#6-Threads-in-a-warp-can-share-data-and-synchronize" class="headerlink" title="6. Threads in a warp can share data and synchronize"></a>6. Threads in a warp can share data and synchronize</h2><p>Warps are not just a scheduling artifact — they are also the smallest scope at which threads can talk to each other directly, <em>without</em> round-tripping through memory.</p>
+<p>The normal way for Thread 0 to hand a value to Thread 1 is through shared memory: write, wait, read. <strong>Warp shuffle</strong> instructions bypass that entirely, letting Thread 0 copy a value straight from its private register into Thread 1’s register in a single step. This is the foundation of several common patterns:</p>
+<ul>
+<li><strong>Parallel reduction.</strong> Summing 32 values is slow if one thread adds them sequentially. With shuffles, each thread passes a partial sum down the line, and a warp can reduce 32 numbers in a handful of hardware steps instead of 32.</li>
+<li><strong>Warp voting.</strong> Instructions like <code>__any_sync</code> let threads ask a collective question — “did <em>anyone</em> find the target?” — and the hardware broadcasts the answer to all 32 lanes so they can exit a search loop early.</li>
+<li><strong>Broadcast.</strong> One thread fetches a shared value and instantly distributes it to the whole warp, instead of 32 threads each issuing their own memory request.</li>
+</ul>
+<p>Sharing data safely requires the threads to be <strong>aligned in time</strong>. If Thread 0 reads Thread 1’s register before Thread 1 has finished computing the value, Thread 0 gets garbage. Historically this alignment was guaranteed for free. But starting with the Volta architecture, NVIDIA introduced <strong>Independent Thread Scheduling</strong>, which lets threads within a warp drift apart. As a result, programmers now insert an explicit <strong><code>__syncwarp()</code></strong> immediately before a shuffle or vote, forcing the 32 threads to catch up to the same line of code before they exchange data.</p>
+<p>There is one sharp edge worth remembering: if you put a warp-level synchronization <em>inside</em> a divergent branch, you risk a <strong>deadlock</strong>. If half the warp is masked out and the other half waits for data from the sleeping lanes, the program freezes. This is the one place where divergence stops being an invisible performance issue and becomes a visible correctness bug.</p>
 
                 
               </div>
@@ -458,7 +455,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Systems/" class="category-chain-item">Systems</a>
+  <a href="/categories/AI-and-Machine-Learning/" class="category-chain-item">AI and Machine Learning</a>
   
   
 
@@ -475,11 +472,11 @@
       
         <a href="/tags/reference/" class="print-no-link">#reference</a>
       
-        <a href="/tags/neuron/" class="print-no-link">#neuron</a>
+        <a href="/tags/systems/" class="print-no-link">#systems</a>
       
-        <a href="/tags/python/" class="print-no-link">#python</a>
+        <a href="/tags/machine-learning/" class="print-no-link">#machine-learning</a>
       
-        <a href="/tags/shell/" class="print-no-link">#shell</a>
+        <a href="/tags/computer-architecture/" class="print-no-link">#computer-architecture</a>
       
     </div>
   
@@ -491,8 +488,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Profile a NEFF Executable</div>
-      <div>https://jifengwu2k.github.io/2026/07/19/Profile-a-NEFF-Executable/</div>
+      <div>What Is a GPU Warp? SIMT, Thread IDs, Divergence, and Synchronization</div>
+      <div>https://jifengwu2k.github.io/2026/08/28/What-Is-a-GPU-Warp/</div>
     </div>
     <div class="license-meta">
       
@@ -504,7 +501,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>July 19, 2026</div>
+          <div>August 28, 2026</div>
         </div>
       
       
@@ -536,9 +533,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/07/19/Compile-NEFF-Executables-from-PyTorch-Code/" title="Compile NEFF Executables from PyTorch Code">
+                      <a href="/2026/08/28/Lean-Type-and-Prop-Through-Python-Metaclasses/" title="Understanding Lean&#39;s Type and Prop Through Python Metaclasses">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Compile NEFF Executables from PyTorch Code</span>
+                        <span class="hidden-mobile">Understanding Lean&#39;s Type and Prop Through Python Metaclasses</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -546,8 +543,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/07/10/2026-07-Financial-Statement/" title="2026-07 Financial Statement">
-                        <span class="hidden-mobile">2026-07 Financial Statement</span>
+                      <a href="/2026/08/17/The-Endless-Youth-Act/" title="The Endless Youth Act">
+                        <span class="hidden-mobile">The Endless Youth Act</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
