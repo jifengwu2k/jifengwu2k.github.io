@@ -19,25 +19,25 @@
   <meta name="author" content="Jifeng Wu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="A summary of Jie Liu&#39;s B-exam on sparse tensor computation, covering sparse format conversion, asynchronous GPU execution, and the design of high-performance BCSR&#x2F;WCSR SpMM kernels.">
+    <meta name="description" content="Memory models govern shared-memory visibility and ordering; forward-progress guarantees govern whether concurrent work can continue executing.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Jie Liu&#39;s B-Exam: Abstractions and Optimizations for Sparse Tensor Computation on Modern Hardware">
-<meta property="og:url" content="https://jifengwu2k.github.io/2026/04/17/Jie-Liu-s-B-Exam-Abstractions-and-Optimizations-for-Sparse-Tensor-Computation-on-Modern-Hardware/index.html">
+<meta property="og:title" content="Memory Models and Forward-Progress Guarantees">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/08/31/Memory-Models-and-Forward-Progress-Guarantees/index.html">
 <meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
-<meta property="og:description" content="A summary of Jie Liu&#39;s B-exam on sparse tensor computation, covering sparse format conversion, asynchronous GPU execution, and the design of high-performance BCSR&#x2F;WCSR SpMM kernels.">
+<meta property="og:description" content="Memory models govern shared-memory visibility and ordering; forward-progress guarantees govern whether concurrent work can continue executing.">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-04-17T04:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-17T04:00:00.000Z">
+<meta property="article:published_time" content="2026-08-31T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-31T04:00:00.000Z">
 <meta property="article:author" content="Jifeng Wu">
 <meta property="article:tag" content="computer-architecture">
-<meta property="article:tag" content="defense-summary">
-<meta property="article:tag" content="llm">
-<meta property="article:tag" content="machine-learning">
+<meta property="article:tag" content="programming-languages">
+<meta property="article:tag" content="reference">
+<meta property="article:tag" content="systems">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Jie Liu&#39;s B-Exam: Abstractions and Optimizations for Sparse Tensor Computation on Modern Hardware - Jifeng Wu&#39;s Personal Website</title>
+  <title>Memory Models and Forward-Progress Guarantees - Jifeng Wu&#39;s Personal Website</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -306,7 +306,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Jie Liu's B-Exam: Abstractions and Optimizations for Sparse Tensor Computation on Modern Hardware</span>
+            <span id="subtitle">Memory Models and Forward-Progress Guarantees</span>
           
         </div>
 
@@ -322,8 +322,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-04-17 00:00" pubdate>
-          April 17, 2026
+        <time datetime="2026-08-31 00:00" pubdate>
+          August 31, 2026
         </time>
       </span>
     
@@ -334,7 +334,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          9.8k words
+          3.5k words
         
       </span>
     
@@ -345,7 +345,7 @@
         
         
         
-          82 mins
+          30 mins
         
       </span>
     
@@ -384,135 +384,38 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Jie Liu&#39;s B-Exam: Abstractions and Optimizations for Sparse Tensor Computation on Modern Hardware</h1>
+            <h1 id="seo-header">Memory Models and Forward-Progress Guarantees</h1>
             
             
               <div class="markdown-body">
                 
-                <p>On <strong>April 17, 2026</strong>, Jie Liu gave her <strong>B-exam</strong> over Zoom, titled <strong>“Abstractions and Optimizations for Sparse Tensor Computation on Modern Hardware.”</strong></p>
-<p>The central theme of the presentation was simple but important: <strong>specialization is unavoidable in sparse computing</strong>, yet manually engineering every sparse format and every sparse kernel for every hardware target does not scale. Jie framed her dissertation around two complementary directions:</p>
-<ol>
-<li><strong>format specialization</strong>: a unified abstraction and compiler framework for representing, converting, and generating code for many sparse tensor formats; and</li>
-<li><strong>hardware specialization</strong>: a systematic study of how to map sparse matrix-matrix multiplication efficiently onto modern asynchronous GPU architectures.</li>
+                <p>A <strong>memory model</strong> is a specification for how concurrent threads interact through shared memory. It defines the rules and guarantees around the visibility and ordering of reads and writes.</p>
+<p>In a single-threaded program, execution appears strictly sequential. In a parallel program, the compiler and the processor may reorder instructions, cache values in registers or caches, and buffer writes. These optimizations are safe in isolation but can make multithreaded behavior unpredictable: one thread may not immediately observe a change made by another. The memory model says which reorderings are allowed and when a write becomes visible to other threads.</p>
+<p>Three ideas are central:</p>
+<ul>
+<li><strong>Atomicity:</strong> an operation—such as reading or writing a variable—completes as a single unit, so no other thread ever observes a half-completed result.</li>
+<li><strong>Visibility:</strong> a change made by one thread becomes observable to other threads, typically through cache coherence and explicit synchronization.</li>
+<li><strong>Ordering:</strong> the compiler or CPU is constrained from rearranging operations when their logical order matters.</li>
+</ul>
+<h2 id="Forward-progress-guarantees"><a href="#Forward-progress-guarantees" class="headerlink" title="Forward-progress guarantees"></a>Forward-progress guarantees</h2><p>Where the memory model says <em>what</em> a thread observes, a <strong>progress model</strong>—also called a <strong>forward-progress guarantee</strong>—says <em>whether</em> a thread keeps executing. It describes the hardware-level scheduling behavior that determines how processors and accelerators advance concurrent threads, tasks, or workgroups. Its purpose is to prevent permanent stalls caused by resource scheduling.</p>
+<p>This is a liveness question. In concurrency theory:</p>
+<ul>
+<li><strong>Safety</strong> means nothing bad happens—for example, no data race occurs.</li>
+<li><strong>Liveness</strong> means something good eventually happens—for example, a thread finishes execution.</li>
+</ul>
+<p>A progress guarantee is fundamentally a liveness guarantee. It does not replace correct synchronization, and it cannot resolve a logical deadlock in which two threads wait forever on each other. It matters when a thread is waiting for work that the hardware may fail to schedule.</p>
+<h3 id="Common-forward-progress-levels"><a href="#Common-forward-progress-levels" class="headerlink" title="Common forward-progress levels"></a>Common forward-progress levels</h3><ol>
+<li><p><strong>Weak progress &#x2F; no useful guarantee.</strong> The hardware makes no promise that a waiting thread will resume while other tasks occupy the execution units. If thread A spins waiting for a flag set by thread B, and thread B is never scheduled, the system can hang indefinitely.</p>
+</li>
+<li><p><strong>Concurrent forward progress.</strong> Every active thread eventually makes progress in finite time. Threads may be time-sliced onto the same resources, but a thread that waits on another is guaranteed that the other thread will eventually be scheduled. This resembles the goal of preemptive CPU scheduling.</p>
+</li>
+<li><p><strong>Parallel forward progress.</strong> Waiting threads and the threads they depend on are guaranteed to be co-resident and to execute simultaneously on distinct execution units, so one thread’s spin-wait cannot prevent another from running.</p>
+</li>
 </ol>
-<h2 id="Why-sparse-tensor-computation-remains-hard"><a href="#Why-sparse-tensor-computation-remains-hard" class="headerlink" title="Why sparse tensor computation remains hard"></a>Why sparse tensor computation remains hard</h2><p>Sparse tensors show up everywhere: graph learning, scientific computing, recommender systems, and LLM inference. But sparse workloads are fundamentally harder to optimize than dense ones.</p>
-<p>A recurring point in the talk was that, as sparsity increases, the computation becomes increasingly <strong>memory-bound</strong> rather than compute-bound. Compared with dense GEMM, sparse matrix-matrix multiplication (SpMM) often has:</p>
-<ul>
-<li>worse memory locality,</li>
-<li>less contiguous access to the dense operand,</li>
-<li>less reuse across iterations,</li>
-<li>and more irregular control flow.</li>
-</ul>
-<p>At the same time, the sparse computing world keeps fragmenting:</p>
-<ul>
-<li>many specialized sparse formats have been proposed,</li>
-<li>different hardware platforms prefer different regularities,</li>
-<li>and kernels that are good on one system may be awkward or inefficient on another.</li>
-</ul>
-<p>This creates a dual challenge: we need both <strong>better abstractions</strong> for sparse formats and <strong>better strategies</strong> for mapping them onto specialized hardware.</p>
-<h2 id="Contribution-1-UniSparse"><a href="#Contribution-1-UniSparse" class="headerlink" title="Contribution 1: UniSparse"></a>Contribution 1: UniSparse</h2><p>The first major contribution was <strong>UniSparse</strong>, a unified abstraction for sparse tensor formats.</p>
-<p>Jie motivated UniSparse by contrasting it with prior systems such as <strong>TACO</strong>, which use a small fixed attribute vocabulary to describe sparse formats. Her argument was that such attribute-based schemes are useful, but fundamentally limited: they cannot naturally express the full diversity of existing and emerging sparse formats.</p>
-<p>The key design move in UniSparse is to <strong>separate sparse formats into two dimensions</strong>:</p>
-<ul>
-<li><strong>data structure</strong>: how sparse tensor metadata and coordinates are logically represented, and</li>
-<li><strong>data layout</strong>: how the data is physically arranged in memory.</li>
-</ul>
-<p>This decomposition makes the abstraction substantially more expressive.</p>
-<h3 id="Core-ideas-in-UniSparse"><a href="#Core-ideas-in-UniSparse" class="headerlink" title="Core ideas in UniSparse"></a>Core ideas in UniSparse</h3><p>From the talk, the important ingredients were:</p>
-<ul>
-<li><strong>index maps</strong> for describing how indices in a dense tensor map to indices in a sparse representation,</li>
-<li><strong>metadata trees</strong> for reasoning about hierarchical sparse structure,</li>
-<li><strong>layout choices</strong> expressed via traversal order,</li>
-<li>and a small set of well-defined <strong>mutation primitives</strong>, especially operations such as <strong>merge</strong> and <strong>trim</strong>.</li>
-</ul>
-<p>The conceptual payoff is that many formats that look unrelated at first can be described as variations in structure, layout, and metadata transformation.</p>
-<h3 id="What-UniSparse-enables"><a href="#What-UniSparse-enables" class="headerlink" title="What UniSparse enables"></a>What UniSparse enables</h3><p>UniSparse is not only a descriptive language. It is also intended to support automation.</p>
-<p>According to the talk, the framework supports:</p>
-<ul>
-<li>expressing a broad range of custom sparse formats,</li>
-<li>representing custom index-map transformations,</li>
-<li>describing hybrid formats and alternative memory layouts,</li>
-<li><strong>automated format conversion</strong>,</li>
-<li>and <strong>kernel generation</strong> through an MLIR-based compiler infrastructure.</li>
-</ul>
-<p>Jie emphasized that the compiler can infer conversion sequences between source and target formats by using reversible operators plus a reachable reference representation. In other words, UniSparse is meant to bridge custom format design and actual compiler automation, instead of serving as a purely theoretical notation.</p>
-<p>This is a strong systems contribution because it aims to reduce the amount of handwritten sparse-format-specific infrastructure that researchers and engineers typically have to maintain.</p>
-<h2 id="Contribution-2-optimizing-sparse-kernels-on-GPUs"><a href="#Contribution-2-optimizing-sparse-kernels-on-GPUs" class="headerlink" title="Contribution 2: optimizing sparse kernels on GPUs"></a>Contribution 2: optimizing sparse kernels on GPUs</h2><p>The second half of the talk shifted from abstraction to performance engineering.</p>
-<p>Here the focus was on <strong>SpMM on NVIDIA Hopper GPUs</strong>, especially on how to exploit Hopper’s asynchronous execution features for sparse workloads. Jie argued that recent GPU architectures expose powerful mechanisms designed largely with dense matrix multiplication in mind, but sparse kernels do not automatically benefit from them.</p>
-<p>That observation led to a systematic optimization study.</p>
-<h3 id="Starting-point-sparse-is-not-dense"><a href="#Starting-point-sparse-is-not-dense" class="headerlink" title="Starting point: sparse is not dense"></a>Starting point: sparse is not dense</h3><p>A useful lesson from the talk was that many optimizations that work beautifully for dense GEMM do <strong>not</strong> transfer cleanly to sparse workloads. Sparse matrices introduce:</p>
-<ul>
-<li>irregular nonzero distributions,</li>
-<li>padding overhead,</li>
-<li>load imbalance,</li>
-<li>and weaker reuse patterns.</li>
-</ul>
-<p>So even if the hardware offers mechanisms such as tensor cores, asynchronous memory movement, or cluster-level execution, the burden is still on the kernel designer to mine enough regularity from the sparse structure.</p>
-<h3 id="Hopper-specific-mechanisms"><a href="#Hopper-specific-mechanisms" class="headerlink" title="Hopper-specific mechanisms"></a>Hopper-specific mechanisms</h3><p>The talk examined several Hopper features in detail, especially:</p>
-<ul>
-<li><strong>WGMMA</strong> (warp-group matrix multiply-accumulate),</li>
-<li><strong>TMA</strong> (Tensor Memory Accelerator),</li>
-<li><strong>warp specialization</strong> with producer-consumer pipelines,</li>
-<li>thread-block clusters,</li>
-<li>and persistent-kernel style scheduling.</li>
-</ul>
-<p>The optimization story was progressive rather than magical.</p>
-<ol>
-<li>A basic implementation was far from efficient.</li>
-<li>Replacing scalar FMA with <strong>WGMMA</strong> brought a large speedup.</li>
-<li>Moving data with <strong>TMA</strong> improved throughput further.</li>
-<li>Using <strong>warp specialization</strong> and circular buffers allowed load and compute to overlap more effectively.</li>
-<li>Some inter-SM ideas, such as multicast and persistent scheduling, were studied carefully but did not always help because sparse irregularity reintroduced synchronization overhead and load imbalance.</li>
-</ol>
-<p>That last point was one of the most interesting aspects of the talk: <strong>negative results were treated as first-class technical insight</strong>. Jie did not present Hopper as a magic solution. Instead, she showed where the architecture helps, where it hurts, and why sparse workloads expose limitations that dense-kernel techniques can hide.</p>
-<h2 id="BCSR-and-WCSR"><a href="#BCSR-and-WCSR" class="headerlink" title="BCSR and WCSR"></a>BCSR and WCSR</h2><p>A particularly concrete part of the presentation was the discussion of specialized sparse formats for GPU execution.</p>
-<h3 id="BCSR"><a href="#BCSR" class="headerlink" title="BCSR"></a>BCSR</h3><p>The talk first used <strong>BCSR (Block Compressed Sparse Row)</strong> as a structured format that matches tensor-core-style execution reasonably well. BCSR makes it easier to feed blocked sparse data into Hopper’s matrix-multiply machinery, but it can also introduce padding overhead when the sparse structure is highly irregular.</p>
-<h3 id="WCSR"><a href="#WCSR" class="headerlink" title="WCSR"></a>WCSR</h3><p>To reduce that overhead, Jie introduced <strong>WCSR (Window Compressed Sparse Row)</strong>.</p>
-<p>The motivation was that BCSR still stores redundant zero substructures in some cases. WCSR is more compact and improves load balancing by splitting work at a finer granularity. The trade-off is that it sacrifices some regularity:</p>
-<ul>
-<li>BCSR is friendlier to fully contiguous accesses and async mechanisms such as TMA,</li>
-<li>while WCSR is more compact and better balanced, but requires more indirect access for some operands.</li>
-</ul>
-<p>This kind of trade-off analysis made the talk especially strong: the design space was not presented as a single universal winner, but as a careful balancing act between compactness, regularity, and hardware friendliness.</p>
-<h2 id="Main-reported-results"><a href="#Main-reported-results" class="headerlink" title="Main reported results"></a>Main reported results</h2><p>Two headline results stood out.</p>
-<h3 id="Sparse-kernel-performance"><a href="#Sparse-kernel-performance" class="headerlink" title="Sparse kernel performance"></a>Sparse kernel performance</h3><p>On <strong>SuiteSparse</strong> benchmarks, Jie reported that:</p>
-<ul>
-<li>the <strong>WCSR</strong> kernel outperformed prior SpMM kernels,</li>
-<li>reaching <strong>1.47×</strong> over <strong>AccSpMM</strong>,</li>
-<li>and <strong>6.24×</strong> over <strong>cuSPARSE</strong>.</li>
-</ul>
-<p>The <strong>BCSR</strong> kernel also performed very strongly when sparsity patterns were favorable, especially at moderate density.</p>
-<h3 id="End-to-end-LLM-impact"><a href="#End-to-end-LLM-impact" class="headerlink" title="End-to-end LLM impact"></a>End-to-end LLM impact</h3><p>The talk also connected sparse kernel design to a concrete LLM use case.</p>
-<p>Using <strong>Qwen2.5-7B</strong> in the prefill stage, Jie combined:</p>
-<ul>
-<li>sparse attention from prior work, and</li>
-<li>her sparse FFN acceleration using block sparsity.</li>
-</ul>
-<p>The reported end-to-end gain was a combined <strong>2.66× speedup</strong> at <strong>90% block sparsity</strong> with <strong>64K tokens</strong> over a <strong>cuDNN&#x2F;cuBLAS</strong> baseline.</p>
-<p>This was an important part of the presentation because it showed that the work is not only about microbenchmarks or isolated kernels. It also has implications for real model-serving pipelines.</p>
-<h2 id="Questions-that-shaped-the-discussion"><a href="#Questions-that-shaped-the-discussion" class="headerlink" title="Questions that shaped the discussion"></a>Questions that shaped the discussion</h2><p>The Q&amp;A was strong and revealed what I thought were the most intellectually interesting edges of the work.</p>
-<h3 id="1-Can-specialized-sparse-formats-be-discovered-automatically"><a href="#1-Can-specialized-sparse-formats-be-discovered-automatically" class="headerlink" title="1. Can specialized sparse formats be discovered automatically?"></a>1. Can specialized sparse formats be discovered automatically?</h3><p>One audience question asked whether formats such as those used for warp-specialized SpMM, TMA-based movement, or multicast-friendly layouts were designed manually, and whether they could eventually be discovered automatically.</p>
-<p>Jie said the formats were designed manually, but that she later realized they could be expressed using UniSparse’s format-preprocessing framework. She also suggested that an LLM-guided feedback loop might make future format exploration more automatic.</p>
-<p>That answer was notable because it hints at a future research direction: <strong>use a rich sparse-format IR not just to encode known formats, but to search over format design spaces.</strong></p>
-<h3 id="2-Is-UniSparse-a-library-or-a-portability-layer"><a href="#2-Is-UniSparse-a-library-or-a-portability-layer" class="headerlink" title="2. Is UniSparse a library, or a portability layer?"></a>2. Is UniSparse a library, or a portability layer?</h3><p>Another question asked whether UniSparse should be thought of as a standalone sparse library, or more as an integration layer across libraries and backends.</p>
-<p>Jie’s answer clarified that UniSparse separates:</p>
-<ul>
-<li><strong>format conversion</strong>, implemented through conversion operators lowered to linked function calls, and</li>
-<li><strong>kernel generation</strong>, where existing lowering passes are reused or external implementations are linked.</li>
-</ul>
-<p>So at least in its current form, UniSparse is not simply a drop-in universal wrapper. It is better understood as a <strong>compiler and IR framework</strong> that could, with additional engineering, become a useful integration layer for other sparse libraries.</p>
-<h3 id="3-Is-Hopper-really-good-for-sparse-workloads"><a href="#3-Is-Hopper-really-good-for-sparse-workloads" class="headerlink" title="3. Is Hopper really good for sparse workloads?"></a>3. Is Hopper really good for sparse workloads?</h3><p>One of the best questions challenged the premise of the second half of the talk: if Hopper’s features are mostly built for dense matrix multiplication, and sparse kernels still remain well below the roofline at high sparsity, should we conclude that Hopper is not really a good fit for sparse workloads?</p>
-<p>Jie’s answer was nuanced.</p>
-<p>She did <strong>not</strong> claim that Hopper is ideal for sparse workloads. Instead, she emphasized that:</p>
-<ul>
-<li>GPUs remain the most mature widely available high-performance platform,</li>
-<li>sparse workloads are intrinsically more irregular than dense ones,</li>
-<li>and comparing a general-purpose GPU against a hypothetical sparse-specific accelerator is not always the most useful baseline.</li>
-</ul>
-<p>In other words, Hopper is not the perfect sparse machine, but it is still the most practical and relevant platform for serious sparse-kernel work today.</p>
-<h3 id="4-What-should-NVIDIA-change-to-make-SpMM-truly-first-class"><a href="#4-What-should-NVIDIA-change-to-make-SpMM-truly-first-class" class="headerlink" title="4. What should NVIDIA change to make SpMM truly first-class?"></a>4. What should NVIDIA change to make SpMM truly first-class?</h3><p>Another memorable exchange asked what GPU designers should change if they wanted to make sparse matrix multiplication a first-class workload rather than something adapted from dense-math machinery.</p>
-<p>Jie’s answer suggested that the current sparse tensor core model is still too rigid, because it assumes specific structured sparsity patterns and often falls back on padding. Her instinct was that a truly better solution would likely require <strong>more dedicated sparse-oriented hardware support</strong>, rather than merely repurposing dense tensor cores.</p>
-<p>That answer nicely captured a broader lesson from the whole talk: a lot of current sparse acceleration is still about forcing irregular computations into regular hardware templates.</p>
+<h2 id="Why-this-matters-on-GPUs"><a href="#Why-this-matters-on-GPUs" class="headerlink" title="Why this matters on GPUs"></a>Why this matters on GPUs</h2><p>GPU execution makes progress assumptions especially important. A GPU has finite execution resources and schedules thread groups onto them. If one group occupies those resources while spin-waiting for another group that has not yet been scheduled, the second group may never run to satisfy the wait.</p>
+<p>Historically, GPUs used tightly coupled SIMT execution, in which all threads in a warp executed instructions in lockstep. This created a hazard for locks: if one thread in a warp held a lock while other threads in the same warp spun waiting for it, the warp could stall. Because the warp executed a single instruction stream, the spinning threads kept issuing the spin-loop instruction while the lock holder was masked out and unable to release the lock.</p>
+<p>Modern NVIDIA GPUs support Independent Thread Scheduling, which allows more flexibility within a warp. Nevertheless, correct GPU code must still use the documented synchronization primitives and should not assume that a waiting group can force another group to become resident.</p>
+<p>When writing high-performance parallel code, both contracts matter. The <strong>memory model</strong> tells us how to publish and observe data safely. The <strong>progress model</strong> tells us whether the threads needed by that protocol can actually make forward progress. Together, they determine whether synchronization is both correct and live.</p>
 
                 
               </div>
@@ -531,7 +434,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Research-Notes/" class="category-chain-item">Research Notes</a>
+  <a href="/categories/Systems/" class="category-chain-item">Systems</a>
   
   
 
@@ -546,13 +449,13 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/machine-learning/" class="print-no-link">#machine-learning</a>
+        <a href="/tags/reference/" class="print-no-link">#reference</a>
       
-        <a href="/tags/llm/" class="print-no-link">#llm</a>
-      
-        <a href="/tags/defense-summary/" class="print-no-link">#defense-summary</a>
+        <a href="/tags/systems/" class="print-no-link">#systems</a>
       
         <a href="/tags/computer-architecture/" class="print-no-link">#computer-architecture</a>
+      
+        <a href="/tags/programming-languages/" class="print-no-link">#programming-languages</a>
       
     </div>
   
@@ -564,8 +467,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Jie Liu&#39;s B-Exam: Abstractions and Optimizations for Sparse Tensor Computation on Modern Hardware</div>
-      <div>https://jifengwu2k.github.io/2026/04/17/Jie-Liu-s-B-Exam-Abstractions-and-Optimizations-for-Sparse-Tensor-Computation-on-Modern-Hardware/</div>
+      <div>Memory Models and Forward-Progress Guarantees</div>
+      <div>https://jifengwu2k.github.io/2026/08/31/Memory-Models-and-Forward-Progress-Guarantees/</div>
     </div>
     <div class="license-meta">
       
@@ -577,7 +480,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>April 17, 2026</div>
+          <div>August 31, 2026</div>
         </div>
       
       
@@ -609,18 +512,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/04/18/Docker-and-Podman-Containers-as-Lightweight-VMs-for-Interactive-Work/" title="Docker and Podman Containers as Lightweight VMs for Interactive Work">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Docker and Podman Containers as Lightweight VMs for Interactive Work</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/04/16/Critique-of-RFSeek-and-Ye-Shall-Find-A-tool-for-summary-visualization-and-analysis-of-RFCs/" title="Critique of &#34;RFSeek and Ye Shall Find: A tool for summary visualization and analysis of RFCs&#34;">
-                        <span class="hidden-mobile">Critique of &#34;RFSeek and Ye Shall Find: A tool for summary visualization and analysis of RFCs&#34;</span>
+                      <a href="/2026/08/31/Introduction-to-OpenMP/" title="Introduction to OpenMP">
+                        <span class="hidden-mobile">Introduction to OpenMP</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

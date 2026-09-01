@@ -4,6 +4,68 @@
   
   
   <entry>
+    <title>Memory Models and Forward-Progress Guarantees</title>
+    <link href="/2026/08/31/Memory-Models-and-Forward-Progress-Guarantees/"/>
+    <url>/2026/08/31/Memory-Models-and-Forward-Progress-Guarantees/</url>
+    
+    <content type="html"><![CDATA[<p>A <strong>memory model</strong> is a specification for how concurrent threads interact through shared memory. It defines the rules and guarantees around the visibility and ordering of reads and writes.</p><p>In a single-threaded program, execution appears strictly sequential. In a parallel program, the compiler and the processor may reorder instructions, cache values in registers or caches, and buffer writes. These optimizations are safe in isolation but can make multithreaded behavior unpredictable: one thread may not immediately observe a change made by another. The memory model says which reorderings are allowed and when a write becomes visible to other threads.</p><p>Three ideas are central:</p><ul><li><strong>Atomicity:</strong> an operation—such as reading or writing a variable—completes as a single unit, so no other thread ever observes a half-completed result.</li><li><strong>Visibility:</strong> a change made by one thread becomes observable to other threads, typically through cache coherence and explicit synchronization.</li><li><strong>Ordering:</strong> the compiler or CPU is constrained from rearranging operations when their logical order matters.</li></ul><h2 id="Forward-progress-guarantees"><a href="#Forward-progress-guarantees" class="headerlink" title="Forward-progress guarantees"></a>Forward-progress guarantees</h2><p>Where the memory model says <em>what</em> a thread observes, a <strong>progress model</strong>—also called a <strong>forward-progress guarantee</strong>—says <em>whether</em> a thread keeps executing. It describes the hardware-level scheduling behavior that determines how processors and accelerators advance concurrent threads, tasks, or workgroups. Its purpose is to prevent permanent stalls caused by resource scheduling.</p><p>This is a liveness question. In concurrency theory:</p><ul><li><strong>Safety</strong> means nothing bad happens—for example, no data race occurs.</li><li><strong>Liveness</strong> means something good eventually happens—for example, a thread finishes execution.</li></ul><p>A progress guarantee is fundamentally a liveness guarantee. It does not replace correct synchronization, and it cannot resolve a logical deadlock in which two threads wait forever on each other. It matters when a thread is waiting for work that the hardware may fail to schedule.</p><h3 id="Common-forward-progress-levels"><a href="#Common-forward-progress-levels" class="headerlink" title="Common forward-progress levels"></a>Common forward-progress levels</h3><ol><li><p><strong>Weak progress &#x2F; no useful guarantee.</strong> The hardware makes no promise that a waiting thread will resume while other tasks occupy the execution units. If thread A spins waiting for a flag set by thread B, and thread B is never scheduled, the system can hang indefinitely.</p></li><li><p><strong>Concurrent forward progress.</strong> Every active thread eventually makes progress in finite time. Threads may be time-sliced onto the same resources, but a thread that waits on another is guaranteed that the other thread will eventually be scheduled. This resembles the goal of preemptive CPU scheduling.</p></li><li><p><strong>Parallel forward progress.</strong> Waiting threads and the threads they depend on are guaranteed to be co-resident and to execute simultaneously on distinct execution units, so one thread’s spin-wait cannot prevent another from running.</p></li></ol><h2 id="Why-this-matters-on-GPUs"><a href="#Why-this-matters-on-GPUs" class="headerlink" title="Why this matters on GPUs"></a>Why this matters on GPUs</h2><p>GPU execution makes progress assumptions especially important. A GPU has finite execution resources and schedules thread groups onto them. If one group occupies those resources while spin-waiting for another group that has not yet been scheduled, the second group may never run to satisfy the wait.</p><p>Historically, GPUs used tightly coupled SIMT execution, in which all threads in a warp executed instructions in lockstep. This created a hazard for locks: if one thread in a warp held a lock while other threads in the same warp spun waiting for it, the warp could stall. Because the warp executed a single instruction stream, the spinning threads kept issuing the spin-loop instruction while the lock holder was masked out and unable to release the lock.</p><p>Modern NVIDIA GPUs support Independent Thread Scheduling, which allows more flexibility within a warp. Nevertheless, correct GPU code must still use the documented synchronization primitives and should not assume that a waiting group can force another group to become resident.</p><p>When writing high-performance parallel code, both contracts matter. The <strong>memory model</strong> tells us how to publish and observe data safely. The <strong>progress model</strong> tells us whether the threads needed by that protocol can actually make forward progress. Together, they determine whether synchronization is both correct and live.</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Systems</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>reference</tag>
+      
+      <tag>systems</tag>
+      
+      <tag>computer-architecture</tag>
+      
+      <tag>programming-languages</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Introduction to OpenMP</title>
+    <link href="/2026/08/31/Introduction-to-OpenMP/"/>
+    <url>/2026/08/31/Introduction-to-OpenMP/</url>
+    
+    <content type="html"><![CDATA[<h2 id="Why-Start-with-OpenMP"><a href="#Why-Start-with-OpenMP" class="headerlink" title="Why Start with OpenMP"></a>Why Start with OpenMP</h2><p>OpenMP is the most approachable entry point into shared-memory parallel programming. It works through compiler directives (<code>#pragma omp ...</code>), so you can add parallelism incrementally to existing C++ code without restructuring your whole application.</p><p>Instead of managing OS threads, mutexes, or thread lifetimes by hand, you annotate your code with directives and let the compiler and runtime generate the threads for you.</p><h2 id="The-Fork-Join-Execution-Model"><a href="#The-Fork-Join-Execution-Model" class="headerlink" title="The Fork-Join Execution Model"></a>The Fork-Join Execution Model</h2><p>OpenMP uses a fork-join model:</p><ol><li>Your program starts as a single sequential thread, called the <strong>initial thread</strong>.</li><li>When execution reaches an OpenMP <em>parallel</em> construct, the initial thread <strong>forks</strong> into a team of threads.</li><li>All threads run the same block of code concurrently.</li><li>When the block ends, the threads <strong>join</strong> back together, leaving only the initial thread to continue.</li></ol><p>Because the directives are standard compiler pragmas, a compiler without OpenMP support simply ignores them and builds your program as ordinary sequential code.</p><h3 id="Creating-a-Parallel-Region"><a href="#Creating-a-Parallel-Region" class="headerlink" title="Creating a Parallel Region"></a>Creating a Parallel Region</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;omp.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-meta">#<span class="hljs-keyword">pragma</span> omp parallel</span><br>    &#123;<br>        <span class="hljs-type">int</span> thread_id = <span class="hljs-built_in">omp_get_thread_num</span>();<br>        <span class="hljs-type">int</span> total_threads = <span class="hljs-built_in">omp_get_num_threads</span>();<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;Hello from thread &quot;</span> &lt;&lt; thread_id &lt;&lt; <span class="hljs-string">&quot; out of &quot;</span><br>                  &lt;&lt; total_threads &lt;&lt; std::endl;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure><p>When compiled with OpenMP enabled (for example, <code>g++ -fopenmp main.cpp</code>), every thread in the team executes the block inside the braces independently.</p><h3 id="Parallelizing-Loops"><a href="#Parallelizing-Loops" class="headerlink" title="Parallelizing Loops"></a>Parallelizing Loops</h3><p>The most common everyday use of OpenMP is distributing loop iterations across threads with the <code>for</code> work-sharing construct:</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">vector_add</span><span class="hljs-params">(<span class="hljs-type">const</span> std::vector&lt;<span class="hljs-type">double</span>&gt;&amp; a,</span></span><br><span class="hljs-params"><span class="hljs-function">                <span class="hljs-type">const</span> std::vector&lt;<span class="hljs-type">double</span>&gt;&amp; b,</span></span><br><span class="hljs-params"><span class="hljs-function">                std::vector&lt;<span class="hljs-type">double</span>&gt;&amp; c)</span> </span>&#123;<br>    <span class="hljs-type">const</span> <span class="hljs-type">int</span> n = a.<span class="hljs-built_in">size</span>();<br>    <span class="hljs-meta">#<span class="hljs-keyword">pragma</span> omp parallel for</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) &#123;<br>        c[i] = a[i] + b[i];<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>OpenMP automatically splits the range <code>0</code> to <code>n - 1</code> among the available hardware threads, so each iteration runs exactly once across the team.</p><h2 id="Managing-Data-The-Hidden-Pitfall"><a href="#Managing-Data-The-Hidden-Pitfall" class="headerlink" title="Managing Data: The Hidden Pitfall"></a>Managing Data: The Hidden Pitfall</h2><p>Because all threads share the same memory, keeping data safe is your responsibility. When two threads write to the same variable at the same time, you get a <strong>race condition</strong>, and the result is undefined behavior.</p><p>OpenMP uses clauses to control how variables are shared:</p><ul><li><code>shared</code>: The default for most variables. Every thread reads and writes the <em>same</em> memory location.</li><li><code>private(var)</code>: Gives each thread its own uninitialized copy of <code>var</code>. Changes made by one thread are invisible to the others.</li><li><code>reduction(op : var)</code>: Combines each thread’s local result into a single global value using an operation such as <code>+</code>, <code>*</code>, <code>max</code>, or <code>min</code>. This is essential for accumulation loops like sums and dot products.</li></ul><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">double</span> sum = <span class="hljs-number">0.0</span>;<br><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> omp parallel for reduction(+:sum)</span><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) &#123;<br>    sum += a[i];<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="Task-Based-Parallelism"><a href="#Task-Based-Parallelism" class="headerlink" title="Task-Based Parallelism"></a>Task-Based Parallelism</h2><p>Traditional OpenMP is built around structured loops, but many modern algorithms — graph traversals, recursive divide-and-conquer, and tree searches — do not map cleanly onto flat arrays. <strong>Tasks</strong> handle these irregular workloads.</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">process_node</span><span class="hljs-params">(Node* node)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (!node) <span class="hljs-keyword">return</span>;<br><br>    do_work(node);<br><br>    <span class="hljs-comment">// Spawn a task for each child.</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">pragma</span> omp task</span><br>    <span class="hljs-built_in">process_node</span>(node-&gt;left);<br>    <span class="hljs-meta">#<span class="hljs-keyword">pragma</span> omp task</span><br>    <span class="hljs-built_in">process_node</span>(node-&gt;right);<br><br>    <span class="hljs-comment">// Wait for this node&#x27;s child tasks to finish.</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">pragma</span> omp taskwait</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">traverse</span><span class="hljs-params">(Node* root)</span> </span>&#123;<br>    <span class="hljs-meta">#<span class="hljs-keyword">pragma</span> omp parallel</span><br>    &#123;<br>        <span class="hljs-comment">// Only one thread starts the recursion; tasks do the rest.</span><br>        <span class="hljs-meta">#<span class="hljs-keyword">pragma</span> omp single</span><br>        &#123;<br>            <span class="hljs-built_in">process_node</span>(root);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>The <code>single</code> construct ensures only one thread begins the recursion. Each recursive call then creates tasks that the team executes as work becomes available, letting the program adapt to whatever shape the workload takes.</p><h2 id="GPU-Offloading-with-target"><a href="#GPU-Offloading-with-target" class="headerlink" title="GPU Offloading with target"></a>GPU Offloading with <code>target</code></h2><p>OpenMP began as a CPU-focused model, but OpenMP 4.5 and later add <strong>target offloading</strong>, which lets you compile and run loops directly on GPUs.</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">double</span> sum = <span class="hljs-number">0.0</span>;<br><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> omp target teams distribute parallel for reduction(+:sum)</span><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) &#123;<br>    sum += a[i];<br>&#125;<br></code></pre></td></tr></table></figure><p>Offloading is powerful, but the syntax tends to be verbose, and compiler support varies more than it does for CPU execution. Check your compiler’s documentation before relying on it.</p><h2 id="Next-Step-Kokkos-for-Performance-Portability"><a href="#Next-Step-Kokkos-for-Performance-Portability" class="headerlink" title="Next Step: Kokkos for Performance Portability"></a>Next Step: Kokkos for Performance Portability</h2><p>Once you are comfortable with CPU multithreading through OpenMP, a natural next step is <strong>Kokkos</strong>. Developed by Sandia National Laboratories, Kokkos is a C++ programming model that lets you write an algorithm once and run it on multi-core CPUs as well as NVIDIA, AMD, and Intel GPUs, without rewriting it for each hardware back end.</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Programming</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>reference</tag>
+      
+      <tag>systems</tag>
+      
+      <tag>c++</tag>
+      
+      <tag>computer-architecture</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Dorm-Friendly Haudenosaunee-Inspired Recipes, Drinks, and Snacks</title>
     <link href="/2026/08/30/Dorm-Friendly-Haudenosaunee-Inspired-Recipes-Drinks-and-Snacks/"/>
     <url>/2026/08/30/Dorm-Friendly-Haudenosaunee-Inspired-Recipes-Drinks-and-Snacks/</url>
@@ -47,9 +109,9 @@
     
     <tags>
       
-      <tag>type-theory</tag>
-      
       <tag>programming-languages</tag>
+      
+      <tag>type-theory</tag>
       
       <tag>functional-programming</tag>
       
@@ -229,9 +291,9 @@
       
       <tag>reference</tag>
       
-      <tag>neuron</tag>
-      
       <tag>python</tag>
+      
+      <tag>neuron</tag>
       
       <tag>llm</tag>
       
@@ -260,11 +322,11 @@
       
       <tag>reference</tag>
       
-      <tag>neuron</tag>
-      
       <tag>python</tag>
       
       <tag>shell</tag>
+      
+      <tag>neuron</tag>
       
     </tags>
     
@@ -498,11 +560,11 @@
       
       <tag>systems</tag>
       
+      <tag>machine-learning</tag>
+      
       <tag>python</tag>
       
       <tag>llm</tag>
-      
-      <tag>machine-learning</tag>
       
       <tag>linux</tag>
       
@@ -535,13 +597,13 @@
       
       <tag>systems</tag>
       
-      <tag>neuron</tag>
+      <tag>machine-learning</tag>
       
       <tag>python</tag>
       
-      <tag>machine-learning</tag>
-      
       <tag>shell</tag>
+      
+      <tag>neuron</tag>
       
     </tags>
     
@@ -568,9 +630,9 @@
       
       <tag>reference</tag>
       
-      <tag>type-theory</tag>
-      
       <tag>programming-languages</tag>
+      
+      <tag>type-theory</tag>
       
     </tags>
     
@@ -628,9 +690,9 @@
       
       <tag>systems</tag>
       
-      <tag>llm</tag>
-      
       <tag>machine-learning</tag>
+      
+      <tag>llm</tag>
       
       <tag>inference</tag>
       
@@ -731,9 +793,9 @@
       
       <tag>systems</tag>
       
-      <tag>llm</tag>
-      
       <tag>machine-learning</tag>
+      
+      <tag>llm</tag>
       
       <tag>inference</tag>
       
@@ -948,9 +1010,9 @@
     
     <tags>
       
-      <tag>llm</tag>
-      
       <tag>machine-learning</tag>
+      
+      <tag>llm</tag>
       
       <tag>defense-summary</tag>
       
@@ -1860,9 +1922,9 @@
     
     <tags>
       
-      <tag>llm</tag>
-      
       <tag>machine-learning</tag>
+      
+      <tag>llm</tag>
       
       <tag>ollama</tag>
       
