@@ -19,24 +19,24 @@
   <meta name="author" content="Jifeng Wu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="The useful outcome of a career fair is rarely an offer on the spot. It is a sequence of well-prepared conversations that produces information, relationships, and better next steps.">
+    <meta name="description" content="A sorted list, a sorted set, and a sorted dict - with O(log n) insert, delete, k-th element, and count queries.  Python’s standard library gives you a hash map (dict), a hash set (set), a binary heap">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Career Fairs Are Conversations, Not Conveyor Belts">
-<meta property="og:url" content="https://jifengwu2k.github.io/2026/09/03/Career-Fairs-Are-Conversations-Not-Conveyor-Belts/index.html">
+<meta property="og:title" content="sortedcontainers: The Balanced Tree Python Was Missing">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/09/07/sortedcontainers-The-Balanced-Tree-Python-Was-Missing/index.html">
 <meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
-<meta property="og:description" content="The useful outcome of a career fair is rarely an offer on the spot. It is a sequence of well-prepared conversations that produces information, relationships, and better next steps.">
+<meta property="og:description" content="A sorted list, a sorted set, and a sorted dict - with O(log n) insert, delete, k-th element, and count queries.  Python’s standard library gives you a hash map (dict), a hash set (set), a binary heap">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-09-03T04:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-03T04:00:00.000Z">
+<meta property="article:published_time" content="2026-09-07T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-08T01:07:07.842Z">
 <meta property="article:author" content="Jifeng Wu">
-<meta property="article:tag" content="career">
-<meta property="article:tag" content="communication">
-<meta property="article:tag" content="workshop-notes">
+<meta property="article:tag" content="data-structures">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="reference">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Career Fairs Are Conversations, Not Conveyor Belts - Jifeng Wu&#39;s Personal Website</title>
+  <title>sortedcontainers: The Balanced Tree Python Was Missing - Jifeng Wu&#39;s Personal Website</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -305,7 +305,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Career Fairs Are Conversations, Not Conveyor Belts</span>
+            <span id="subtitle">sortedcontainers: The Balanced Tree Python Was Missing</span>
           
         </div>
 
@@ -321,8 +321,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-09-03 00:00" pubdate>
-          September 3, 2026
+        <time datetime="2026-09-07 00:00" pubdate>
+          September 7, 2026
         </time>
       </span>
     
@@ -333,7 +333,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          8.5k words
+          3.2k words
         
       </span>
     
@@ -344,7 +344,7 @@
         
         
         
-          72 mins
+          27 mins
         
       </span>
     
@@ -383,117 +383,39 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Career Fairs Are Conversations, Not Conveyor Belts</h1>
+            <h1 id="seo-header">sortedcontainers: The Balanced Tree Python Was Missing</h1>
             
             
               <div class="markdown-body">
                 
-                <p>I attended Cornell Career Development’s <em>Making the Most of an In-Person Career Fair</em> workshop shortly before the fall fairs. The most useful reframing from the session was simple:</p>
-<blockquote>
-<p>A career fair is not a conveyor belt that turns resumes into jobs. It is a series of short conversations that should make the next step clearer.</p>
+                <blockquote>
+<p>A sorted list, a sorted set, and a sorted dict - with <code>O(log n)</code> insert, delete, k-th element, and count queries.</p>
 </blockquote>
-<p>That framing makes the event less mysterious. An employer is there to find people who fit its needs; a student, to find opportunities, information, and people worth following up with. Neither side is well served by a generic pitch, an unresearched question, or a stack of resumes exchanged without context.</p>
-<p>Here is the operating plan I took away.</p>
-<h2 id="Decide-what-a-successful-fair-means-for-you"><a href="#Decide-what-a-successful-fair-means-for-you" class="headerlink" title="Decide what a successful fair means for you"></a>Decide what a successful fair means for you</h2><p>The immediate goal is usually <strong>not</strong> to leave with an offer. A good fair can instead leave you with:</p>
+<p>Python’s standard library gives you a hash map (<code>dict</code>), a hash set (<code>set</code>), a binary heap (<code>heapq</code>), binary search over sorted lists (<code>bisect</code>), and a double-ended queue (<code>collections.deque</code>). What it does <strong>not</strong> give you is a balanced binary search tree - a container that stays sorted while you add and remove elements, and that can answer ordered queries (k-th element, rank, and counts) in <code>O(log n)</code>.</p>
+<p>That container is <strong><a target="_blank" rel="noopener" href="https://grantjenks.com/docs/sortedcontainers/"><code>sortedcontainers</code></a></strong> - a pure-Python library that is <strong>pre-installed on LeetCode’s Python judge</strong>, so you can import it in a submission without a second thought.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install sortedcontainers   <span class="hljs-comment"># for everything outside LeetCode</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="What-sortedcontainers-provides"><a href="#What-sortedcontainers-provides" class="headerlink" title="What sortedcontainers provides"></a>What <code>sortedcontainers</code> provides</h2><p>The library ships three classes, and each one answers the same three questions: <em>k-th smallest</em>, <em>insert &#x2F; delete</em>, and <em>how many elements are less than <code>v</code></em>. The only differences are whether duplicates are kept and whether you store bare values or key-value pairs.</p>
+<h3 id="SortedList-a-sorted-multiset-duplicates-kept"><a href="#SortedList-a-sorted-multiset-duplicates-kept" class="headerlink" title="SortedList - a sorted multiset (duplicates kept)"></a><code>SortedList</code> - a sorted multiset (duplicates kept)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> sortedcontainers <span class="hljs-keyword">import</span> SortedList<br>S = SortedList([<span class="hljs-number">2</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5</span>, <span class="hljs-number">8</span>, <span class="hljs-number">11</span>])<br></code></pre></td></tr></table></figure>
+
+<p><strong>k-th smallest - just index it.</strong> <code>S[k]</code> is the (k+1)-th smallest element, and duplicates each occupy a position:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">S[<span class="hljs-number">0</span>]  <span class="hljs-comment"># 2</span><br>S[<span class="hljs-number">1</span>]  <span class="hljs-comment"># 5</span><br>S[<span class="hljs-number">2</span>]  <span class="hljs-comment"># 5</span><br>S[<span class="hljs-number">3</span>]  <span class="hljs-comment"># 8</span><br>S[<span class="hljs-number">4</span>]  <span class="hljs-comment"># 11</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>add &#x2F; remove &#x2F; pop - order is preserved.</strong> <code>add</code> slots an element in for you; <code>remove</code> deletes a single occurrence; <code>pop(k)</code> removes and returns the element at index <code>k</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">S.add(<span class="hljs-number">7</span>)      <span class="hljs-comment"># [2, 5, 5, 7, 8, 11]</span><br>S.remove(<span class="hljs-number">5</span>)   <span class="hljs-comment"># [2, 5, 7, 8, 11]     (one 5 gone)</span><br>S.pop(<span class="hljs-number">0</span>)      <span class="hljs-comment"># 2   -&gt; [5, 7, 8, 11]   (remove and return the smallest)</span><br>S.pop(-<span class="hljs-number">1</span>)     <span class="hljs-comment"># 11  -&gt; [5, 7, 8]       (remove and return the largest)</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>bisect - how many elements are less than <code>v</code>?</strong> <code>bisect_left(v)</code> and <code>bisect_right(v)</code> both return a count:</p>
 <ul>
-<li>a clearer picture of a company, role, and hiring timeline;</li>
-<li>confirmation that an opportunity is or is not worth pursuing;</li>
-<li>a recruiter or alumnus’s preferred follow-up channel;</li>
-<li>a better understanding of the skills an employer actually prioritizes; and</li>
-<li>a concrete next action: apply, prepare for an interview, contact someone, or keep building a missing skill.</li>
+<li><code>bisect_left(v)</code>: number of elements strictly less than v</li>
+<li><code>bisect_right(v)</code>: number of elements less than or equal to v</li>
 </ul>
-<p>That goal varies by stage. A first-year student can use the fair to learn the terrain and practice talking to employers. Someone seeking an internship or full-time role may arrive with a small, prioritized list and a sharper agenda. Exploration is not a consolation prize; it is a legitimate use of a career fair.</p>
-<h2 id="Prepare-enough-that-the-conversation-can-begin-above-Google-search-level"><a href="#Prepare-enough-that-the-conversation-can-begin-above-Google-search-level" class="headerlink" title="Prepare enough that the conversation can begin above Google-search level"></a>Prepare enough that the conversation can begin above Google-search level</h2><p>Recruiters talk to many students and should not need to explain the first paragraph of their company’s website over and over.</p>
-<p>Before the fair, I plan to use Handshake to identify employers, review their roles, and build a target list. Around eight companies is a reasonable starting point, but the number matters less than having a reason for each one. Useful prioritization signals include:</p>
-<ul>
-<li>a role that is genuinely interesting;</li>
-<li>evidence that the employer hires Cornell students;</li>
-<li>an on-campus interview schedule;</li>
-<li>a relevant product, technical direction, or recent announcement; and</li>
-<li>a credible connection between one’s current skills and the employer’s work.</li>
-</ul>
-<p>The preparation is not about memorizing marketing language. It is about being able to say, in plain language, what the organization does, what problem it solves, and why that intersects with what I want to learn or contribute to.</p>
-<p>A few practical details matter too:</p>
-<ul>
-<li><strong>Apply early.</strong> A nominal application deadline is not a promise that a role will remain open until that date. Employers may review applications and pre-schedule interviews before the fair.</li>
-<li><strong>Bring paper resumes.</strong> Even when a resume is visible through Handshake, some employers prefer a physical copy at the table.</li>
-<li><strong>Check the mechanics.</strong> Register in Handshake, look at the map, and know where and when the fair takes place. Large fairs are crowded, lines form, and logistics consume more attention than expected.</li>
-<li><strong>Use the information hidden in plain sight.</strong> Handshake’s on-campus-interview view can reveal which employers are interviewing around the fair—useful context for deciding where to spend limited time.</li>
-</ul>
-<h2 id="Build-a-pitch-that-invites-a-response"><a href="#Build-a-pitch-that-invites-a-response" class="headerlink" title="Build a pitch that invites a response"></a>Build a pitch that invites a response</h2><p>The workshop’s best advice was to treat the pitch as a <strong>dialogue</strong>, not a monologue.</p>
-<p>A useful opening has four small pieces:</p>
-<ol>
-<li><strong>Who are you?</strong> Name, program, and broad area.</li>
-<li><strong>Why this employer?</strong> One specific connection based on actual research.</li>
-<li><strong>What is relevant about your background?</strong> A project, skill, or direction—not your entire biography.</li>
-<li><strong>What would you like to learn?</strong> Ask a question that gives the other person something real to answer.</li>
-</ol>
-<p>A template might be:</p>
-<blockquote>
-<p>Hi, I’m Jifeng, a first-year PhD student in ECE at Cornell. My background is in software engineering and programming languages, and I have been looking at work on compiler and hardware–software interfaces. I saw that your team is working on [specific area]. How do students with a systems or compiler background contribute to that work, and what do you look for in candidates?</p>
-</blockquote>
-<p>The important feature is not the exact wording, but that the introduction establishes <strong>why this conversation is happening</strong> and then makes room for the employer to participate.</p>
-<p>This is especially important for technical students. A career-fair conversation is usually not a technical interview. The first person at a table may be a university recruiter, while another may be a technical employee or alumnus. I should be able to explain every resume item at two levels:</p>
-<ul>
-<li>a technically accurate version for someone who wants detail; and</li>
-<li>a high-level version that names the problem, my contribution, and the transferable capability.</li>
-</ul>
-<p>For example, a highly specialized project should not be introduced only through its application domain if the portable skill is really systems design, performance analysis, verification, or sensor engineering. The point is not to hide the technical work; it is to make its relevance legible.</p>
-<h2 id="Ask-questions-that-create-information-not-just-conversation"><a href="#Ask-questions-that-create-information-not-just-conversation" class="headerlink" title="Ask questions that create information, not just conversation"></a>Ask questions that create information, not just conversation</h2><p>The best questions are informed by research and tailored to what I want to decide. Examples include:</p>
-<ul>
-<li>“I saw the internship posting. Do you consider first-year students for this role?”</li>
-<li>“What skills distinguish the candidates who are successful on this team?”</li>
-<li>“How does your hiring process work, and what is the expected timeline?”</li>
-<li>“I noticed the company is investing in [specific product or direction]. How does that affect this group’s work?”</li>
-<li>“How is the team using AI, and what judgment or skills do you want new hires to bring?”</li>
-<li>“I see internship roles but no full-time roles listed. Do you expect additional opportunities later?”</li>
-</ul>
-<p>These questions avoid two unhelpful extremes: asking for information already printed in the job description, and trying to sound clever rather than learning something useful. A question succeeds if its answer changes what I do next.</p>
-<p>It is also appropriate to ask how to follow up, what the timeline is, and what the next steps in the process look like. In contrast, the workshop advised leaving salary, benefits, and recruiters’ personal questions for an appropriate later stage.</p>
-<h2 id="Respect-the-line—and-the-human-being-across-the-table"><a href="#Respect-the-line—and-the-human-being-across-the-table" class="headerlink" title="Respect the line—and the human being across the table"></a>Respect the line—and the human being across the table</h2><p>A conversation may last only two or three minutes when other students are waiting. The recruiter usually sets the pace. If the conversation is going well and the recruiter keeps asking questions, continue. If a line is forming or I need to move on, I can end gracefully:</p>
-<blockquote>
-<p>It was great meeting you. I have a few other employers to speak with today. What is the best way to follow up with you?</p>
-</blockquote>
-<p>This is better than either lingering indefinitely or silently leaving after handing over a resume.</p>
-<p>“Standing out” is often misunderstood as a demand for a gimmick. The reliable way to stand out is much less theatrical: be prepared, be specific, listen, explain one relevant thing clearly, and follow up thoughtfully. A recruiter who has spoken with dozens of students is more likely to remember a real exchange than an elaborate performance.</p>
-<h2 id="Leave-every-useful-conversation-with-three-things"><a href="#Leave-every-useful-conversation-with-three-things" class="headerlink" title="Leave every useful conversation with three things"></a>Leave every useful conversation with three things</h2><p>Before walking away from an employer I care about, I want to know:</p>
-<ol>
-<li><strong>Timeline:</strong> When are applications reviewed or decisions made?</li>
-<li><strong>Process:</strong> What are the likely interview or screening steps?</li>
-<li><strong>Follow-up channel:</strong> Is an email, LinkedIn connection, Handshake message, or general recruiting inbox preferred?</li>
-</ol>
-<p>This small checklist converts a pleasant interaction into an actionable one. It also prevents a common source of job-search anxiety: uncertainty about who is responsible for the next move and when it should happen.</p>
-<p>Recruiters and alumni can both be helpful, but in different ways. Recruiters are generally the best source for open roles, procedures, and timing. Alumni can offer a lived account of the organization, deeper technical context, advice about entering the field, and occasionally a referral. They are complementary relationships, not substitutes.</p>
-<h2 id="Follow-up-while-the-conversation-is-still-fresh"><a href="#Follow-up-while-the-conversation-is-still-fresh" class="headerlink" title="Follow up while the conversation is still fresh"></a>Follow up while the conversation is still fresh</h2><p>The recommendation to send a note the same day is practical, not merely ceremonial. Employers may review resumes that evening, especially if they are deciding whom to invite to interviews soon afterward. More importantly, specific follow-up is rare enough to be memorable.</p>
-<p>A good message can be short. It should:</p>
-<ol>
-<li>thank the person for their time;</li>
-<li>restate interest in the company or role;</li>
-<li>recall a specific point from the conversation;</li>
-<li>connect a relevant skill, experience, strength, or value to the opportunity;</li>
-<li>add an important relevant detail that did not come up, if there is one; and</li>
-<li>state interest in an interview or in continuing the conversation, when appropriate.</li>
-</ol>
-<p>For example:</p>
-<blockquote>
-<p>Thank you for speaking with me at the Cornell career fair today. I appreciated learning how your team approaches [topic discussed], especially [specific detail]. My work on [relevant project] has given me experience with [capability], and I would be excited to apply that background to [role or problem]. I remain very interested in [company&#x2F;position] and would welcome the opportunity to continue the conversation.</p>
-</blockquote>
-<p>There does not need to be a manufactured question at the end. A concise note that proves one was listening is more valuable than a generic request for “more information.”</p>
-<h2 id="The-compact-version"><a href="#The-compact-version" class="headerlink" title="The compact version"></a>The compact version</h2><p>If I reduce the workshop to a card I could read before entering the hall, it is this:</p>
-<ol>
-<li>Register, research, prioritize, apply early, and bring resumes.</li>
-<li>Start a dialogue: who I am, why this employer, one relevant capability, one real question.</li>
-<li>Ask about skills, process, timeline, and preferred follow-up.</li>
-<li>Keep technical stories comprehensible without making them shallow.</li>
-<li>Respect the queue, follow the recruiter’s lead, and close intentionally.</li>
-<li>Send a same-day note that recalls the actual conversation.</li>
-</ol>
-<p>A career fair will always be noisy and imperfect. Preparation still turns it from an intimidating mass of tables into a set of manageable experiments: learn something, make a connection, and take the next step with more information than before.</p>
-<h2 id="Resources"><a href="#Resources" class="headerlink" title="Resources"></a>Resources</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://canvas.cornell.edu/courses/14918/pages/fairs-intro">Cornell Career Development Toolkit: Fairs module</a></li>
-<li><a target="_blank" rel="noopener" href="https://access.vault.com/videos/virtual-career-fairs">Vault: Virtual Career Fairs</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.themuse.com/advice/questions-to-ask-at-career-fairs">The Muse: Questions to Ask at a Career Fair</a></li>
-</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">S = SortedList([<span class="hljs-number">2</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5</span>, <span class="hljs-number">8</span>, <span class="hljs-number">11</span>])     <span class="hljs-comment"># back to the original</span><br>S.bisect_left(<span class="hljs-number">5</span>)   <span class="hljs-comment"># 1    (just the 2)</span><br>S.bisect_right(<span class="hljs-number">5</span>)  <span class="hljs-comment"># 3    (2, 5, and 5)</span><br>S.bisect_left(<span class="hljs-number">7</span>)   <span class="hljs-comment"># 3    (2, 5, 5)</span><br>S.bisect_right(<span class="hljs-number">7</span>)  <span class="hljs-comment"># 3    (same - 7 isn&#x27;t present)</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="SortedSet-a-sorted-set-duplicates-collapsed"><a href="#SortedSet-a-sorted-set-duplicates-collapsed" class="headerlink" title="SortedSet - a sorted set (duplicates collapsed)"></a><code>SortedSet</code> - a sorted set (duplicates collapsed)</h3><p>Same three operations, but duplicates collapse into one, so <code>[2, 5, 5, 8, 11]</code> becomes <code>[2, 5, 8, 11]</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> sortedcontainers <span class="hljs-keyword">import</span> SortedSet<br>T = SortedSet([<span class="hljs-number">2</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5</span>, <span class="hljs-number">8</span>, <span class="hljs-number">11</span>])   <span class="hljs-comment"># -&gt; [2, 5, 8, 11]</span><br><br>T[<span class="hljs-number">0</span>]  <span class="hljs-comment"># 2</span><br>T[<span class="hljs-number">1</span>]  <span class="hljs-comment"># 5</span><br>T[<span class="hljs-number">2</span>]  <span class="hljs-comment"># 8</span><br>T[<span class="hljs-number">3</span>]  <span class="hljs-comment"># 11</span><br><br>T.add(<span class="hljs-number">7</span>)      <span class="hljs-comment"># [2, 5, 7, 8, 11]</span><br>T.remove(<span class="hljs-number">5</span>)   <span class="hljs-comment"># [2, 7, 8, 11]</span><br>T.pop(<span class="hljs-number">0</span>)      <span class="hljs-comment"># 2   -&gt; [7, 8, 11]   (remove and return the smallest)</span><br>T.pop(-<span class="hljs-number">1</span>)     <span class="hljs-comment"># 11  -&gt; [7, 8]       (remove and return the largest)</span><br><br>T = SortedSet([<span class="hljs-number">2</span>, <span class="hljs-number">5</span>, <span class="hljs-number">8</span>, <span class="hljs-number">11</span>])      <span class="hljs-comment"># reset</span><br>T.bisect_left(<span class="hljs-number">5</span>)   <span class="hljs-comment"># 1    (elements &lt; 5: just 2)</span><br>T.bisect_right(<span class="hljs-number">5</span>)  <span class="hljs-comment"># 2    (elements &lt;= 5: 2 and 5)</span><br>T.bisect_left(<span class="hljs-number">7</span>)   <span class="hljs-comment"># 2    (elements &lt; 7: 2 and 5)</span><br>T.bisect_right(<span class="hljs-number">7</span>)  <span class="hljs-comment"># 2    (same - 7 isn&#x27;t present)</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="SortedDict-sorted-keys-mapped-to-values"><a href="#SortedDict-sorted-keys-mapped-to-values" class="headerlink" title="SortedDict - sorted keys mapped to values"></a><code>SortedDict</code> - sorted keys mapped to values</h3><p>A map stores key-value pairs, not bare values, so you build it from pairs. The same three operations answer questions about <strong>keys</strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> sortedcontainers <span class="hljs-keyword">import</span> SortedDict<br>D = SortedDict(&#123;<span class="hljs-number">2</span>: <span class="hljs-string">&#x27;two&#x27;</span>, <span class="hljs-number">5</span>: <span class="hljs-string">&#x27;five&#x27;</span>, <span class="hljs-number">8</span>: <span class="hljs-string">&#x27;eight&#x27;</span>, <span class="hljs-number">11</span>: <span class="hljs-string">&#x27;eleven&#x27;</span>&#125;)<br><br><span class="hljs-comment"># smallest / largest - peekitem returns the (key, value) pair without removing it</span><br>D.peekitem(<span class="hljs-number">0</span>)    <span class="hljs-comment"># (2, &#x27;two&#x27;)      smallest</span><br>D.peekitem(-<span class="hljs-number">1</span>)   <span class="hljs-comment"># (11, &#x27;eleven&#x27;)  largest</span><br><br><span class="hljs-comment"># how many keys are less than k?</span><br>D.bisect_left(<span class="hljs-number">5</span>)   <span class="hljs-comment"># 1    (keys &lt; 5: just 2)</span><br>D.bisect_right(<span class="hljs-number">5</span>)  <span class="hljs-comment"># 2    (keys &lt;= 5: 2 and 5)</span><br>D.bisect_left(<span class="hljs-number">7</span>)   <span class="hljs-comment"># 2    (keys &lt; 7: 2 and 5)</span><br><br><span class="hljs-comment"># insert / delete - keys stay sorted</span><br>D[<span class="hljs-number">7</span>] = <span class="hljs-string">&#x27;seven&#x27;</span>   <span class="hljs-comment"># -&gt; 2, 5, 7, 8, 11</span><br><span class="hljs-keyword">del</span> D[<span class="hljs-number">5</span>]         <span class="hljs-comment"># -&gt; 2, 7, 8, 11</span><br><br><span class="hljs-comment"># remove smallest / largest - popitem removes and returns the (key, value) pair</span><br>D.popitem(<span class="hljs-number">0</span>)     <span class="hljs-comment"># (2, &#x27;two&#x27;)      -&gt; 7, 8, 11</span><br>D.popitem(-<span class="hljs-number">1</span>)    <span class="hljs-comment"># (11, &#x27;eleven&#x27;)  -&gt; 7, 8</span><br></code></pre></td></tr></table></figure>
 
                 
               </div>
@@ -512,7 +434,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Reflections/" class="category-chain-item">Reflections</a>
+  <a href="/categories/Programming/" class="category-chain-item">Programming</a>
   
   
 
@@ -527,11 +449,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/career/" class="print-no-link">#career</a>
+        <a href="/tags/reference/" class="print-no-link">#reference</a>
       
-        <a href="/tags/workshop-notes/" class="print-no-link">#workshop-notes</a>
+        <a href="/tags/python/" class="print-no-link">#python</a>
       
-        <a href="/tags/communication/" class="print-no-link">#communication</a>
+        <a href="/tags/data-structures/" class="print-no-link">#data-structures</a>
       
     </div>
   
@@ -543,8 +465,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Career Fairs Are Conversations, Not Conveyor Belts</div>
-      <div>https://jifengwu2k.github.io/2026/09/03/Career-Fairs-Are-Conversations-Not-Conveyor-Belts/</div>
+      <div>sortedcontainers: The Balanced Tree Python Was Missing</div>
+      <div>https://jifengwu2k.github.io/2026/09/07/sortedcontainers-The-Balanced-Tree-Python-Was-Missing/</div>
     </div>
     <div class="license-meta">
       
@@ -556,7 +478,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>September 3, 2026</div>
+          <div>September 7, 2026</div>
         </div>
       
       
@@ -588,18 +510,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/09/07/sortedcontainers-The-Balanced-Tree-Python-Was-Missing/" title="sortedcontainers: The Balanced Tree Python Was Missing">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">sortedcontainers: The Balanced Tree Python Was Missing</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/09/02/Lessons-from-a-Consulting-Panel/" title="Lessons from a Consulting Panel">
-                        <span class="hidden-mobile">Lessons from a Consulting Panel</span>
+                      <a href="/2026/09/03/Career-Fairs-Are-Conversations-Not-Conveyor-Belts/" title="Career Fairs Are Conversations, Not Conveyor Belts">
+                        <span class="hidden-mobile">Career Fairs Are Conversations, Not Conveyor Belts</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
