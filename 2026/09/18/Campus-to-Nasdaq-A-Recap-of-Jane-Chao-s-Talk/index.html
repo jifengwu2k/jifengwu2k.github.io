@@ -19,26 +19,24 @@
   <meta name="author" content="Jifeng Wu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="How the recursive definition of a Cartesian tree leads to a linear-time construction algorithm using a monotonic stack.">
+    <meta name="description" content="Jane Chao, PhD &#39;05 and co-founder&#x2F;CEO of Ceribell, returned to Cornell to explain how a biophysics PhD, a year of film school, and five years at McKinsey led to a Nasdaq-listed company that puts an AI">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Understanding Cartesian Trees: From Recursive Definition to Monotonic Stack">
-<meta property="og:url" content="https://jifengwu2k.github.io/2026/09/09/Understanding-Cartesian-Trees-From-Recursive-Definition-to-Monotonic-Stack/index.html">
+<meta property="og:title" content="Campus to Nasdaq: A Recap of Jane Chao&#39;s Talk">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/09/18/Campus-to-Nasdaq-A-Recap-of-Jane-Chao-s-Talk/index.html">
 <meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
-<meta property="og:description" content="How the recursive definition of a Cartesian tree leads to a linear-time construction algorithm using a monotonic stack.">
+<meta property="og:description" content="Jane Chao, PhD &#39;05 and co-founder&#x2F;CEO of Ceribell, returned to Cornell to explain how a biophysics PhD, a year of film school, and five years at McKinsey led to a Nasdaq-listed company that puts an AI">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://jifengwu2k.github.io/static/images/cartesian-tree2.png">
-<meta property="article:published_time" content="2026-09-09T04:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-09T15:15:27.378Z">
+<meta property="article:published_time" content="2026-09-18T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-18T04:00:00.000Z">
 <meta property="article:author" content="Jifeng Wu">
-<meta property="article:tag" content="computer-science">
-<meta property="article:tag" content="data-structures">
-<meta property="article:tag" content="reference">
+<meta property="article:tag" content="career">
+<meta property="article:tag" content="entrepreneurship">
+<meta property="article:tag" content="talk-notes">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://jifengwu2k.github.io/static/images/cartesian-tree2.png">
   
   
   
-  <title>Understanding Cartesian Trees: From Recursive Definition to Monotonic Stack - Jifeng Wu&#39;s Personal Website</title>
+  <title>Campus to Nasdaq: A Recap of Jane Chao&#39;s Talk - Jifeng Wu&#39;s Personal Website</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -307,7 +305,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Understanding Cartesian Trees: From Recursive Definition to Monotonic Stack</span>
+            <span id="subtitle">Campus to Nasdaq: A Recap of Jane Chao's Talk</span>
           
         </div>
 
@@ -323,8 +321,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-09-09 00:00" pubdate>
-          September 9, 2026
+        <time datetime="2026-09-18 00:00" pubdate>
+          September 18, 2026
         </time>
       </span>
     
@@ -335,7 +333,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          6.5k words
+          12k words
         
       </span>
     
@@ -346,7 +344,7 @@
         
         
         
-          54 mins
+          104 mins
         
       </span>
     
@@ -385,96 +383,63 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Understanding Cartesian Trees: From Recursive Definition to Monotonic Stack</h1>
+            <h1 id="seo-header">Campus to Nasdaq: A Recap of Jane Chao&#39;s Talk</h1>
             
             
               <div class="markdown-body">
                 
-                <p>A Cartesian tree combines two kinds of order that at first seem unrelated. Given an array of distinct values, it is a binary tree whose:</p>
-<ol>
-<li><strong>in-order traversal reproduces the original array</strong>, and</li>
-<li><strong>nodes satisfy the heap property</strong>.</li>
-</ol>
-<p>This post uses a min-heap Cartesian tree, so every parent is smaller than its children. For any array of distinct values, these two rules determine a unique tree.</p>
-<p>The recursive definition is simple: choose the array’s minimum as the root, recursively build the left subtree from everything before that minimum, and recursively build the right subtree from everything after it.</p>
-<h2 id="The-recursive-definition"><a href="#The-recursive-definition" class="headerlink" title="The recursive definition"></a>The recursive definition</h2><p>For an array <code>A[l:r]</code> (a half-open interval in Python-style notation: <code>l</code> inclusive, <code>r</code> exclusive), let <code>m</code> be the index of its minimum value. An empty interval is the base case and produces an empty subtree. Then:</p>
-<ul>
-<li><code>A[m]</code> becomes the root;</li>
-<li><code>A[l:m]</code> recursively forms its left subtree; and</li>
-<li><code>A[m+1:r]</code> recursively forms its right subtree.</li>
-</ul>
-<p>This construction immediately explains both defining properties:</p>
-<ul>
-<li>The root is the range minimum, so it is smaller than every node beneath it.</li>
-<li>An in-order traversal visits the left range, then <code>A[m]</code>, then the right range, preserving the array’s order.</li>
-</ul>
-<p>The straightforward implementation, however, repeatedly scans subarrays to find their minima. On an already sorted array, the minimum is always at one end. The scans then cost roughly</p>
-<p>$$N + (N - 1) + (N - 2) + \cdots + 1 &#x3D; O(N^2).$$</p>
-<p>To obtain a linear-time algorithm, we need to stop searching for each subtree’s minimum from scratch.</p>
-<h2 id="Build-from-left-to-right-instead"><a href="#Build-from-left-to-right-instead" class="headerlink" title="Build from left to right instead"></a>Build from left to right instead</h2><p>Suppose we have already built the Cartesian tree for <code>A[0:i]</code>, and the next value <code>A[i]</code> arrives.</p>
-<p>Because <code>A[i]</code> is the newest array element, it must be the final node visited by an in-order traversal of the updated tree. Therefore, it cannot be inserted arbitrarily. It must attach somewhere along the existing tree’s <strong>right spine</strong>: the path from the root to the rightmost node (the last node visited by an in-order traversal).</p>
-<p>There are three possibilities for the new value:</p>
-<ol>
-<li><strong>It is larger than the rightmost node on the spine.</strong> It becomes that node’s right child.</li>
-<li><strong>It is smaller than the root.</strong> It becomes the new root, and the entire old tree becomes its left subtree.</li>
-<li><strong>It lies somewhere in between.</strong> It enters the middle of the right spine: larger nodes move beneath it as its left subtree, while the closest smaller node remains above it as its parent.</li>
-</ol>
-<p>All three cases share one essential property: <code>A[i]</code> becomes the new rightmost node, and every node moved beneath it came from an earlier position in the array. The in-order property is therefore preserved no matter which case applies; the cases differ only in how much of the old right spine becomes the new node’s left subtree.</p>
-<p>Thus, the problem at every step is not <em>where in the whole tree does <code>A[i]</code> belong?</em> It is only <em>where on the right spine does it belong?</em></p>
-<h2 id="Why-the-right-spine-is-monotonic"><a href="#Why-the-right-spine-is-monotonic" class="headerlink" title="Why the right spine is monotonic"></a>Why the right spine is monotonic</h2><p>In a min-heap Cartesian tree, values strictly increase as we move from the root down the right spine. Every edge goes from a parent to a child, and the min-heap property requires the parent to be smaller.</p>
-<p>So the right spine is already a monotonic sequence:</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">root                         rightmost leaf<br>  1  -&gt;  3  -&gt;  7  -&gt;  12  -&gt;  18<br>smallest                         largest<br></code></pre></td></tr></table></figure>
-
-<p>When a new value <code>x</code> arrives:</p>
-<ul>
-<li>every spine node smaller than <code>x</code> may legally remain its ancestor;</li>
-<li>every trailing spine node larger than <code>x</code> must move below it; and</li>
-<li>the boundary between those two groups is exactly the insertion point.</li>
-</ul>
-<p>For example, inserting <code>8</code> into the spine above leaves:</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">1  -&gt;  3  -&gt;  7  -&gt;  8<br>                    /<br>                  12  -&gt;  18<br></code></pre></td></tr></table></figure>
-
-<p>The subtree rooted at <code>12</code> becomes the left subtree of <code>8</code>. This is the only placement that keeps both required orders. In general, inserting <code>x</code> at the boundary between the last smaller spine node and the first larger spine node preserves the heap property: <code>x</code> is smaller than every node moved below it and larger than the node left above it, so every parent stays smaller than its children. The in-order property holds for the reason given earlier—the nodes moved below <code>x</code> all came from before it in the array.</p>
-<p>This monotonicity is what will make the stack monotonic, letting each insertion find the boundary by popping only from the top of the stack. Since both required properties hold after every insertion, the tree is always the Cartesian tree for the prefix processed so far.</p>
-<h2 id="Pointer-walking-works-but-can-be-quadratic"><a href="#Pointer-walking-works-but-can-be-quadratic" class="headerlink" title="Pointer walking works, but can be quadratic"></a>Pointer walking works, but can be quadratic</h2><p>We could find the insertion boundary by starting at the root and following <code>.right</code> pointers. We walk past smaller nodes, stop before the first larger node, and then rewire two links:</p>
-<ol>
-<li>the last smaller node’s <code>.right</code> link points to the new node; and</li>
-<li>the first larger node becomes the new node’s <code>.left</code> child.</li>
-</ol>
-<p>This is correct, but starting from the root for every insertion repeats work. Consider the sorted input <code>[1, 2, 3, 4, 5]</code>:</p>
-<ul>
-<li>inserting <code>2</code> walks one edge;</li>
-<li>inserting <code>3</code> walks two edges;</li>
-<li>inserting <code>4</code> walks three edges; and</li>
-<li>in general, inserting the next value walks the entire current spine.</li>
-</ul>
-<p>The total is again $1 + 2 + \cdots + N &#x3D; O(N^2)$.</p>
-<p>What we need is a way to remember the right spine and inspect it from its bottom, where each new value first tries to attach.</p>
-<h2 id="The-monotonic-stack"><a href="#The-monotonic-stack" class="headerlink" title="The monotonic stack"></a>The monotonic stack</h2><p>A stack provides exactly that representation. Store the right-spine nodes in root-to-leaf order, with the deepest node at the top.</p>
-<p><img src="/static/images/cartesian-tree2.png" srcset="/img/loading.gif" lazyload alt="Step-by-step construction of a Cartesian tree, with the right spine outlined in red and each inserted node shown in green"></p>
-<p><em>Constructing a Cartesian tree from left to right. The red outline marks the current right spine, and the green node is the value being inserted.</em></p>
-<p>For each new value <code>x</code>:</p>
-<ol>
-<li>Pop while the stack top is larger than <code>x</code>.</li>
-<li>Make the last popped node (the closest spine node larger than <code>x</code>) the new node’s left child.</li>
-<li>If the stack is not empty, make the new node the stack top’s right child (the closest spine node smaller than <code>x</code>).</li>
-<li>Push the new node.</li>
-</ol>
-<p>Here is a compact Python implementation:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> dataclasses <span class="hljs-keyword">import</span> dataclass<br><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">Optional</span><br><br><br><span class="hljs-meta">@dataclass</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Node</span>:<br>    value: <span class="hljs-built_in">int</span><br>    index: <span class="hljs-built_in">int</span><br>    left: <span class="hljs-type">Optional</span>[<span class="hljs-string">&quot;Node&quot;</span>] = <span class="hljs-literal">None</span><br>    right: <span class="hljs-type">Optional</span>[<span class="hljs-string">&quot;Node&quot;</span>] = <span class="hljs-literal">None</span><br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">build_cartesian_tree</span>(<span class="hljs-params">values: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-type">Optional</span>[Node]:<br>    <span class="hljs-string">&quot;&quot;&quot;Build a min-heap Cartesian tree for distinct values.&quot;&quot;&quot;</span><br>    stack: <span class="hljs-built_in">list</span>[Node] = []<br><br>    <span class="hljs-keyword">for</span> index, value <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(values):<br>        node = Node(value=value, index=index)<br>        last_popped = <span class="hljs-literal">None</span><br><br>        <span class="hljs-keyword">while</span> stack <span class="hljs-keyword">and</span> stack[-<span class="hljs-number">1</span>].value &gt; value:<br>            last_popped = stack.pop()<br><br>        node.left = last_popped<br><br>        <span class="hljs-keyword">if</span> stack:<br>            stack[-<span class="hljs-number">1</span>].right = node<br><br>        stack.append(node)<br><br>    <span class="hljs-keyword">return</span> stack[<span class="hljs-number">0</span>] <span class="hljs-keyword">if</span> stack <span class="hljs-keyword">else</span> <span class="hljs-literal">None</span><br></code></pre></td></tr></table></figure>
-
-<p>The stack is not a separate approximation of the tree. At every step, it contains exactly the nodes on the current right spine. Popping a node means that the node is no longer on that spine, not that it disappears from the tree: the popped chain is retained as the new node’s left subtree.</p>
-<h2 id="Why-the-running-time-is-linear"><a href="#Why-the-running-time-is-linear" class="headerlink" title="Why the running time is linear"></a>Why the running time is linear</h2><p>A single insertion may pop many nodes, but each node is:</p>
-<ul>
-<li>pushed exactly once; and</li>
-<li>popped at most once.</li>
-</ul>
-<p>Across all insertions, there are at most <code>N</code> pushes and <code>N</code> pops. The total construction time is therefore $O(N)$, or amortized $O(1)$ per element, with $O(N)$ auxiliary space in the worst case.</p>
-<p>This is the key insight behind the monotonic-stack construction: the recursive definition tells us what the tree must look like, while left-to-right insertion reveals that only the right spine can change. The stack remembers that spine and prevents us from traversing the same path again and again.</p>
-<h2 id="A-note-on-duplicate-values"><a href="#A-note-on-duplicate-values" class="headerlink" title="A note on duplicate values"></a>A note on duplicate values</h2><p>The uniqueness statement assumes distinct values. If duplicates are allowed, choose a tie-breaking rule—for example, compare <code>(value, index)</code> pairs lexicographically—and apply it consistently in both the heap definition and the stack’s pop condition. The same construction then produces a deterministic tree.</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://en.oi-wiki.org/ds/cartesian-tree/">Cartesian tree — OI Wiki</a></li>
-</ul>
+                <p>On September 18, 2026, Jane Chao, PhD ‘05, returned to Cornell for a talk hosted by the Center for Life Science Ventures. She is the co-founder and CEO of Ceribell, a Nasdaq-listed medtech company whose AI-powered EEG platform detects otherwise invisible seizures in the ICU. But she spent only a few minutes on the company. Most of the hour was her own story, and that is the focus here: a biophysics PhD, a year of film school, a postdoc crisis, five years at McKinsey, and a detour-filled path to founding a company.</p>
+<h2 id="Her-Path-in-Her-Own-Words"><a href="#Her-Path-in-Her-Own-Words" class="headerlink" title="Her Path, in Her Own Words"></a>Her Path, in Her Own Words</h2><p><em>What follows is lightly compressed from a cleaned transcript of the talk, preserving Jane Chao’s wording; square-bracketed text is editorial.</em></p>
+<p><strong>Jane Chao:</strong> That’s Ceribell. I’ll spend five or ten minutes talking about my personal journey.</p>
+<p>I got very emotional because I hadn’t seen my advisor or co-advisor for 20 years. I was almost tearful this morning. Actually, I was tearful, not almost tearful.</p>
+<p>Twenty-five years ago, I arrived in New York City for the tri-institutional program with Cornell, Sloan Kettering, and Rockefeller University. I was very fresh off the boat. I had about $200—my parents’ five years of savings—and started my American dream. I thought I wanted to be a researcher, a professor, a scientist, because I just loved science.</p>
+<p>I love the TPCB program because they let us do rotations. You get to date your professor before you marry them professionally. That’s quite a luxury; I know a lot of PhD programs don’t offer that. I rotated and fell in love with what both Brian [Crane] and Alex [name as transcribed; identity unconfirmed] were doing in the lab, and I had an amazing time there.</p>
+<p><strong>Halfway through my PhD, though, I realized I wasn’t sure I wanted to stay in academia.</strong> It was disturbing, because I had studied for this for decades and had always thought that was what I wanted.</p>
+<h3 id="Lessons-from-graduate-school"><a href="#Lessons-from-graduate-school" class="headerlink" title="Lessons from graduate school"></a>Lessons from graduate school</h3><p>Reflecting on it, I remember at least four or five times going to my advisor’s office in tears and saying, “I can’t do this. I don’t think I can finish my PhD.” I’m not just saying this because he’s here, but I’m so grateful for my advisor.</p>
+<p>One day I said, “Brian, the result is negative again. I don’t feel I can do this.” He said, “I watched this movie last week. It was really great. Why don’t you go watch it and take a week off?” That was literally my advisor. <strong>He taught me not only research and science, but also how to manage people, bring out the best in them, and meet people where they are.</strong></p>
+<p>The second thing is a quote from Brian that I still use with my team all the time. Brian probably doesn’t know this. One day I went to the lab and said, “This failed; that failed. This is what I plan to do. This is a new design.” Brian asked, “Do you believe this is going to work?”</p>
+<p>That damn experiment—sorry, that experiment—had failed so many times. I said, “I don’t know. It might work; it might not.” <strong>He said something I still remember today: “If you think it’s going to fail, you’re going to find a way to fail it.”</strong></p>
+<p><strong>Every time things get hard, I ask myself, and sometimes my team, “Do you believe in this?”</strong> Because if you don’t believe in it, you’re going to find a way to fail it. Those are probably my first two lessons.</p>
+<p>The third lesson I learned in my PhD program is something I still use every day, whether I’m dealing with a regulatory issue, commercialization, or manufacturing: solving problems.</p>
+<p>It sounds so easy to talk about problem solving. But especially in the business world, we often get lost in the weeds. <strong>I ask the team, “What exactly is the problem definition?”</strong> That’s what we learn in PhD programs. What is your hypothesis? How do you test it? So many business problems boil down to what we learn and do in PhD programs.</p>
+<p><strong>Even though my PhD subject has nothing to do with what I’m doing today, the tools and the way of thinking are valuable.</strong> If you’re doing your PhD or studying any subject, that is going to be very valuable down the road.</p>
+<h3 id="Film-school-and-a-difficult-transition"><a href="#Film-school-and-a-difficult-transition" class="headerlink" title="Film school and a difficult transition"></a>Film school and a difficult transition</h3><p>After my PhD, I went to film school. Brian actually supported it—I don’t know what he was thinking!</p>
+<p>I grew up in the Chinese education system, narrowly focused on science. I was always good at science, but I thought, “I love art. What if I should be an artist? I want to explore that.” I loved film because Brian kept asking me to watch movies.</p>
+<p>I studied for a year at the Beijing Film Academy. I borrowed $6,000 from a friend with a fancy job in Silicon Valley, because I came from a very humble family in China. I did that for a year. <em>[unclear]</em></p>
+<p>It was helpful in hindsight. After six months, it was obvious to me that I wasn’t going to be a filmmaker. I didn’t enjoy the emotional ups and downs. I missed solving problems and rigorous thinking.</p>
+<p><strong>But film school helped me start Ceribell in an indirect way.</strong> Filmmaking is about telling stories and looking at the world from other people’s perspectives. I love documentaries; that’s what I did in film school. <strong>Everything about documentary is: what does the world look like from another person’s perspective? How do you see that world?</strong></p>
+<p>When you do product design, that’s exactly what you do. What is the world like for nurses? What is the world like for patients? What is the experience like for physicians? <strong>That highly empathetic perspective is something that science graduate school probably doesn’t teach you. I gained it in film school.</strong></p>
+<p><strong>After that, I had a major crisis, if I’m honest. I didn’t know what I wanted to do with my life.</strong> I was completely broke. I wrote Brian an email asking, “Can I just have some shelter in your lab?” I came back to Ithaca for a few months in the winter. You can imagine how depressed I was. <em>[unclear]</em></p>
+<p>I looked for a postdoc and started one at UCSF. It lasted only a year because I was really struggling. It was the only job I could find, but I was very lost.</p>
+<p><strong>There will be a takeaway after all this. It’s not about me; it’s about what might be relevant to you.</strong></p>
+<h3 id="McKinsey-Novartis-and-Genentech"><a href="#McKinsey-Novartis-and-Genentech" class="headerlink" title="McKinsey, Novartis, and Genentech"></a>McKinsey, Novartis, and Genentech</h3><p>A friend dragged me to a McKinsey event. I had no idea what McKinsey was; I had to Google it. They had a program for PhD students. There was a first-year associate—a junior-level hire—with a PhD in theoretical physics from Caltech. I asked him about the experience. <strong>He said, “If you don’t know what you want to do with your life, this is a great place to be.”</strong></p>
+<p>I thought, “That’s perfect. I have no idea what to do. I’m going to learn.”</p>
+<p>It was a fascinating five years. I worked in Europe, Asia, and the U.S. <strong>I call it my paid MBA.</strong> Again, it’s problem solving. That’s why McKinsey hires MDs, PhDs, and JDs who don’t have MBAs. They give you a [three- or six-week; duration unclear] crash-course MBA, and then you’re advising the C-suite. It’s problem solving all around.</p>
+<p>Eventually, I wanted to get back to technology, because McKinsey is pure business. Long story short, I joined Novartis in Switzerland as the strategy lead for the late-stage portfolio. That’s where a pharmaceutical company decides which molecules move from Phase II to Phase III. Then I went to Genentech and started the company 12 years ago after meeting my co-founders.</p>
+<p>I had a few slides about the company’s journey. I couldn’t find pictures from graduate school because it was before we had cell-phone cameras. I had a Nokia. That tells my age, right? We didn’t have iPhones.</p>
+<h3 id="Purpose-and-the-early-team"><a href="#Purpose-and-the-early-team" class="headerlink" title="Purpose and the early team"></a>Purpose and the early team</h3><p>Starting the company was quite a journey. I can talk a lot more about it if you’re interested. There’s a picture of the company from ten years ago.</p>
+<p>I met a few entrepreneurs at the incubator this morning. <strong>In hindsight, if you ask me for advice about how I got here—besides everything Brian taught me, including watching movies and relaxing when you’re stressed—I would ask, “What is your North Star?”</strong></p>
+<p><strong>Looking back, my career seems chaotic. But there was a clear North Star.</strong> It took a few years to figure it out: <strong>I love problem solving, and I love having my work make a direct social impact that I can see, something tangible.</strong></p>
+<p>Throughout my career, I’ve been looking for something I’m passionate about. I have to care about it, and there has to be social impact. Even though it’s an atypical career path, I’ve been working toward that North Star. That’s why I decided to start Ceribell.</p>
+<p><strong>Candidly, there are so many ways a startup can fail, especially a medical-device startup. Keeping that North Star is important.</strong></p>
+<p>The second thing I would say, if you ever think about starting a company, is that it’s all about the people. This was the company ten years ago—our entire team. I was eight months pregnant with my son, and he turns ten in two months. I can’t believe it. Almost all four of those team members are still with the company.</p>
+<p><strong>You need people who share your vision, but also people who can truly challenge you. Starting a company is all about the first four or five people you bring onto your team.</strong> Maybe that goes beyond companies, too. That’s the amazing part.</p>
+<h3 id="Going-public"><a href="#Going-public" class="headerlink" title="Going public"></a>Going public</h3><p>Nasdaq was a huge milestone. Almost two years ago, in October 2024, we went public. We went to New York and rang the bell.</p>
+<p>Sometimes I say it was the best day of my life. I’m divorced, so my wedding day wasn’t the best day of my life. People say, “The day your child was born must have been the best day.” No, it wasn’t—it was so painful! So this really was the best day of my life.</p>
+<p>I feel incredibly proud, for a few reasons. <strong>It wasn’t about everyone exiting and getting a big check. That’s not what it was about.</strong></p>
+<p>I asked the bankers around me, and this is sad, but I’m proud of it: <strong>I think I’m the first woman of color ever to take a medical-device company public, and probably still the only one. That’s really wrong. You need to change that.</strong> <em>[as she stated]</em></p>
+<p>Second, the market was really tough from 2021 to 2024. For three years, not a single medtech company could go public. The bankers pushed us because they wanted a high-quality medtech company to go public. We went, and we opened up the medtech IPO market. After that, five or six companies went public.</p>
+<p>Most importantly, we raised a lot of money, and we’re putting that money back into our R&amp;D pipeline. That’s how we developed a neonatal product. In neonates, one hour of seizure can separate an IQ of 100 from 85. Every hour of delay in EEG doubles the seizure burden for these patients. Now we’re developing delirium and LVO applications.</p>
+<p>It has been an incredible journey. I feel humbled, blessed, and deeply grateful to my advisors. That’s all I have. I’m happy to answer questions.</p>
+<h2 id="Lessons-Learned"><a href="#Lessons-Learned" class="headerlink" title="Lessons Learned"></a>Lessons Learned</h2><p><strong>1. A career can look chaotic and still have a North Star.</strong> Chao’s path runs from a Cornell&#x2F;Sloan Kettering&#x2F;Rockefeller PhD in protein structure, to a year at the Beijing Film Academy, to a postdoc at UCSF that lasted a year, to five years at McKinsey, to Novartis and Genentech, to founding Ceribell. She called it atypical and, on the surface, chaotic. But she identified a consistent North Star—she loves problem solving, and she needs her work to produce visible social impact—and every move was a step toward that, even the ones that felt like detours.</p>
+<p><strong>2. A PhD transfers as a method, not as a subject.</strong> Her dissertation on protein folding has nothing to do with EEG hardware today. What carried over was the discipline of asking “what exactly is the problem?” before rushing to solutions, forming a hypothesis, and gathering evidence. She uses that framework on regulatory, manufacturing, and hiring problems as readily as on experiments. Her advice to graduate students was blunt: your subject may not transfer, but the way of thinking will.</p>
+<p><strong>3. Belief is part of the method: “If you think it’s going to fail, you’re going to find a way to fail it.”</strong> That line, from her advisor Brian Crane, became a management practice. When things get hard she asks her team, “Do you believe in this?”—because a team that expects failure will unconsciously engineer it. The corollary for a founder is that conviction is also the product being sold. After being rejected by roughly fifty venture capitalists, Chao recalled, the check that saved the company came from someone who admitted he knew nothing about seizures but believed in her and her co-founder.</p>
+<p><strong>4. It is all about the first four or five people.</strong> Chao showed a photo of Ceribell’s entire early team, taken when she was eight months pregnant, and noted that almost all of them were still with the company a decade later. Her recruiting advice was unglamorous and specific: she met roughly forty people to hire three. She prefers small, serial introductions over large networking events, and the first two employees came from a friend’s labmate and a cold LinkedIn message.</p>
+<p><strong>5. Strategy is deciding what not to do.</strong> This was her favorite line from a McKinsey mentor, and she still quotes it. With limited time and capital, the hard work is allocation, not aspiration—and the same logic applies to markets. Choosing not to enter a seductive one is as strategic as entering it; even an idea as intuitively right as putting a stroke-detection device in ambulances can run into a “graveyard for medical-device companies.”</p>
+<p><strong>6. Zoom in and out, and think two rounds ahead.</strong> She described an explicit cadence—five-year vision, annual goals, quarterly goals, monthly execution—and the need to alternate between detail and altitude. Stay down too long and you miss long-lead items that should have started years earlier; stay up too long and execution slips. For fundraising specifically, she plans two rounds ahead, identifying the 18-month milestones that will justify the next valuation.</p>
+<p><strong>7. Growth is the real test, not founder status.</strong> Asked whether she considered hiring a CEO, Chao admitted that early on she assumed she would be COO and recruited an interim CEO, then concluded it “would kill the company” and took the role herself. Her current view: the question is not whether someone is a founder but whether the company’s growth outpaces the leader’s own. Can you keep learning and find people smarter than you who will challenge you? She also spoke openly about impostor syndrome—the feeling persisted despite the PhD and McKinsey résumé, and it diminished only as competence caught up with the role.</p>
+<p><strong>8. Empathy is a transferable research skill.</strong> The film-school detour, which looked like the least useful item on her résumé, turned out to be product training. Documentary work, she said, is the practice of seeing the world from another person’s perspective—exactly what product design demands when the users are nurses, patients, and physicians. Science graduate school, she noted, does not usually teach that. Notably, it was her advisor’s habit of sending her to the movies (“go watch it and take a week off”) that planted the idea in the first place.</p>
+<h2 id="Closing"><a href="#Closing" class="headerlink" title="Closing"></a>Closing</h2><p>The talk’s through-line was not the technology but the translation problem: from bench to bedside, from a lab result to a cleared device, from a résumé to a company. Chao’s answer was unromantic—find a North Star, learn to define the problem, hire people who will challenge you, decide what not to do, and keep believing long enough to find a way to make it work.</p>
 
                 
               </div>
@@ -493,7 +458,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Programming/" class="category-chain-item">Programming</a>
+  <a href="/categories/Research-Notes/" class="category-chain-item">Research Notes</a>
   
   
 
@@ -508,11 +473,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/reference/" class="print-no-link">#reference</a>
+        <a href="/tags/career/" class="print-no-link">#career</a>
       
-        <a href="/tags/data-structures/" class="print-no-link">#data-structures</a>
+        <a href="/tags/talk-notes/" class="print-no-link">#talk-notes</a>
       
-        <a href="/tags/computer-science/" class="print-no-link">#computer-science</a>
+        <a href="/tags/entrepreneurship/" class="print-no-link">#entrepreneurship</a>
       
     </div>
   
@@ -524,8 +489,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Understanding Cartesian Trees: From Recursive Definition to Monotonic Stack</div>
-      <div>https://jifengwu2k.github.io/2026/09/09/Understanding-Cartesian-Trees-From-Recursive-Definition-to-Monotonic-Stack/</div>
+      <div>Campus to Nasdaq: A Recap of Jane Chao&#39;s Talk</div>
+      <div>https://jifengwu2k.github.io/2026/09/18/Campus-to-Nasdaq-A-Recap-of-Jane-Chao-s-Talk/</div>
     </div>
     <div class="license-meta">
       
@@ -537,7 +502,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>September 9, 2026</div>
+          <div>September 18, 2026</div>
         </div>
       
       
@@ -569,18 +534,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/09/13/2026-09-Financial-Statement/" title="2026-09 Financial Statement">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">2026-09 Financial Statement</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/09/07/sortedcontainers-The-Balanced-Tree-Python-Was-Missing/" title="sortedcontainers: The Balanced Tree Python Was Missing">
-                        <span class="hidden-mobile">sortedcontainers: The Balanced Tree Python Was Missing</span>
+                      <a href="/2026/09/13/2026-09-Financial-Statement/" title="2026-09 Financial Statement">
+                        <span class="hidden-mobile">2026-09 Financial Statement</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
