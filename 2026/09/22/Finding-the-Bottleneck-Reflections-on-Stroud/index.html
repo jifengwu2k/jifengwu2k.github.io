@@ -19,23 +19,25 @@
   <meta name="author" content="Jifeng Wu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="2026-09 Financial Statement">
+    <meta name="description" content="What I took from Stroud&#39;s information session: how to find the constraint that actually limits a system, why the first real fix rarely solves the whole problem, and what that implies for choosing a pl">
 <meta property="og:type" content="article">
-<meta property="og:title" content="2026-09 Financial Statement">
-<meta property="og:url" content="https://jifengwu2k.github.io/2026/09/13/2026-09-Financial-Statement/index.html">
+<meta property="og:title" content="Finding the Bottleneck: Reflections on Stroud">
+<meta property="og:url" content="https://jifengwu2k.github.io/2026/09/22/Finding-the-Bottleneck-Reflections-on-Stroud/index.html">
 <meta property="og:site_name" content="Jifeng Wu&#39;s Personal Website">
-<meta property="og:description" content="2026-09 Financial Statement">
+<meta property="og:description" content="What I took from Stroud&#39;s information session: how to find the constraint that actually limits a system, why the first real fix rarely solves the whole problem, and what that implies for choosing a pl">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-09-13T04:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-28T14:11:28.197Z">
+<meta property="article:published_time" content="2026-09-22T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-22T04:00:00.000Z">
 <meta property="article:author" content="Jifeng Wu">
-<meta property="article:tag" content="finance">
-<meta property="article:tag" content="records">
+<meta property="article:tag" content="career">
+<meta property="article:tag" content="debugging">
+<meta property="article:tag" content="essay">
+<meta property="article:tag" content="talk-notes">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>2026-09 Financial Statement - Jifeng Wu&#39;s Personal Website</title>
+  <title>Finding the Bottleneck: Reflections on Stroud - Jifeng Wu&#39;s Personal Website</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -304,7 +306,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">2026-09 Financial Statement</span>
+            <span id="subtitle">Finding the Bottleneck: Reflections on Stroud</span>
           
         </div>
 
@@ -320,8 +322,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-09-13 00:00" pubdate>
-          September 13, 2026
+        <time datetime="2026-09-22 00:00" pubdate>
+          September 22, 2026
         </time>
       </span>
     
@@ -332,7 +334,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k words
+          8.4k words
         
       </span>
     
@@ -343,7 +345,7 @@
         
         
         
-          10 mins
+          70 mins
         
       </span>
     
@@ -382,14 +384,48 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">2026-09 Financial Statement</h1>
+            <h1 id="seo-header">Finding the Bottleneck: Reflections on Stroud</h1>
             
             
               <div class="markdown-body">
                 
-                <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs csv">date,name,amount<br>2026-09-01,Payment to Chase card,-47.62<br>2026-09-01,Amazon web services aws.amazon.co,1.95<br>2026-09-02,Collegetown Terr Rent,-1529.00<br>2026-09-03,MIDJOURNEY INC. MIDJOURNEY.CO CA,-103.68<br>2026-09-04,Cash Redemption,25.33<br>2026-09-06,WALMART.COM 800-925-6278 AR,-39.08<br>2026-09-08,GOOGLE *CLOUD JR2Q4B g.co/helppay# CA,-25.00<br>2026-09-08,WALMART.COM 800-925-6278 AR,-32.04<br>2026-09-09,GOOGLE *Google One g.co/helppay# CA,-5.39<br>2026-09-10,SQ *UNCLE MARTY&#x27;S PRIN gosq.com NY,-80.26<br>2026-09-11,AMAZON WEB SERVI PAYROLL,130.04<br>2026-09-12,SONARA.AI 804-384-9050,-2.95<br>2026-09-12,FLEXJOBS.COM 866-991-9222,-29.95<br>2026-09-14,Payment to Chase card,-87.34<br>2026-09-15,OPENAI OPENAI.COM CA,-45.25<br>2026-09-16,WALMART.COM 800-925-6278 AR,-43.13<br>2026-09-17,WALMART.COM 800-925-6278 AR,-3.15<br>2026-09-18,OPENAI OPENAI.COM CA,-46.14<br>2026-09-18,Payment to Chase card,-3.06<br>2026-09-21,OPENAI OPENAI.COM CA,-108.00<br>2026-09-21,OPENAI OPENAI.COM CA,-46.35<br>2026-09-21,WALMART.COM 800-925-6278 AR,-15.16<br>2026-09-21,OPENAI OPENAI.COM CA,-45.29<br>2026-09-21,WALMART.COM 800-925-6278 AR,-39.46<br>2026-09-23,Payment to Chase card,-542.38<br>2026-09-25,DEEPSEERWEA 18658850911,-10.60<br></code></pre></td></tr></table></figure>
-
-<p>Total: -2772.96</p>
+                <p>I went to <a target="_blank" rel="noopener" href="https://career.cornell.edu/events/2026/09/22/stroud-international-information-session-2/">Stroud International’s information session at Cornell</a> on September 22. Stroud is an operations consulting firm: rather than writing strategy reports, its consultants go into plants and change how the work actually runs. Three of them presented projects they had led, and partner Taylor Milner talked about starting a career there.</p>
+<p>One idea held the evening together: the <strong>bottleneck</strong>, the part of a process that limits what the whole system can produce. It sounds obvious, but every story showed how easy it is to fix the wrong thing — or to fix the right thing and still not move the result.</p>
+<h2 id="The-vitamin-line-the-first-fix-was-real-but-it-wasn’t-enough"><a href="#The-vitamin-line-the-first-fix-was-real-but-it-wasn’t-enough" class="headerlink" title="The vitamin line: the first fix was real, but it wasn’t enough"></a>The vitamin line: the first fix was real, but it wasn’t enough</h2><p>Lilah Lopez, a senior associate who graduated in 2025, described a vitamin facility that wanted to sell more. To get board approval to take on the orders, the plant had to prove it could produce an <strong>extra two million bottles in a year</strong>. Lilah’s job was to make that possible.</p>
+<p>The first step was to map the line and ask which machine limited it. Bottles are cleaned, get a silica packet to keep them dry, pass through a filler that drops in a counted number of pills, and then go to quality checks and packing. Each machine has a rated top speed and a slower speed the plant actually runs it at. Here, the filler was the constraint: it ran at <strong>45 bottles per minute</strong> even though it could do 80.</p>
+<p>She talked to the operators first. They said turning the dials to maximum didn’t produce maximum output — at higher speeds, pills were miscounted and bottles were rejected as “kickouts,” which only made their jobs harder.</p>
+<p>To understand why, she worked through the filler’s mechanics. It has two identical lanes. In each lane, a hopper drops a pile of pills onto the first of three vibrating trays; the trays spread them into neat rows by the third tray; the pills then fall into a five-lane funnel, where sensors count them into the bottle.</p>
+<p>Two problems were hiding in that description.</p>
+<p>First, pills were getting stuck at the bottom of the funnel, so bottles left slightly underweight. At higher speed, more pills were trying to pass through in less time, and they needed help moving. Adjusting one setting — she called it “vibration number 4” — shook the funnel as pills dropped through, and the count came out right.</p>
+<p>Second, at full speed the sensors could not distinguish the end of one batch of pills from the start of the next. The fix was a pause: setting the “speed offset” to 1 introduced a <strong>0.1-second gap</strong> between batches, giving the sensors time to reset. The kickouts stopped.</p>
+<p>Those two changes took the filler from 45 to <strong>72 bottles per minute</strong>, 27 more than where it started. Lilah expected the project to be finished. It wasn’t. The line as a whole still missed its target, even though every machine’s speed profile now showed at least 72.</p>
+<p>The remaining constraint sat upstream of the filler, in how bottles were fed into it. A gate opened to let bottles into lane one, closed while a redirection bar swung over, then opened again for lane two. The full cycle took <strong>15 seconds</strong> and delivered <strong>15 bottles</strong> across both lanes — <strong>60 bottles per minute</strong>, below the filler’s new 72. The fix was a dial at the bottom of the filler that controlled conveyor speed. After several weeks of monitoring, the plant was on track for the extra two million bottles.</p>
+<p>What stayed with me is how reasonable the original diagnosis was. The filler was a sensible first suspect, but improving it moved the bottleneck rather than removing it; the only way to know was to measure the whole line again.</p>
+<h2 id="The-lettuce-plant-the-same-fix-didn’t-fit-every-product"><a href="#The-lettuce-plant-the-same-fix-didn’t-fit-every-product" class="headerlink" title="The lettuce plant: the same fix didn’t fit every product"></a>The lettuce plant: the same fix didn’t fit every product</h2><p>Mackenzie Rosin framed her story as a puzzle. You arrive at a client site. The product is the second-most-popular fresh vegetable in the U.S., 95 percent water; 70 percent of U.S. production is grown in California, and the average American eats about 30 pounds a year. The room guessed lettuce.</p>
+<p>The plant takes spinach, spring mix, and arugula from farms, washes it, dries it in what is essentially a ten-times-larger salad spinner, weighs it into portions, bags and seals it, and ships it to grocery stores. Management says demand is rising, costs are climbing, and they are losing market share; new machinery and an outside co-packer are both too expensive. They want improvements, not a report.</p>
+<p>Everyone on the floor has a theory about the low output. The machinery is old. New workers don’t know the line. Maintenance is slow. The schedule forces too many product changes. At higher speeds, bags don’t seal and weights fluctuate, creating rework. Mackenzie listened, then built an output profile from data; the <strong>scale-and-bagger</strong> step was limiting the line.</p>
+<p>The operator said the scale and bagger were already set to their maximum of <strong>40 drops per minute</strong>, but only about <strong>22</strong> were happening. Lettuce rides a conveyor onto a vibrating cone that spreads it into <strong>12 buckets</strong>; when a combination of buckets reaches the target weight, they release into a bag. Three things control the drop rate: the bagger-ready signal, the number of buckets per drop, and the time for product to fall into the bag. The signal was fine and gravity was doing its job. The machine was designed to use <strong>three or four buckets per drop</strong> and was using <strong>six</strong>. With 12 buckets, three or four per drop gives about four bags; six gives two.</p>
+<p>What controls buckets per drop? The infeed flow rate and how evenly the lettuce spreads across the buckets. A mass balance gives the required flow: bags per minute times the weight of each bag. Three variables affect it — scale-cone vibration, the weight at the cone that triggers the infeed conveyor, and the conveyor-belt speed — and all three were off specification. She and the maintenance team corrected them and expected throughput to rise. It didn’t show up in the overall results.</p>
+<p>Rather than declare a partial success, Mackenzie split the results by product. Spinach had reached its target; arugula had not moved at all. The difference was shape. Spinach leaves are smooth and flat and slip past one another into the buckets. Arugula has fingers that tangle and clump, tumble back down the conveyor, and stick in the buckets. With new setpoints for each product based on leaf shape, the site raised throughput by <strong>30 percent</strong>.</p>
+<p>She came back to the plant later for another project. The team had kept improving past its original target, because they had learned the problem-solving method rather than just received a fix.</p>
+<h2 id="What-the-numbers-leave-out"><a href="#What-the-numbers-leave-out" class="headerlink" title="What the numbers leave out"></a>What the numbers leave out</h2><p>In Q&amp;A, Taylor said the biggest change over his 25 years has been the amount of data available — but more data isn’t better data, and it can make people feel they have to use all of it. When he started, the studies and graphs were drawn by hand, standing on the floor with a pencil, clipboard, and stopwatch. Some of the best data still comes from that, because recorded data, or the way it is reported, can be wrong or misleading.</p>
+<p>Mackenzie’s story made the same point from the other side: the operators’ theories were not noise but described real mechanisms, and the useful move was to test them against measurements. When I evaluate a process, I want to ask what a timer includes, whether rejected output is counted, and what a dashboard hides.</p>
+<h2 id="Understand-the-process-you-have-before-buying-a-new-one"><a href="#Understand-the-process-you-have-before-buying-a-new-one" class="headerlink" title="Understand the process you have before buying a new one"></a>Understand the process you have before buying a new one</h2><p>During Q&amp;A, Margaret Seeman gave the firm’s view on capital investment. Most processes are not optimized as they stand, and she estimated that <strong>20 to 25 percent improvement</strong> is usually available without new equipment. Engineers sometimes jump to a capital project, wait a year, spend a million dollars, and still miss the underlying problem. Taylor added that understanding the current process usually lets clients delay their next equipment purchase by <strong>two to four years</strong>.</p>
+<p>The lesson I take is to understand what the current system can already do before asking for more resources, and to judge a proposed investment by the constraint it would actually remove.</p>
+<h2 id="What-starting-out-looks-like"><a href="#What-starting-out-looks-like" class="headerlink" title="What starting out looks like"></a>What starting out looks like</h2><p>Margaret described the shape of the first few years: two weeks of induction on the firm’s core tools, then straight to a client site, with a scope of work to own within the first year. The role widens over time, from driving results to coaching colleagues and advising clients. Taylor added that the firm grows its own people, gives <strong>five weeks of vacation</strong>, and protects weekends — and that it hires analytical people from any technical background, not only engineers. His test for a candidate sounded simpler: are you interested in how things work?</p>
+<h2 id="What-I’m-taking-away"><a href="#What-I’m-taking-away" class="headerlink" title="What I’m taking away"></a>What I’m taking away</h2><p>Stroud’s projects end when the client’s goal is met; sometimes secondary problems are left unresolved, which Mackenzie admitted still bothers her. That makes sense for a consulting engagement with a defined target. For research, I want the opposite: a bottleneck found in one system should become a question I can test and generalize. Which other systems share this constraint? What would disprove my explanation? Can I predict where the same fix will transfer?</p>
+<p>The rest of what I’m taking away:</p>
+<ul>
+<li><strong>Define the outcome before the intervention.</strong> “More orders the plant can serve” is a goal; “a faster filler” is a means. The goal tells me which improvements matter and when the work is done.</li>
+<li><strong>Re-measure the whole system after each change</strong>, because the bottleneck moves.</li>
+<li><strong>Prefer an explanation of the mechanism to a correlation.</strong> Knowing why the 0.1-second gap mattered is what made that fix trustworthy.</li>
+<li><strong>When a change works on one case and not another, treat the difference as the lead</strong>, not as an exception to note and move past.</li>
+<li><strong>Use the knowledge of the people closest to the process, and use measurements to test it.</strong></li>
+<li><strong>Understand current capacity before asking for new resources.</strong></li>
+<li><strong>Judge my own contribution partly by what the team can do after I leave.</strong> Documentation, reproducible measurements, and shared reasoning outlast a single intervention.</li>
+<li><strong>Choose work that offers real responsibility, coaching, feedback tied to results, and room for a life outside it.</strong></li>
+</ul>
+<p>I left wanting to get better at finding the bottleneck, at explaining why it exists, and at helping the people around me keep improving after the project ends.</p>
 
                 
               </div>
@@ -408,7 +444,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Statements/" class="category-chain-item">Statements</a>
+  <a href="/categories/Reflections/" class="category-chain-item">Reflections</a>
   
   
 
@@ -423,9 +459,13 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/records/" class="print-no-link">#records</a>
+        <a href="/tags/essay/" class="print-no-link">#essay</a>
       
-        <a href="/tags/finance/" class="print-no-link">#finance</a>
+        <a href="/tags/career/" class="print-no-link">#career</a>
+      
+        <a href="/tags/debugging/" class="print-no-link">#debugging</a>
+      
+        <a href="/tags/talk-notes/" class="print-no-link">#talk-notes</a>
       
     </div>
   
@@ -437,8 +477,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>2026-09 Financial Statement</div>
-      <div>https://jifengwu2k.github.io/2026/09/13/2026-09-Financial-Statement/</div>
+      <div>Finding the Bottleneck: Reflections on Stroud</div>
+      <div>https://jifengwu2k.github.io/2026/09/22/Finding-the-Bottleneck-Reflections-on-Stroud/</div>
     </div>
     <div class="license-meta">
       
@@ -450,7 +490,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>September 13, 2026</div>
+          <div>September 22, 2026</div>
         </div>
       
       
@@ -482,18 +522,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/09/18/Campus-to-Nasdaq-A-Recap-of-Jane-Chao-s-Talk/" title="Campus to Nasdaq: A Recap of Jane Chao&#39;s Talk">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Campus to Nasdaq: A Recap of Jane Chao&#39;s Talk</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/09/09/Understanding-Cartesian-Trees-From-Recursive-Definition-to-Monotonic-Stack/" title="Understanding Cartesian Trees: From Recursive Definition to Monotonic Stack">
-                        <span class="hidden-mobile">Understanding Cartesian Trees: From Recursive Definition to Monotonic Stack</span>
+                      <a href="/2026/09/18/Campus-to-Nasdaq-A-Recap-of-Jane-Chao-s-Talk/" title="Campus to Nasdaq: A Recap of Jane Chao&#39;s Talk">
+                        <span class="hidden-mobile">Campus to Nasdaq: A Recap of Jane Chao&#39;s Talk</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
